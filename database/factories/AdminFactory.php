@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Admin::class, function (Faker $faker) {
+$factory->define(App\Models\Admin::class, function (Faker $faker) {
     return [
         'name' => str_random(10),
         'email' => $faker->unique()->safeEmail,
