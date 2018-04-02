@@ -1,46 +1,81 @@
 import React from 'react';
-import { Menu, Icon } from 'antd';
+import { Link } from "react-router-dom";
+import { Menu, Icon, Layout, Button } from 'antd';
+
+const { Sider, } = Layout;
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
-export default class Sider extends React.Component {
-    handleClick = (e) => {
-        console.log('click ', e);
+const routers = [
+    {
+        title: '首页',
+        icon : 'dashboard',
+    }, {
+        title: 'APP管理',
+        icon : 'appstore',
+        child: [{
+            title: '添加APP',
+            icon : 'dashboard',
+        }, {
+            title: '添加模版',
+            icon : 'dashboard',
+        }],
+    }, {
+        title: '推广统计',
+        icon : 'pie-chart',
+        child: [{
+            title: '流量统计',
+            icon : 'dot-chart',
+        }, {
+            title: '用户统计',
+            icon : 'area-chart',
+        }],
+    }, {
+        title: '设置',
+        icon : 'setting',
     }
+];
+
+export default class SiderComponent extends React.Component {
     render() {
         return (
-            <Menu
-                onClick={this.handleClick}
-                style={{ width: 256 }}
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
-                mode="inline"
+            <Sider 
+                width={220}
+                trigger={<span><Icon type={'appstore'} /></span>}
+                collapsedWidth={0}
+                breakpoint="lg"
             >
-                <SubMenu key="sub1" title={<span><Icon type="mail" /><span>Navigation One</span></span>}>
-                    <MenuItemGroup key="g1" title="Item 1">
-                        <Menu.Item key="1">Option 1</Menu.Item>
-                        <Menu.Item key="2">Option 2</Menu.Item>
-                    </MenuItemGroup>
-                    <MenuItemGroup key="g2" title="Item 2">
-                        <Menu.Item key="3">Option 3</Menu.Item>
-                        <Menu.Item key="4">Option 4</Menu.Item>
-                    </MenuItemGroup>
-                </SubMenu>
-                <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>Navigation Two</span></span>}>
-                    <Menu.Item key="5">Option 5</Menu.Item>
-                    <Menu.Item key="6">Option 6</Menu.Item>
-                    <SubMenu key="sub3" title="Submenu">
-                        <Menu.Item key="7">Option 7</Menu.Item>
-                        <Menu.Item key="8">Option 8</Menu.Item>
-                    </SubMenu>
-                </SubMenu>
-                <SubMenu key="sub4" title={<span><Icon type="setting" /><span>Navigation Three</span></span>}>
-                    <Menu.Item key="9">Option 9</Menu.Item>
-                    <Menu.Item key="10">Option 10</Menu.Item>
-                    <Menu.Item key="11">Option 11</Menu.Item>
-                    <Menu.Item key="12">Option 12</Menu.Item>
-                </SubMenu>
-            </Menu>
+                <div className="logo" style={styles.logo} />
+                <Menu
+                    defaultSelectedKeys={['0-0']}
+                    mode="inline"
+                    theme="dark"
+                >
+                    {routers.map((item, index) => {
+                        if(item.child && item.child.length) {
+                            let child = item.child.map((val, key) => (
+                                <Menu.Item key={index + '-' + key}>{val.title}</Menu.Item>
+                            ));
+                            return (
+                                <SubMenu key={index} title={<span><Icon type={item.icon} /> {item.title}</span>}>
+                                    {child}
+                                </SubMenu>
+                            );
+                        }else {
+                            return <Menu.Item key={index + '-0'}><Icon type={item.icon} /> {item.title}</Menu.Item>;
+                        }
+                    })}
+                </Menu>
+            </Sider>
         );
     }
 }
+
+var styles = {
+    logo: {
+        height: '32px',
+        background: 'rgba(255,255,255,.2)',
+        margin: '30px 16px',
+        borderRadius: '3px',
+    },
+};

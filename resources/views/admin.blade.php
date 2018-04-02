@@ -7,8 +7,15 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>管理系统</title>
 
-    <title>react测试</title>
+    <style type="text/css">
+        #example {
+            display: flex;
+            flex: 1;
+            height: 100%;
+        }
+    </style>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

@@ -9,7 +9,10 @@
 |
 */
 
-Route::view('/{name?}', 'react');
+Route::view('/', 'admin')->name('home');
+Route::view('home', 'admin')->name('home');
+
+Route::post('getadmininfo', 'AdminController@getInfo');
 
 // Route::redirect('/', '/admin/a', 301);
 // Route::get('home', 'HomeController@index')->name('home');
