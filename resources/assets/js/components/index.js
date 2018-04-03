@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import { Layout, Breadcrumb } from 'antd';
 
@@ -30,7 +30,7 @@ class App extends React.Component {
         return (
             <Router basename='/admin'>
                 <Layout>
-                    <SiderComponent />
+                    <Route path="/*" component={SiderComponent} />
                     <Layout>
                         <HeaderComponent admin={this.state.admin} />
                         <ContentComponent />

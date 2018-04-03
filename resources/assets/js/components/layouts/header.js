@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { Menu, Icon, Layout, Dropdown, Row } from 'antd';
 
 const { Header, } = Layout;
@@ -8,7 +9,10 @@ const MenuItemGroup = Menu.ItemGroup;
 const menu = (
     <Menu>
         <Menu.Item>
-            <a target="_blank" rel="noopener noreferrer" href="#">退出登录</a>
+            <a href="#" onClick={(event)=>{
+                event.preventDefault();
+                document.getElementById('logout-form').submit();
+            }}>退出登录</a>
         </Menu.Item>
     </Menu>
 );
@@ -23,9 +27,9 @@ export default class HeaderComponent extends React.Component {
             >
                 <Row type="flex" justify="end">
                     <Dropdown overlay={menu}>
-                        <a className="ant-dropdown-link" href="#">
+                        <Link to="/" className="ant-dropdown-link">
                             {admin.name} <Icon type="down" />
-                        </a>
+                        </Link>
                     </Dropdown>
                 </Row>
             </Header>

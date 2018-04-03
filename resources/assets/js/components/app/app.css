@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+.formStyle {
+    width: 80%;
+    max-width: 800px;
+    margin: 30px 0;
+}
+
+.formItemStyle {
+    width: 90%;
+    display: inline-block;
+}
+
+.iconSpan {
+    display: inline-block;
+    width: 10%;
+    text-align: center;
+}
+
+.iconSpan > .sideIcon {
+    cursor: pointer;
+    font-size: 20px;
+    vertical-align: middle;
+    color: #999;
+}

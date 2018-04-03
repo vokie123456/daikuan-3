@@ -10,25 +10,28 @@ const routers = [
     {
         title: '首页',
         icon : 'dashboard',
+        link : '/',
     }, {
         title: 'APP管理',
         icon : 'appstore',
         child: [{
             title: '添加APP',
-            icon : 'dashboard',
+            link : '/apps/create',
+        }, {
+            title: 'APP公司',
+        }, {
+            title: 'APP列表',
+            link : '/apps',
         }, {
             title: '添加模版',
-            icon : 'dashboard',
         }],
     }, {
         title: '推广统计',
         icon : 'pie-chart',
         child: [{
             title: '流量统计',
-            icon : 'dot-chart',
         }, {
             title: '用户统计',
-            icon : 'area-chart',
         }],
     }, {
         title: '设置',
@@ -37,7 +40,37 @@ const routers = [
 ];
 
 export default class SiderComponent extends React.Component {
+    removeFirstSlash = (str) => {
+        if(str) {
+            str = str.replace(/^\//, '');
+        }
+        return str;
+    }; 
+
     render() {
+        let { match } = this.props;
+        let selected = [];
+        let opened = [];
+        if(match.params && match.params[0]) {
+            let current_url = this.removeFirstSlash(match.params[0]);
+            for(let i in routers) {
+                if(routers[i].link && this.removeFirstSlash(routers[i].link) == current_url) {
+                    selected.push(i + '-0');
+                }else if(routers[i].child && routers[i].child.length) {
+                    let child = routers[i].child;
+                    for(let c in child) {
+                        if(child[c].link && this.removeFirstSlash(child[c].link) == current_url) {
+                            ++c;
+                            selected.push(`${i}-${c}`);
+                            opened.push(i);
+                        }
+                    }
+                }
+            }
+        }else {
+            selected.push('0-0');
+        }
+        
         return (
             <Sider 
                 width={220}
@@ -47,22 +80,35 @@ export default class SiderComponent extends React.Component {
             >
                 <div className="logo" style={styles.logo} />
                 <Menu
-                    defaultSelectedKeys={['0-0']}
+                    defaultSelectedKeys={selected}
+                    defaultOpenKeys={opened}
                     mode="inline"
                     theme="dark"
                 >
                     {routers.map((item, index) => {
+                        let text = <span><Icon type={item.icon} /> {item.title}</span>;
                         if(item.child && item.child.length) {
-                            let child = item.child.map((val, key) => (
-                                <Menu.Item key={index + '-' + key}>{val.title}</Menu.Item>
-                            ));
                             return (
-                                <SubMenu key={index} title={<span><Icon type={item.icon} /> {item.title}</span>}>
-                                    {child}
+                                <SubMenu key={index} title={text}>
+                                    {item.child.map((val, key) => (
+                                        <Menu.Item key={index + '-' + (key + 1)}>
+                                            {val.link ?
+                                                <Link to={val.link}>{val.title}</Link>
+                                                : val.title
+                                            }
+                                        </Menu.Item>
+                                    ))}
                                 </SubMenu>
                             );
                         }else {
-                            return <Menu.Item key={index + '-0'}><Icon type={item.icon} /> {item.title}</Menu.Item>;
+                            return (
+                                <Menu.Item key={index + '-0'}>
+                                    {item.link ?
+                                        <Link to={item.link}>{text}</Link>
+                                        : text
+                                    }
+                                </Menu.Item>
+                            );
                         }
                     })}
                 </Menu>
