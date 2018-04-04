@@ -10,7 +10,10 @@
 */
 
 
-Route::post('getadmininfo', 'AdminController@getInfo');
+Route::post('getadmininfo', 'Admin\AdminController@getInfo');
+Route::get('getappcompanies', 'CompanyController@getAppCompanies');
+Route::post('addappcompany', 'CompanyController@addAppCompany');
+Route::post('updatecompany', 'CompanyController@updateCompany');
 
 Route::view('{a?}/{b?}', 'admin');
 

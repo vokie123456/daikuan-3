@@ -7,7 +7,7 @@ export default class ContentComponent extends React.Component {
     render() {
         return (
             <Footer style={styles.footer}>
-                <span>Copyright ©1996-2018 SHIDING Corporation, All Rights Reserved</span>
+                <span>Copyright ©2018-2020 SHIDING Corporation, All Rights Reserved</span>
             </Footer>
         );
     }

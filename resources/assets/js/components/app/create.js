@@ -13,7 +13,6 @@ import {
 } from 'antd';
 
 import SomeInput from './some_input';
-import './app.css';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;

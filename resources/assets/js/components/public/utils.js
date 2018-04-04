@@ -25,11 +25,11 @@ var utils = {
      * @param  String    method    请求类型 post/get
      * @return Void
      */
-    axios: (url, datas, callback, key = null, isAlert = true, type = 1, method = 'post') => {
+    axios: (url, datas, callback, key = null, isAlert = true, method = 'post', type = 1) => {
         axios({
             method: method,
             url: url,
-            data: datas || {},
+            params: datas || {},
         })
         .then((res) => {
             if(res.status == 200 && res.data) {

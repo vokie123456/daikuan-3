@@ -10,6 +10,7 @@ import SiderComponent from './layouts/sider';
 import HeaderComponent from './layouts/header';
 import ContentComponent from './layouts/content';
 import FooterComponent from './layouts/footer';
+import './app/app.css';
 
 class App extends React.Component {
     constructor(props) {
@@ -20,7 +21,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        Utils.axios(Api.getadmininfo, {}, (result) => {
+        Utils.axios(Api.getAdminInfo, {}, (result) => {
             this.setState({admin: result});
         }, 'admin', false);
     }

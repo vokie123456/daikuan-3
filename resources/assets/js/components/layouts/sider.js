@@ -19,6 +19,7 @@ const routers = [
             link : '/apps/create',
         }, {
             title: 'APP公司',
+            link : '/apps/company',
         }, {
             title: 'APP列表',
             link : '/apps',
