@@ -11,11 +11,13 @@
 
 
 Route::post('getadmininfo', 'Admin\AdminController@getInfo');
-Route::get('getappcompanies', 'CompanyController@getAppCompanies');
-Route::post('addappcompany', 'CompanyController@addAppCompany');
-Route::post('updatecompany', 'CompanyController@updateCompany');
+Route::get('getappcompanies', 'CompanyController@index');
+Route::post('addappcompany', 'CompanyController@create');
+Route::post('updatecompany', 'CompanyController@update');
+Route::post('delcompany', 'CompanyController@delete');
+Route::post('appstore', 'AppController@store');
 
-Route::view('{a?}/{b?}', 'admin');
+Route::view('{a?}/{b?}/{c?}', 'admin');
 
 // Route::redirect('/', '/admin/a', 301);
 // Route::get('home', 'HomeController@index')->name('home');

@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { Form, Input, Icon, Button, message } from 'antd';
 
 const FormItem = Form.Item;
-let uuid = 0;
 
 class SomeInput extends React.Component {
     // 默认参数
     static defaultProps = {
         isRequired: true,
         rules: [],
-        initialValue: [0],
+        initialValue: [''],
         inputParams: {},
-        maxlength: 9,
+        maxCount: 9,
+        clearDefaultRule: false,
     };
     // 参数类型
     static propTypes = {
@@ -20,50 +20,52 @@ class SomeInput extends React.Component {
         label: PropTypes.string.isRequired,
         isRequired: PropTypes.bool,
         rules: PropTypes.array,
+        clearDefaultRule: PropTypes.bool,
         inputParams: PropTypes.object,
         initialValue: PropTypes.array,
         getFieldDecorator: PropTypes.func.isRequired,
         getFieldValue: PropTypes.func.isRequired,
         setFieldsValue: PropTypes.func.isRequired,
         buttonText: PropTypes.string,
-        maxlength: PropTypes.number,
+        maxCount: PropTypes.number,
+        // MyComponent: PropTypes.node,
     };
     // 构造函数
     constructor(props) {
         super(props);
     }
 
+    componentDidMount() {
+        const { getFieldDecorator, initialValue, name } = this.props;
+        getFieldDecorator(name + '_key', {initialValue: initialValue});
+    }
+
     // 删除一行
-    remove = (k) => {
+    remove = (index) => {
         const { getFieldValue, setFieldsValue, name } = this.props;
-        const keys = getFieldValue(name + '_key');
+        const keys = getFieldValue(name + '_key') || [];
         // 仅一个时不能删除
-        if (keys.length === 1) return;
-        // can use data-binding to set
+        if (keys.length <= 1) return;
         let obj = {};
-        obj[name + '_key'] = keys.filter(key => key !== k);
+        obj[name + '_key'] = keys.filter((k, i) => index != i);
         setFieldsValue(obj);
     };
 
     // 添加一行
     add = () => {
-        const { getFieldValue, setFieldsValue, name, maxlength } = this.props;
+        const { getFieldValue, setFieldsValue, name, maxCount } = this.props;
         const keys = getFieldValue(name + '_key');
         if(keys.length) {
             //判断是否已达最大值
-            if(keys.length >= maxlength) {
+            if(keys.length >= maxCount) {
                 message.warning('数量已达上限, 无法添加!');
                 return;
             }
-            //更新下标
-            uuid = keys[keys.length - 1] + 1;
         }
-        const nextKeys = keys.concat(uuid);
-        uuid++;
         // can use data-binding to set
         // important! notify form to detect changes
         let obj = {};
-        obj[name + '_key'] = nextKeys;
+        obj[name + '_key'] = keys.concat('');
         setFieldsValue(obj);
     }
 
@@ -76,11 +78,17 @@ class SomeInput extends React.Component {
             label, 
             isRequired, 
             inputParams,
-            rules, 
+            rules,
+            clearDefaultRule,
             buttonText,
+            MyComponent,
+            //value = null,
+            //onChange = null,
         } = this.props;
 
-        getFieldDecorator(name + '_key', { initialValue: initialValue });
+        // getFieldDecorator(name + '_key', {initialValue: initialValue});
+        const keys = getFieldValue(name + '_key');
+        if(!keys) return null;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -97,36 +105,39 @@ class SomeInput extends React.Component {
                 sm: {span: 16, offset: 8, },
             },
         };
-        let _rules = [{
+        let _rules = clearDefaultRule ? [] : [{
             required: true,
             whitespace: true,
             message: label + ' 不能为空!',
         }];
         let _buttonText = buttonText ? buttonText : '添加 ' + label;
-        const keys = getFieldValue(name + '_key');
-        const formItems = keys.map((k, index) => {
+        const formItems = keys.map((item, index) => {
+            // inputParams.defaultValue = k;
             return (
                 <FormItem
                     {...(index === 0 ? formItemLayout : tailFormItemLayout)}
                     label={index === 0 ? label : ''}
                     required={isRequired}
-                    key={k}
+                    key={index}
                 >
-                    {getFieldDecorator(`${name}[${k}]`, {
-                        //validateTrigger: ['onChange', 'onBlur'],
-                        rules: _rules.concat(rules),
-                    })(
-                        <div className="formItemStyle">
-                            <Input {...inputParams} />
-                        </div>
-                    )}
+                    <div className="formItemStyle">
+                        {getFieldDecorator(`${name}[${index}]`, {
+                            //validateTrigger: ['onChange', 'onBlur'],
+                            rules: _rules.concat(rules),
+                            initialValue: item,
+                        })(
+                            MyComponent ? 
+                                <MyComponent /> :
+                                <Input {...inputParams} />
+                        )}
+                    </div>
                     {keys.length > 1 ? (
                         <span className="iconSpan">
                             <Icon
                                 className="sideIcon"
                                 type="minus-circle-o"
                                 disabled={keys.length === 1}
-                                onClick={() => this.remove(k)}
+                                onClick={() => this.remove(index)}
                             />
                         </span>
                     ) : null}

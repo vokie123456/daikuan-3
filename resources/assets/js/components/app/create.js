@@ -10,8 +10,12 @@ import {
     InputNumber,
     Button, 
     AutoComplete,
+    Upload,
+    message,
 } from 'antd';
 
+import Api from '../public/api';
+import Utils from '../public/utils';
 import SomeInput from './some_input';
 
 const { TextArea } = Input;
@@ -19,34 +23,291 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
 
+function getBase64(img, callback) {
+    let reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+}
+
+class RateGroup extends React.Component {
+    constructor(props) {
+        super(props);
+    
+        const value = this.props.value || {};
+        this.state = {
+            value: value.value || '',
+            type: value.type || '0',
+        };
+    }
+    componentWillReceiveProps(nextProps) {
+        // Should be a controlled component.
+        if ('value' in nextProps) {
+            const value = nextProps.value;
+            this.setState(value);
+        }
+    }
+
+    handleValueChange = (value) => {
+        this.setState({ value });
+        // if(isNaN(value)) return;
+        // if(!('value' in this.props)) {
+        //     this.setState({ value });
+        // }
+        // this.triggerChange({ value });
+    }
+
+    handleTypeChange = (type) => {
+        this.setState({ type });
+        // if(!('value' in this.props)) {
+        //     this.setState({ type });
+        // }
+        // this.triggerChange({ type });
+    }
+
+    triggerChange = (changedValue) => {
+        // Should provide an event to pass value to Form.
+        const onChange = this.props.onChange;
+        if (onChange) {
+            onChange(this.state);
+            // onChange(Object.assign({}, this.state, changedValue));
+        }
+    }
+
+    render() {
+        const state = this.state;
+        return (
+            <span>
+                <InputNumber
+                    min={0}
+                    max={100}
+                    precision={2}
+                    value={state.value}
+                    onChange={this.handleValueChange}
+                    onBlur={this.triggerChange}
+                />
+                <Select 
+                    style={{ width: 80, marginLeft: '10px', }}
+                    value={state.type}
+                    onChange={this.handleTypeChange}
+                    onBlur={this.triggerChange}
+                >
+                    <Option value="0">% /日</Option>
+                    <Option value="1">% /周</Option>
+                    <Option value="2">% /月</Option>
+                    <Option value="3">% /年</Option>
+                </Select>
+            </span>
+        );
+    }
+}
+
+class TermGroup extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const value = this.props.value || {};
+        this.state = {
+            value: value.value || '',
+            type: value.type || '天',
+        };
+    }
+    componentWillReceiveProps(nextProps) {
+        // Should be a controlled component.
+        if(nextProps && nextProps.value && (nextProps.value instanceof Object)) {
+            const value = nextProps.value;
+            this.setState(value);
+        }
+    }
+
+    handleValueChange = (e) => {
+        let value = parseInt(e.target.value) || 0;
+        this.setState({ value });
+        // if(isNaN(value)) return;
+        // if(!('value' in this.props)) {
+        //     this.setState({ value });
+        // }
+        // this.triggerChange({ value });
+    }
+
+    handleTypeChange = (type) => {
+        this.setState({ type });
+        // if(!('value' in this.props)) {
+        //     this.setState({ type });
+        // }
+        // this.triggerChange({ type });
+    }
+
+    triggerChange = (changedValue) => {
+        // Should provide an event to pass value to Form.
+        const onChange = this.props.onChange;
+        if (onChange) {
+            onChange(this.state);
+            // onChange(Object.assign({}, this.state, changedValue));
+        }
+    }
+
+    render() {
+        const state = this.state;
+        return (
+            <span>
+                <Input
+                    value={state.value}
+                    onChange={this.handleValueChange}
+                    onBlur={this.triggerChange}
+                    addonAfter={(
+                        <Select 
+                            style={{ width: 60, }}
+                            value={state.type}
+                            onChange={this.handleTypeChange}
+                            onBlur={this.triggerChange}
+                        >
+                            <Option value="天">天</Option>
+                            <Option value="周">周</Option>
+                            <Option value="月">月</Option>
+                            <Option value="年">年</Option>
+                        </Select>
+                    )}
+                />
+            </span>
+        );
+    }
+}
+
+
 class AppCreate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            recommend: '2.5',
-            status: true,
+            companies: [],
+            loading: false,
         }
+        this.normal = true;
+    }
+
+    componentDidMount() {
+        Utils.axios({
+            key: 'companies',
+            url: Api.getAppCompanies,
+            isAlert: false,
+            method: 'get',
+            params: {'all': 1}
+        }, (result) => {
+            if(result.length && this.normal) {
+                this.setState({companies: result});
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.normal = false;
+    }
+
+    handleChange = (info) => {
+        let file = info.file;
+        const typeOk = (
+            file.type === 'image/jpeg' ||
+            file.type === 'image/png' ||
+            file.type === 'image/gif' ||
+            file.type === 'image/bmp' ||
+            file.type === 'image/x-icon'
+        );
+        if(!typeOk) {
+            message.warning('图片类型不合法!');
+            return;
+        }else {
+            const sizeOk = file.size / 1024 < 200;
+            if (!sizeOk) {
+                message.warning('图标大小需小于200KB!');
+                return;
+            }
+        }
+
+        getBase64(file, imageUrl => this.setState({
+            imageUrl,
+        }));
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
+        const form = this.props.form;
+        form.validateFieldsAndScroll((err, values) => {
+            console.log(values);
             if (!err) {
-                console.log('Received values of form: ', values);
+                var formdata = new FormData();
+                for(let i in values) {
+                    let _value = (
+                        i == 'moneys' ||
+                        i == 'rates' ||
+                        i == 'repayments' ||
+                        i == 'terms'
+                    ) ? JSON.stringify(values[i]) : values[i];
+                    if(i == 'status') _value = _value ? 1 : 0;
+                    formdata.append(i, _value);
+                }
+                Utils.axios({
+                    url: Api.addApp,
+                    data: formdata,
+                    // headers: {
+                    //     'Content-Type': 'application/x-www-form-urlencoded',
+                    // },
+                }, (result) => {
+                    console.log(result);
+                }, (result) => {
+                    if(result && result.errors) {
+                        var errors = {};
+                        for(let j in result.errors) {
+                            if(result.errors[j]) {
+                                errors[j] = {
+                                    // value: values[j],
+                                };
+                                if(typeof(result.errors[j]) == 'string') {
+                                    errors[j]['errors'] = [new Error(result.errors[j])];
+                                }else if(result.errors[j][0]) {
+                                    errors[j]['errors'] = [new Error(result.errors[j][0])];
+                                }
+                            }
+                        }
+                        // console.log(errors);
+                        form.setFields(errors);
+                        message.warning('添加失败!');
+                    }
+                });
+
             }
         });
     };
 
-    onchange = (value, key) => {
-        if(value && key) {
-            let obj = {};
-            obj[key] = value;
-            this.setState(obj);
+    checkRate = (rule, value, callback) => {
+        let _value = value.value;
+        if(!_value && (_value !== 0 || _value !== '0')) {
+            callback('请填写利率数值!');
+            return;
+        }
+        _value = parseFloat(_value) || 0;
+        if(_value > 0 && _value < 100) {
+            callback();
+        }else {
+            callback('利率数值需在0-100以内!');
+        }
+    }
+
+    checkTerm = (rule, value, callback) => {
+        let _value = value.value;
+        if(!_value && (_value !== 0 || _value !== '0')) {
+            callback('请填写还款期限!');
+            return;
+        }
+        _value = parseInt(_value) || 0;
+        if(_value > 0) {
+            callback();
+        }else {
+            callback('还款期限数值不合法!');
         }
     }
 
     render() {
         const { getFieldDecorator, getFieldValue, setFieldsValue } = this.props.form;
+        let { companies } = this.state;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -74,28 +335,18 @@ class AppCreate extends React.Component {
             getFieldValue,
             setFieldsValue,
         };
-        const selectDate1 = (
-            <Select defaultValue="天" style={{ width: 60 }}>
-                <Option value="天">天</Option>
-                <Option value="周">周</Option>
-                <Option value="月">月</Option>
-                <Option value="年">年</Option>
-            </Select>
+        const uploadButton = (
+            <div>
+                <Icon type={this.state.loading ? 'loading' : 'plus'} />
+                <div className="ant-upload-text">Upload</div>
+            </div>
         );
-        const selectDate2 = (
-            <Select
-                name="rate_type"
-                defaultValue="0" 
-                style={{ width: 80, marginLeft: '10px', }}
-            >
-                <Option value="0">/日</Option>
-                <Option value="1">/周</Option>
-                <Option value="2">/月</Option>
-                <Option value="3">/年</Option>
-            </Select>
-        );
+        const imageUrl = this.state.imageUrl || getFieldValue('appicon');
         return (
-            <Form className="formStyle" onSubmit={this.handleSubmit}>
+            <Form 
+                className="formStyle" 
+                onSubmit={this.handleSubmit}
+            >
                 <FormItem
                     {...formItemLayout}
                     label="APP名称"
@@ -103,10 +354,42 @@ class AppCreate extends React.Component {
                     {getFieldDecorator('name', {
                         rules: [{
                             required: true,
-                            message: '请输入APP名称!',
+                            message: '请填写APP的名称!',
                         }],
                     })(
-                        <Input name="name" maxLength={45} />
+                        <Input maxLength={45} />
+                    )}
+                </FormItem>
+                <FormItem
+                    {...formItemLayout}
+                    label="APP图标"
+                >
+                    {getFieldDecorator('appicon', {
+                        rules: [{
+                            required: true,
+                            message: '请上传APP图标!',
+                        }],
+                        valuePropName: 'file',
+                        getValueFromEvent: (e) => {
+                            if (Array.isArray(e)) return e;
+                            return e && e.file;
+                        },
+                    })(
+                        <Upload
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            beforeUpload={(file)=>false}
+                            onChange={this.handleChange}
+                        >
+                            {imageUrl ? 
+                                <img 
+                                    className="appIconStyle" 
+                                    src={imageUrl} 
+                                    alt="app图标" 
+                                /> : uploadButton
+                            }
+                        </Upload>
                     )}
                 </FormItem>
                 <FormItem
@@ -119,7 +402,10 @@ class AppCreate extends React.Component {
                             message: '请选择APP归属的公司!',
                         }],
                     })(
-                        <Select name="company_id">
+                        <Select>
+                            {companies.map((item, index) => (
+                                <Option key={index} value={item.id}>{item.name}</Option>
+                            ))}
                         </Select>
                     )}
                 </FormItem>
@@ -137,45 +423,36 @@ class AppCreate extends React.Component {
                     {getFieldDecorator('weburl', {
                         rules: [{
                             required: true,
-                            message: '请选择APP的推广地址!',
+                            message: '请填写推广地址!',
                         }, {
                             type: 'url',
                             message: '推广地址不正确!'
                         }],
                     })(
-                        <Input name="weburl" maxLength={255} />
+                        <Input maxLength={255} />
                     )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
                     label="推荐指数"
                 >
-                    <Rate 
-                        allowHalf 
-                        defaultValue={2.5}
-                        onChange={(value)=>this.onchange(value, 'recommend')}
-                    />
-                    <Input 
-                        type="hidden" 
-                        name="recommend" 
-                        value={this.state.recommend}
-                    />
+                    {getFieldDecorator('recommend', {
+                        initialValue: 2.5,
+                    })(
+                        <Rate allowHalf />
+                    )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
                     label="利率"
                     required={true}
                 >
-                    <InputNumber
-                        defaultValue={0}
-                        min={0}
-                        max={100}
-                        name="rate"
-                        formatter={value => `${value}%`}
-                        parser={value => value.replace('%', '')}
-                        precision={2}
-                    />
-                    {selectDate2}
+                    {getFieldDecorator('rates', {
+                        initialValue: { value: '', type: '0' },
+                        rules: [{ validator: this.checkRate }],
+                    })(
+                        <RateGroup />
+                    )}
                 </FormItem>
                 <SomeInput 
                     name="moneys"
@@ -184,21 +461,17 @@ class AppCreate extends React.Component {
                         pattern: /^[1-9]\d*$/,
                         message: '贷款金额不合法!'
                     }]}
-                    initialValue={[0]}
-                    maxlength={5}
+                    maxCount={5}
                     {..._props}
                 />
                 <SomeInput 
                     name="terms"
                     label="还款期限"
-                    rules={[{
-                        pattern: /^[1-9]\d*$/,
-                        message: '还款期限不合法!'
-                    }]}
-                    maxlength={5}
-                    inputParams={{
-                        addonAfter: selectDate1,
-                    }}
+                    rules={[{ validator: this.checkTerm }]}
+                    maxCount={5}
+                    clearDefaultRule={true}
+                    MyComponent={TermGroup}
+                    initialValue={[{value: '', type: '周'}]}
                     {..._props}
                 />
                 <SomeInput 
@@ -208,28 +481,33 @@ class AppCreate extends React.Component {
                 />
                 <FormItem
                     {...formItemLayout}
-                    label="APP简介"
+                    label="简介"
                 >
-                    <Input name="synopsis" maxLength="120" />
+                    {getFieldDecorator('synopsis', { initialValue: '' })(
+                        <Input maxLength="120" />
+                    )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
                     label="详细介绍"
                 >
-                    <TextArea name="details" rows="8" />
+                    {getFieldDecorator('details', { initialValue: '' })(
+                        <TextArea rows="8" />
+                    )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
                     label="申请人数"
                 >
-                    <InputNumber
-                        defaultValue={0}
-                        min={0}
-                        max={999999}
-                        name="apply_number"
-                        formatter={value => `${value}人`}
-                        parser={value => value.replace('人', '')}
-                    />
+                    {getFieldDecorator('apply_number', { initialValue: 0 })(
+                        <InputNumber
+                            min={0}
+                            max={999999}
+                            formatter={value => `${value}人`}
+                            parser={value => value.replace('人', '')}
+                            precision={0}
+                        />
+                    )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
@@ -242,15 +520,12 @@ class AppCreate extends React.Component {
                         </span>
                     )}
                 >
-                    <Switch 
-                        defaultChecked
-                        onChange={(value)=>this.onchange(value, 'status')}
-                    />
-                    <Input 
-                        type="hidden" 
-                        name="status" 
-                        value={this.state.status}
-                    />
+                    {getFieldDecorator('status', { 
+                        valuePropName: 'checked',
+                        initialValue: true,
+                    })(
+                        <Switch />
+                    )}
                 </FormItem>
 
                 <FormItem {...tailFormItemLayout}>
@@ -261,5 +536,16 @@ class AppCreate extends React.Component {
     }
 }
 
-AppCreate = Form.create()(AppCreate);
-export default AppCreate;
+AppCreate = Form.create({
+    mapPropsToFields(props = {}) {
+        let inits = props.inits || {};
+        for(let i in inits) {
+            inits[i] = Form.createFormField({value: inits[i]});
+        }
+        return inits;
+    },
+})(AppCreate);
+
+const App = (props) => <AppCreate {...props} />;
+
+export default App;

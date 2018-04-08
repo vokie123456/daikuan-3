@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Input, Icon, Button, Popconfirm } from 'antd';
+import { Table, Input, Icon, Button, Popconfirm, message } from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
@@ -14,11 +14,26 @@ class EditableCell extends React.Component {
     handleChange = (e) => {
         const value = e.target.value;
         this.setState({ value });
-    }
+    };
+    handleBlur = (e) => {
+        let obj = {};
+        let { value, editable, } = this.state;
+        if(editable) obj.editable = false;
+        if(!value) obj.value = this.props.value;
+        if(obj.hasOwnProperty('editable') || obj.value) {
+            this.setState(obj);
+        }
+    };
     check = () => {
+        let { value, } = this.state;
+        if(!value) {
+            message.warning('名称不能为空!');
+            this.editInput && this.editInput.focus();
+            return;
+        }
         this.setState({ editable: false });
         if (this.props.onChange) {
-            this.props.onChange(this.state.value);
+            this.props.onChange(value);
         }
     }
     edit = () => {
@@ -29,11 +44,26 @@ class EditableCell extends React.Component {
         return (
             <div className="editable-cell">
                 {editable ?
-                    <div className="editable-cell-input-wrapper">
+                    <div className="editable-cell-input-wrapper" style={{
+                        paddingRight: '44px',
+                    }}>
                         <Input
+                            ref={ele => this.editInput = ele}
                             value={value}
                             onChange={this.handleChange}
                             onPressEnter={this.check}
+                            //onBlur={this.handleBlur}
+                        />
+                        <Icon
+                            type="close"
+                            className="editable-cell-icon-check"
+                            onClick={()=>{
+                                this.setState({
+                                    editable: false,
+                                    value: this.props.value,
+                                });
+                            }}
+                            style={{right: '20px', }}
                         />
                         <Icon
                             type="check"
@@ -75,63 +105,26 @@ class AppCompany extends React.Component {
     componentDidMount() {
         this.fetch();
     }
-
+    //获取列表数据
     fetch = (params = {}) => {
         this._searchText = this.state.searchText;
         this.setState({ loading: true });
-        Utils.axios(Api.getAppCompanies, params, (result) => {
+        Utils.axios({
+            key: 'companies',
+            url: Api.getAppCompanies,
+            params: params,
+            isAlert: false,
+            method: 'get',
+        }, (result) => {
             this.setState({
                 datas: result,
                 loading: false,
                 filterDropdownVisible: false,
                 showSearch: this.state.searchText ? true : false,
             })
-        }, 'companies', false, 'get');
+        });
     };
-
-    onCellChange = (key, dataIndex) => {
-        return (value) => {
-            Utils.axios(Api.updateCompany, {
-                name: value,
-                id: key,
-            }, (result) => {
-                const datas = [...this.state.datas];
-                const target = datas.find(item => item.key === key);
-                if (target) {
-                    target[dataIndex] = value;
-                    this.setState({ datas });
-                }
-            });
-        }
-    }
-
-    onDelete = (key) => {
-        const datas = [...this.state.datas];
-        this.setState({ datas: datas.filter(item => item.key !== key) });
-    }
-
-    // 添加公司
-    handleAdd = (value) => {
-        const { datas } = this.state;
-
-        Utils.axios(Api.addAppCompany, {
-            name: value,
-        }, (result) => {
-            this.setState({
-                companyName: '',
-                datas: [...datas, result],
-            });
-        }, 'company');
-    }
-
-    onAddInputChange = (e) => {
-        this.setState({ companyName: e.target.value });
-    };
-
-    onSearchInputChange = (e) => {
-        this.setState({ searchText: e.target.value });
-    };
-
+    //公司列表
     getCompanyList = () => {
         let order = this.sort.order || '';
         if(order == 'descend') order = 'desc';
@@ -149,6 +142,59 @@ class AppCompany extends React.Component {
         };
         // console.log(params);
         this.fetch(params);
+    };
+    //添加公司
+    handleAdd = (value) => {
+        const { datas } = this.state;
+        Utils.axios({
+            url: Api.addAppCompany,
+            params: {name: value,},
+            key: 'company',
+        }, (result) => {
+            this.setState({
+                companyName: '',
+                datas: [...datas, result],
+            });
+        });
+    }
+    //更新公司名称
+    onCellChange = (key, dataIndex) => {
+        return (value) => {
+            Utils.axios({
+                url: Api.updateCompany,
+                params: {
+                    name: value,
+                    id: key,
+                },
+            }, (result) => {
+                const datas = [...this.state.datas];
+                const target = datas.find(item => item.key === key);
+                if (target) {
+                    target[dataIndex] = value;
+                    this.setState({ datas });
+                }
+            });
+        }
+    }
+    //删除公司
+    onDelete = (key) => {
+        Utils.axios({
+            url: Api.delCompany,
+            params: {
+                id: key,
+            },
+        }, (result) => {
+            const datas = [...this.state.datas];
+            this.setState({ datas: datas.filter(item => item.id !== key) });
+        });
+    }
+    //输入新公司名称
+    onAddInputChange = (e) => {
+        this.setState({ companyName: e.target.value });
+    };
+    //输入搜索的公司
+    onSearchInputChange = (e) => {
+        this.setState({ searchText: e.target.value });
     };
 
     render() {
@@ -188,6 +234,7 @@ class AppCompany extends React.Component {
         }, {
             title: '添加时间',
             dataIndex: 'created_at',
+            sorter: true,
         }, {
             title: '操作',
             render: (text, record) => {

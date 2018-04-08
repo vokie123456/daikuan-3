@@ -21,9 +21,13 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        Utils.axios(Api.getAdminInfo, {}, (result) => {
+        Utils.axios({
+            url: Api.getAdminInfo,
+            key: 'admin',
+            isAlert: false,
+        }, (result) => {
             this.setState({admin: result});
-        }, 'admin', false);
+        });
     }
 
     render() {

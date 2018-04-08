@@ -14,38 +14,60 @@ var utils = {
     /**
      * 重新封装axios方法, 统一返回格式
      * 
-     * @param  String    url       请求的url地址
-     * @param  Object    datas     请求参数
-     * @param  Function  callback  回调函数
-     * @param  String    key       返回数据的键名
-     * @param  Bool      isAlert   是否提示
-     * @param  Int       type
-     *         ret = 1 : 只在成功时才回调
-     *         ret = 2 : 不管正确和失败都回调
-     * @param  String    method    请求类型 post/get
+     * @param  config  Object  配置参数
+     * - String  url      请求的url地址
+     * - Object  params   请求参数(get)
+     * - String  key      返回数据的键名
+     * - String  method   请求类型 post/get
+     * - Bool    isAlert  是否提示
+     * - Bool    debug    是否打印返回数据
+     * - Object  data     请求参数(post)
+     * - Object  headers  请求头
+     * - Bool    force    是否强制执行回调
+     * @param  success  Function  成功回调
+     * @param  fail     Function  失败回调, 当为true时执行成功回调
      * @return Void
      */
-    axios: (url, datas, callback, key = null, isAlert = true, method = 'post', type = 1) => {
+    axios: (config = {}, success = null, fail = null) => {
+        let _config = {
+            url: null,
+            key: null,
+            isAlert: true,
+            method: 'post',
+            params: {},
+            data: {},
+            debug: false,
+            headers: {},
+            force: false,
+        };
+        (config instanceof Object) && Object.assign(_config, config);
+        if(!_config.url || typeof(_config.url) != 'string') return;
         axios({
-            method: method,
-            url: url,
-            params: datas || {},
+            method: _config.method,
+            url: _config.url,
+            params: _config.params,
+            data: _config.data,
+            headers: _config.headers,
         })
         .then((res) => {
-            if(res.status == 200 && res.data) {
+            if(res.data) {
                 let result = res.data;
-                if(isAlert && result.error) {
+                if(_config.isAlert && result.error) {
                     if(result.errno == 0) message.success(result.error);
                     else message.error(result.error);
                 }
-                // 回调函数
-                if(callback && ((result.errno == 0 && type == 1) || type == 2)) {
-                    callback((key && result[key]) ? result[key] : result);
+                let data = (_config.key && result[_config.key]) ? result[_config.key] : result;
+                if(result.errno == 0 || fail === true || _config.force) {  //成功或强制执行
+                    success && success(data);
+                }else if(fail) {  //失败
+                    fail(data);
                 }
+            }else {
+                console.log('axios失败: ', res);
             }
         })
         .catch((error) => {
-            console.log(error);
+            console.log('axios错误: ', error);
         });
     },
 };
