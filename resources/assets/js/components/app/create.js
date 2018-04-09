@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect, } from "react-router-dom";
 import { 
     Form, 
     Input,
@@ -111,6 +112,7 @@ class TermGroup extends React.Component {
             type: value.type || '天',
         };
     }
+
     componentWillReceiveProps(nextProps) {
         // Should be a controlled component.
         if(nextProps && nextProps.value && (nextProps.value instanceof Object)) {
@@ -180,6 +182,7 @@ class AppCreate extends React.Component {
         this.state = {
             companies: [],
             loading: false,
+            redirect: null,
         }
         this.normal = true;
     }
@@ -229,11 +232,13 @@ class AppCreate extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const form = this.props.form;
+        const { form, inits } = this.props;
         form.validateFieldsAndScroll((err, values) => {
-            console.log(values);
+            // console.log(values);
             if (!err) {
-                var formdata = new FormData();
+                let app_id = inits.id ? inits.id.value : null;
+                let formdata = new FormData();
+                if(app_id) formdata.append('id', app_id);
                 for(let i in values) {
                     let _value = (
                         i == 'moneys' ||
@@ -245,13 +250,14 @@ class AppCreate extends React.Component {
                     formdata.append(i, _value);
                 }
                 Utils.axios({
-                    url: Api.addApp,
+                    url: app_id ? Api.updateApp : Api.addApp,
                     data: formdata,
                     // headers: {
                     //     'Content-Type': 'application/x-www-form-urlencoded',
                     // },
                 }, (result) => {
-                    console.log(result);
+                    let redirect = '/apps';
+                    this.setState({ redirect })
                 }, (result) => {
                     if(result && result.errors) {
                         var errors = {};
@@ -306,8 +312,9 @@ class AppCreate extends React.Component {
     }
 
     render() {
-        const { getFieldDecorator, getFieldValue, setFieldsValue } = this.props.form;
-        let { companies } = this.state;
+        let { companies, redirect } = this.state;
+        if(redirect) return <Redirect to={redirect} />;
+        const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue } = this.props.form;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -333,6 +340,7 @@ class AppCreate extends React.Component {
         const _props = {
             getFieldDecorator,
             getFieldValue,
+            getFieldsValue,
             setFieldsValue,
         };
         const uploadButton = (
@@ -379,7 +387,7 @@ class AppCreate extends React.Component {
                             listType="picture-card"
                             className="avatar-uploader"
                             showUploadList={false}
-                            beforeUpload={(file)=>false}
+                            beforeUpload={(file) => false}
                             onChange={this.handleChange}
                         >
                             {imageUrl ? 
@@ -448,7 +456,7 @@ class AppCreate extends React.Component {
                     required={true}
                 >
                     {getFieldDecorator('rates', {
-                        initialValue: { value: '', type: '0' },
+                        initialValue: getFieldValue('rates') || { value: '', type: '0' },
                         rules: [{ validator: this.checkRate }],
                     })(
                         <RateGroup />
@@ -462,6 +470,7 @@ class AppCreate extends React.Component {
                         message: '贷款金额不合法!'
                     }]}
                     maxCount={5}
+                    initialValue={getFieldValue('moneys') || ['']}
                     {..._props}
                 />
                 <SomeInput 
@@ -471,19 +480,22 @@ class AppCreate extends React.Component {
                     maxCount={5}
                     clearDefaultRule={true}
                     MyComponent={TermGroup}
-                    initialValue={[{value: '', type: '周'}]}
+                    initialValue={getFieldValue('terms') || [{value: '', type: '天'}]}
                     {..._props}
                 />
                 <SomeInput 
                     name="repayments"
                     label="还款方式"
                     {..._props}
+                    initialValue={getFieldValue('repayments') || ['']}
                 />
                 <FormItem
                     {...formItemLayout}
                     label="简介"
                 >
-                    {getFieldDecorator('synopsis', { initialValue: '' })(
+                    {getFieldDecorator('synopsis', {
+                        initialValue: ''
+                    })(
                         <Input maxLength="120" />
                     )}
                 </FormItem>
@@ -491,7 +503,9 @@ class AppCreate extends React.Component {
                     {...formItemLayout}
                     label="详细介绍"
                 >
-                    {getFieldDecorator('details', { initialValue: '' })(
+                    {getFieldDecorator('details', {
+                        initialValue: ''
+                    })(
                         <TextArea rows="8" />
                     )}
                 </FormItem>
@@ -499,7 +513,9 @@ class AppCreate extends React.Component {
                     {...formItemLayout}
                     label="申请人数"
                 >
-                    {getFieldDecorator('apply_number', { initialValue: 0 })(
+                    {getFieldDecorator('apply_number', {
+                        initialValue: 0
+                    })(
                         <InputNumber
                             min={0}
                             max={999999}
@@ -536,8 +552,8 @@ class AppCreate extends React.Component {
     }
 }
 
-AppCreate = Form.create({
-    mapPropsToFields(props = {}) {
+const AppCreateInit = Form.create({
+    mapPropsToFields(props) {
         let inits = props.inits || {};
         for(let i in inits) {
             inits[i] = Form.createFormField({value: inits[i]});
@@ -546,6 +562,33 @@ AppCreate = Form.create({
     },
 })(AppCreate);
 
-const App = (props) => <AppCreate {...props} />;
+
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {datas: null,}
+    }
+
+    componentDidMount() {
+        const { match } = this.props;
+        if(match && match.params && match.params.id) {
+            Utils.axios({
+                key: 'app',
+                url: Api.getApp + '/' + match.params.id,
+                isAlert: false,
+                method: 'get',
+            }, (result) => {
+                this.setState({datas: result});
+            });
+        }
+    }
+
+    render() {
+        const { params = {} } = this.props.match;
+        let datas = this.state.datas;
+        if(params.id && !datas) return null;
+        return <AppCreateInit inits={datas || {}} />
+    }
+};
 
 export default App;

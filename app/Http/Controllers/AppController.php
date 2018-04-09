@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreAppPost;
 use App\Repositories\AppRepository;
+use App\Http\Resources\AppResource;
 
 class AppController extends Controller
 {
@@ -16,25 +17,17 @@ class AppController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * app列表.
      *
      * @return \Illuminate\Http\Response
      */
-    public function upload()
+    public function index(Request $request)
     {
-        //
-        return view('admin');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-        return view('admin');
+        // DB::enableQueryLog();
+        $datas = AppResource::collection($this->appRepository->getList($request->all()));
+        // error_log(print_r(DB::getQueryLog(), true));
+        $this->set_success('获取成功')->set_data('apps', $datas);
+        return response()->json($this->get_result());
     }
 
     /**
@@ -46,12 +39,13 @@ class AppController extends Controller
     public function store(StoreAppPost $request)
     {
         //
-        $path = $request->file('appicon')->store('icon');
+        $path = $request->file('appicon')->store('icon', 'public');
         if($path) {
             $datas = $request->all();
             $datas['icon'] = $path;
-            $result = $this->appRepository->create($datas);
-            $this->set_success('获取成功')->set_data('app', $result);
+            $ret = $this->appRepository->create($datas);
+            if($ret) $this->set_success('添加成功')->set_data('ret', $ret);
+            else $this->set_error('添加失败');
             return response()->json($this->get_result());
         }
     }
@@ -65,17 +59,14 @@ class AppController extends Controller
     public function show($id)
     {
         //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $app = $this->appRepository->getApp($id);
+        if($app) {
+            $result = new AppResource($app);
+            $this->set_success('获取成功')->set_data('app', $result);
+        }else {
+            $this->set_error('获取失败');
+        }
+        return response()->json($this->get_result());
     }
 
     /**
@@ -85,9 +76,26 @@ class AppController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreAppPost $request)
     {
         //
+        $ret = $this->appRepository->update($request->all());
+        if($ret) $this->set_success('更新成功')->set_data('ret', $ret);
+        else $this->set_error('更新失败');
+        return response()->json($this->get_result());
+    }
+
+
+    public function updateStatus(Request $request)
+    {
+        if($request->get('id')) {
+            $ret = $this->appRepository->updateStatus($request->get('id'), $request->get('status'));
+            if($ret) $this->set_success('更新成功')->set_data('ret', $ret);
+            else $this->set_error('更新失败');
+        }else {
+            $this->set_error('缺少参数');
+        }
+        return response()->json($this->get_result());
     }
 
     /**
@@ -98,6 +106,15 @@ class AppController extends Controller
      */
     public function destroy($id)
     {
+        error_log($id);
         //
+        if($id) {
+            $ret = $this->appRepository->destroy($id);
+            if($ret) $this->set_success('删除成功')->set_data('ret', $ret);
+            else $this->set_error('删除失败');
+        }else {
+            $this->set_error('缺少参数');
+        }
+        return response()->json($this->get_result());
     }
 }

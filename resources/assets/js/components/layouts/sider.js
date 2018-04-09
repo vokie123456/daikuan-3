@@ -17,6 +17,7 @@ const routers = [
         child: [{
             title: '添加APP',
             link : '/apps/create',
+            param: true,
         }, {
             title: 'APP公司',
             link : '/apps/company',
@@ -48,6 +49,14 @@ export default class SiderComponent extends React.Component {
         return str;
     }; 
 
+    check_path = (str1, str2, param = false) => {
+        if(param) {
+            return str2.indexOf(str1) === 0;
+        }else {
+            return str1 == str2;
+        }
+    }
+
     render() {
         let { match } = this.props;
         let selected = [];
@@ -55,12 +64,12 @@ export default class SiderComponent extends React.Component {
         if(match.params && match.params[0]) {
             let current_url = this.removeFirstSlash(match.params[0]);
             for(let i in routers) {
-                if(routers[i].link && this.removeFirstSlash(routers[i].link) == current_url) {
+                if(routers[i].link && this.check_path(this.removeFirstSlash(routers[i].link), current_url, !!routers[i].param)) {
                     selected.push(i + '-0');
                 }else if(routers[i].child && routers[i].child.length) {
                     let child = routers[i].child;
                     for(let c in child) {
-                        if(child[c].link && this.removeFirstSlash(child[c].link) == current_url) {
+                        if(child[c].link && this.check_path(this.removeFirstSlash(child[c].link), current_url, !!child[c].param)) {
                             ++c;
                             selected.push(`${i}-${c}`);
                             opened.push(i);
@@ -71,7 +80,6 @@ export default class SiderComponent extends React.Component {
         }else {
             selected.push('0-0');
         }
-        
         return (
             <Sider 
                 width={220}

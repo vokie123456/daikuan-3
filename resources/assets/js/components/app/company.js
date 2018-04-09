@@ -271,7 +271,6 @@ class AppCompany extends React.Component {
                     rowKey={record => record.id}
                     columns={columns}
                     pagination={{
-                        //pageSize: 3,
                         showSizeChanger: true,
                         showQuickJumper: true,
                     }}

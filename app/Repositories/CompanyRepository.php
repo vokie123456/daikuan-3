@@ -29,13 +29,7 @@ class CompanyRepository
             ),
         );
         $formatquery = new Formatquery($config);
-        $param = [];
-        if(!empty($request['order'])) $param['order'] = $request['order'];
-        if(!empty($request['sort'])) $param['sort'] = $request['sort'];
-        if(!empty($request['limit'])) $param['limit'] = $request['limit'];
-        if(!empty($request['offset'])) $param['offset'] = $request['offset'];
-        if(!empty($request['search'])) $param['search'] = $request['search'];
-        $query = $formatquery->setParams($param)->getParams();
+        $query = $formatquery->setParams($request)->getParams();
         // error_log(print_r($query, true));
         return $this->company::orderBy($query['sort'], $query['order'])
                 ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1)

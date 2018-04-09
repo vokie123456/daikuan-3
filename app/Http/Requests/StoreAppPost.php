@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Storage;
 
 class StoreAppPost extends FormRequest
 {
@@ -25,10 +26,17 @@ class StoreAppPost extends FormRequest
      */
     public function rules()
     {
+        $icon_rule = 'bail|required|image|dimensions:ratio=1|max:200';
+        if(!empty(request('appicon')) && is_string(request('appicon'))) {
+            $img = str_replace(['storage/', '/storage/'], '', request('appicon'));
+            if(Storage::disk('public')->exists($img)) {
+                $icon_rule = 'required|max:255';
+            }
+        }
         return [
             'name' => 'required|max:45',
             'weburl' => 'required|url|max:255',
-            'appicon' => 'bail|required|image|dimensions:ratio=1|max:200',
+            'appicon' => $icon_rule,
             'company_id' => 'required|integer|min:1',
             'rates' => [
                 'required',

@@ -27,4 +27,10 @@ class App extends Model
 
     //黑名单
     protected $guarded = [];
+
+    //
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company', 'company_id', 'id');
+    }
 }

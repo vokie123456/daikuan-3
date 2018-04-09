@@ -7,7 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>管理系统</title>
+    <title>推广管理系统</title>
 
     <style type="text/css">
         #example {

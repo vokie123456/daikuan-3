@@ -85,10 +85,10 @@ class SomeInput extends React.Component {
             //value = null,
             //onChange = null,
         } = this.props;
-
+        
         // getFieldDecorator(name + '_key', {initialValue: initialValue});
         const keys = getFieldValue(name + '_key');
-        if(!keys) return null;
+        if(!keys || typeof(getFieldValue(name)) == 'undefined') return null;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
