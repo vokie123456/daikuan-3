@@ -28,15 +28,16 @@ class AppResource extends JsonResource
             'details' => $this->details,
             'rates' => [
                 'value' => $this->rate,
-                'type' => (string)$this->rate_type,
+                'type' => $this->rate_type,
             ],
             'moneys' => json_decode($this->moneys, true),
             'terms' => json_decode($this->terms, true),
             'repayments' => json_decode($this->repayments, true),
             'apply_number' => $this->apply_number,
+            'sort' => $this->sort,
             'recommend' => round(intval($this->recommend) / 2, 1),
             'status' => $this->status ? true : false,
-            'created_at' => $this->created_at->toDateTimeString(),
+            'created_at' => $this->created_at,
         ];
     }
 }

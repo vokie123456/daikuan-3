@@ -100,10 +100,15 @@ class AppCompany extends React.Component {
         this.pagination = {};
         this.filter = {};
         this.sort = {};
+        this.normal = true;
     }
 
     componentDidMount() {
         this.fetch();
+    }
+
+    componentWillUnmount() {
+        this.normal = false;
     }
     //获取列表数据
     fetch = (params = {}) => {
@@ -116,12 +121,14 @@ class AppCompany extends React.Component {
             isAlert: false,
             method: 'get',
         }, (result) => {
-            this.setState({
-                datas: result,
-                loading: false,
-                filterDropdownVisible: false,
-                showSearch: this.state.searchText ? true : false,
-            })
+            if(this.normal) {
+                this.setState({
+                    datas: result,
+                    loading: false,
+                    filterDropdownVisible: false,
+                    showSearch: this.state.searchText ? true : false,
+                });
+            }
         });
     };
     //公司列表
@@ -179,10 +186,8 @@ class AppCompany extends React.Component {
     //删除公司
     onDelete = (key) => {
         Utils.axios({
-            url: Api.delCompany,
-            params: {
-                id: key,
-            },
+            url: Api.delCompany + key,
+            method: 'get',
         }, (result) => {
             const datas = [...this.state.datas];
             this.setState({ datas: datas.filter(item => item.id !== key) });
@@ -247,15 +252,17 @@ class AppCompany extends React.Component {
         }];
         return (
             <div>
-                <div className="companyBox">
-                    <Search
-                        ref={ele => this.addInput = ele}
-                        onChange={this.onAddInputChange}
-                        onSearch={this.handleAdd}
-                        value={companyName}
-                        enterButton="添加公司"
-                        size="large"
-                    />
+                <div className="toolbar" style={{width: 400}}>
+                    <div className="addBox">
+                        <Search
+                            ref={ele => this.addInput = ele}
+                            onChange={this.onAddInputChange}
+                            onSearch={this.handleAdd}
+                            value={companyName}
+                            enterButton="添加公司"
+                            size="large"
+                        />
+                    </div>
                 </div>
                 {showSearch ?
                     <div className="searchMart">

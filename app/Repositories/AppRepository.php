@@ -23,7 +23,7 @@ class AppRepository
         $config = array(
             'defSort'   => 'created_at',
             'defOrder'  => 'desc',
-            'sortArr'   => array('created_at', 'name', 'company_name' => 'company_id'),
+            'sortArr'   => array('created_at', 'name', 'status',  'company_name' => 'company_id'),
             'searchArr' => array(
                 'name'  => ['rule' => '%alias% like \'%%s%\'',],
             ),
@@ -44,19 +44,19 @@ class AppRepository
         $_data = array(
             'name' => $datas['name'],
             'weburl' => $datas['weburl'],
-            'icon' => isset($datas['icon']) ? $datas['icon'] : $datas['appicon'],
+            'icon' => $datas['appicon'],
             'company_id' => (int)$datas['company_id'],
             'synopsis' => $datas['synopsis'] ? $datas['synopsis'] : '',
             'details' => $datas['details'] ? $datas['details'] : '',
-            'rate' => (int)$datas['rates']['value'],
+            'rate' => (float)$datas['rates']['value'],
             'rate_type' => (int)$datas['rates']['type'],
             'moneys' => $datas['moneys'],
             'terms' => $datas['terms'],
             'repayments' => $datas['repayments'],
             'apply_number' => (int)$datas['apply_number'],
+            'sort' => (int)$datas['sort'],
             'recommend' => intval(floatval($datas['recommend']) * 2),
-            'status' => $datas['terms'] ? 1 : 0,
-            'created_at' => date('Y-m-d H:i:s'),
+            'status' => (isset($datas['status']) && $datas['status']) ? 1 : 0,
             'updated_at' => date('Y-m-d H:i:s'),
         );
         return $_data;
@@ -64,14 +64,16 @@ class AppRepository
 
     public function create($datas)
     {
-        return $this->appRepository::create($this->format_data($datas));
+        $_data = $this->format_data($datas);
+        $_data['created_at'] = date('Y-m-d H:i:s');
+        return $this->appRepository::create($_data);
     }
 
     public function update($datas)
     {
-        $data = $this->format_data($datas);
-        $data['icon'] = str_replace(['storage/', '/storage/'], '', $data['icon']);
-        return $this->appRepository->where('id', $datas['id'])->update($data);
+        $_data = $this->format_data($datas);
+        $_data['icon'] = str_replace('/storage/', '', $_data['icon']);
+        return $this->appRepository->where('id', $datas['id'])->update($_data);
     }
 
     public function updateStatus($id, $status)

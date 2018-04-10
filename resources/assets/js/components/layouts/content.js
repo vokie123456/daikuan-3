@@ -6,6 +6,9 @@ import Home from '../home';
 import Apps from '../app/index';
 import AppCreate from '../app/create';
 import AppCompany from '../app/company';
+import Category from '../category';
+import CategoryForm from '../category/form';
+import CategoryApps from '../category/apps';
 
 const { Content, } = Layout;
 
@@ -17,6 +20,9 @@ export default class ContentComponent extends React.Component {
                 <Route path="/apps" exact component={Apps} />
                 <Route path="/apps/create/:id?" component={AppCreate} />
                 <Route path="/apps/company" component={AppCompany} />
+                <Route path="/category/:type" exact component={Category} />
+                <Route path="/category/:type/form/:id?" component={CategoryForm} />
+                <Route path="/categories/apps" component={CategoryApps} />
             </Content>
         );
     }

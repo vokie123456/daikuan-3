@@ -6,6 +6,7 @@
 `在构造函数处导入模型, 如:`
 
 ```PHP
+//AppRepository.php
 namespace App\Repositories;
 
 use App\Models\Company;

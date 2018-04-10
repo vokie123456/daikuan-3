@@ -40,6 +40,7 @@ class RateGroup extends React.Component {
             type: value.type || '0',
         };
     }
+    
     componentWillReceiveProps(nextProps) {
         // Should be a controlled component.
         if ('value' in nextProps) {
@@ -205,7 +206,7 @@ class AppCreate extends React.Component {
         this.normal = false;
     }
 
-    handleChange = (info) => {
+    handleUpload = (info) => {
         let file = info.file;
         const typeOk = (
             file.type === 'image/jpeg' ||
@@ -236,8 +237,8 @@ class AppCreate extends React.Component {
         form.validateFieldsAndScroll((err, values) => {
             // console.log(values);
             if (!err) {
-                let app_id = inits.id ? inits.id.value : null;
                 let formdata = new FormData();
+                let app_id = (inits && inits.id) ? inits.id.value : null;
                 if(app_id) formdata.append('id', app_id);
                 for(let i in values) {
                     let _value = (
@@ -275,7 +276,7 @@ class AppCreate extends React.Component {
                         }
                         // console.log(errors);
                         form.setFields(errors);
-                        message.warning('添加失败!');
+                        message.warning('保存失败!');
                     }
                 });
 
@@ -388,11 +389,11 @@ class AppCreate extends React.Component {
                             className="avatar-uploader"
                             showUploadList={false}
                             beforeUpload={(file) => false}
-                            onChange={this.handleChange}
+                            onChange={this.handleUpload}
                         >
                             {imageUrl ? 
                                 <img 
-                                    className="appIconStyle" 
+                                    className="uploadImgStyle" 
                                     src={imageUrl} 
                                     alt="app图标" 
                                 /> : uploadButton
@@ -422,7 +423,7 @@ class AppCreate extends React.Component {
                     label={(
                         <span>
                             推广地址&nbsp;
-                            <Tooltip title="需为完整的url地址 (以http://或https://开头).">
+                            <Tooltip title="需为完整的url地址 (以http://或https://开头)">
                                 <Icon type="question-circle-o" />
                             </Tooltip>
                         </span>
@@ -529,8 +530,29 @@ class AppCreate extends React.Component {
                     {...formItemLayout}
                     label={(
                         <span>
+                            排序序号&nbsp;
+                            <Tooltip title="升降序可在类别处自行设置">
+                                <Icon type="question-circle-o" />
+                            </Tooltip>
+                        </span>
+                    )}
+                >
+                    {getFieldDecorator('sort', {
+                        initialValue: 0
+                    })(
+                        <InputNumber
+                            min={0}
+                            max={9999999}
+                            precision={0}
+                        />
+                    )}
+                </FormItem>
+                <FormItem
+                    {...formItemLayout}
+                    label={(
+                        <span>
                             当前状态&nbsp;
-                            <Tooltip title="只有开启后才能在APP中搜索到.">
+                            <Tooltip title="只有开启后才能在APP中看到">
                                 <Icon type="question-circle-o" />
                             </Tooltip>
                         </span>
@@ -563,7 +585,7 @@ const AppCreateInit = Form.create({
 })(AppCreate);
 
 
-class App extends React.Component {
+export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {datas: null,}
@@ -586,9 +608,12 @@ class App extends React.Component {
     render() {
         const { params = {} } = this.props.match;
         let datas = this.state.datas;
-        if(params.id && !datas) return null;
-        return <AppCreateInit inits={datas || {}} />
+        if(!params.id && datas) {
+            window.location.reload();
+            return null;
+        }else if(params.id && !datas) {
+            return null;
+        }
+        return <AppCreateInit {...Object.assign({}, this.props, {inits: datas})} />
     }
 };
-
-export default App;

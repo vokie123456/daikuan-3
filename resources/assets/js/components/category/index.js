@@ -7,7 +7,7 @@ import Utils from '../public/utils';
 
 const Search = Input.Search;
 
-class Apps extends React.Component {
+class Categories extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,22 +20,33 @@ class Apps extends React.Component {
         this.filter = {};
         this.sort = {};
         this.search = '';
+
+        const { params = {} } = this.props.match;
+        this.type_id = (params.type && params.type == 1) ? 1 : 0;
     }
 
     componentDidMount() {
         this.fetch();
     }
+
+    componentWillReceiveProps(nextProps) {
+        // console.log(nextProps);
+        const { params = {} } = nextProps.match;
+        this.type_id = (params.type && params.type == 1) ? 1 : 0;
+        this.fetch();
+    }
     //获取列表数据
     fetch = (params = {}) => {
         this.setState({ loading: true });
+        params.search = params.search || {};
+        params.search.type = this.type_id;
         Utils.axios({
-            key: 'apps',
-            url: Api.getApps,
+            key: 'category',
+            url: Api.getCategories,
             params: params,
             isAlert: false,
             method: 'get',
         }, (result) => {
-            // console.log(result);
             this.setState({
                 datas: result,
                 loading: false,
@@ -43,8 +54,8 @@ class Apps extends React.Component {
             })
         });
     };
-    //app列表
-    getCompanyList = (search = '') => {
+    //类别列表
+    getCategoryList = (search = '') => {
         let limit = this.pagination.pageSize || '';
         let offset = limit ? ((this.pagination.current || 1) - 1) * limit : '';
         let order = this.sort.order || '';
@@ -65,18 +76,18 @@ class Apps extends React.Component {
     //切换状态
     onChangeStatus = (value, id) => {
         Utils.axios({
-            url: Api.updateAppStatus,
+            url: Api.updateCategoryStatus,
             data: {
                 id: id,
                 status: value ? 1 : 0,
             },
         });
     }
-    //删除app
+    //删除类别
     onDelete = (id) => {
         Utils.axios({
             key: 'ret',
-            url: Api.deletaApp + '/' + id,
+            url: Api.delCategory + id,
             method: 'get',
         }, (result) => {
             const datas = [...this.state.datas];
@@ -86,22 +97,17 @@ class Apps extends React.Component {
 
     render() {
         const { datas, showSearch, companyName, } = this.state;
-        const columns = [{
-            title: 'APP图标',
-            dataIndex: 'appicon',
-            render: (value, record) => {
-                return (
-                    value ? <img src={value} style={styles.icon} /> : <div style={styles.emptyIcon}></div>
-                );
-            }
-        }, {
-            title: 'APP名称',
+        let columns = [{
+            title: '类别名称',
             dataIndex: 'name',
             sorter: true,
         }, {
-            title: '公司名称',
-            dataIndex: 'company_name',
+            title: '显示位置',
+            dataIndex: 'type',
             sorter: true,
+            render: (value, record) => {
+                return record.type_name ? record.type_name : '';
+            }
         }, {
             title: '添加时间',
             dataIndex: 'created_at',
@@ -126,7 +132,7 @@ class Apps extends React.Component {
                 return (
                     <Button.Group>
                         <Button>
-                            <Link to={'/apps/create/' + record.id}>Edit</Link>
+                            <Link to={'/category/' + this.type_id + '/form/' + record.id}>Edit</Link>
                         </Button>
                         <Button>
                             <Popconfirm title="确定要删除?" onConfirm={() => this.onDelete(record.id)}>
@@ -137,12 +143,30 @@ class Apps extends React.Component {
                 );
             },
         }];
+
+        if(this.type_id == 1) {
+            columns.unshift({
+                title: '图标',
+                dataIndex: 'image',
+                render: (value, record) => {
+                    return (
+                        value ? <img src={value} style={styles.icon} /> : <div style={styles.emptyIcon}></div>
+                    );
+                }
+            });
+        }
+
         return (
             <div>
                 <div className="toolbar">
+                    <div className="addBox">
+                        <Button type="primary" size="large">
+                            <Link to={`/category/${this.type_id}/form`}>添加</Link>
+                        </Button>
+                    </div>
                     <div className="searchBox">
                         <Search
-                            onSearch={this.getCompanyList}
+                            onSearch={this.getCategoryList}
                             enterButton="Search"
                             size="large"
                         />
@@ -163,7 +187,7 @@ class Apps extends React.Component {
                         this.pagination = pagination;
                         this.filter = filter;
                         this.sort = sort;
-                        this.getCompanyList();
+                        this.getCategoryList();
                     }}
                 />
             </div>
@@ -186,4 +210,4 @@ styles.emptyIcon = {
     borderRadius: '3px',
 };
 
-export default Apps;
+export default Categories;

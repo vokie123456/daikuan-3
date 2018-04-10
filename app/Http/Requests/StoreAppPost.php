@@ -28,13 +28,13 @@ class StoreAppPost extends FormRequest
     {
         $icon_rule = 'bail|required|image|dimensions:ratio=1|max:200';
         if(!empty(request('appicon')) && is_string(request('appicon'))) {
-            $img = str_replace(['storage/', '/storage/'], '', request('appicon'));
+            $img = str_replace('/storage/', '', request('appicon'));
             if(Storage::disk('public')->exists($img)) {
                 $icon_rule = 'required|max:255';
             }
         }
         return [
-            'name' => 'required|max:45',
+            'name' => 'required|string|max:45',
             'weburl' => 'required|url|max:255',
             'appicon' => $icon_rule,
             'company_id' => 'required|integer|min:1',
@@ -95,8 +95,9 @@ class StoreAppPost extends FormRequest
                 },
             ],
             'apply_number' => 'integer|min:0',
+            'sort' => 'integer|min:0',
             'recommend' => 'required|numeric|min:0|max:5',
-            'status' => 'required|boolean',
+            // 'status' => 'required|boolean',
         ];
     }
     
@@ -133,6 +134,7 @@ class StoreAppPost extends FormRequest
             'terms' => '还款期限',
             'repayments' => '还款方式',
             'apply_number' => '申请人数',
+            'sort' => '排序序号',
             'recommend' => '推荐指数',
             'status' => '当前状态',
         ];

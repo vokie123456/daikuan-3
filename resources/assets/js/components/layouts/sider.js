@@ -17,15 +17,38 @@ const routers = [
         child: [{
             title: '添加APP',
             link : '/apps/create',
-            param: true,
+            contain: true,
         }, {
-            title: 'APP公司',
+            title: '公司列表',
             link : '/apps/company',
         }, {
             title: 'APP列表',
             link : '/apps',
         }, {
             title: '添加模版',
+        }],
+    }, {
+        title: '类别管理',
+        icon : 'profile',
+        child: [{
+            title: '首页图标',
+            link : '/category/1',
+            contain: true,
+        }, {
+            title: '类别列表',
+            link : '/category/0',
+            contain: true,
+        }, {
+            title: '类内APP',
+            link : '/categories/apps',
+        }],
+    }, {
+        title: '广告管理',
+        icon : 'notification',
+        child: [{
+            title: '添加广告',
+        }, {
+            title: '广告列表',
         }],
     }, {
         title: '推广统计',
@@ -47,10 +70,14 @@ export default class SiderComponent extends React.Component {
             str = str.replace(/^\//, '');
         }
         return str;
-    }; 
+    };
 
-    check_path = (str1, str2, param = false) => {
-        if(param) {
+    check_path = (item, str2) => {
+        let str1 = this.removeFirstSlash(item.link);
+        if(item.contain) {
+            if(item.replace) {
+                str1 = str1.replace(new RegExp(item.replace), '');
+            }
             return str2.indexOf(str1) === 0;
         }else {
             return str1 == str2;
@@ -64,12 +91,12 @@ export default class SiderComponent extends React.Component {
         if(match.params && match.params[0]) {
             let current_url = this.removeFirstSlash(match.params[0]);
             for(let i in routers) {
-                if(routers[i].link && this.check_path(this.removeFirstSlash(routers[i].link), current_url, !!routers[i].param)) {
+                if(routers[i].link && this.check_path(routers[i], current_url)) {
                     selected.push(i + '-0');
                 }else if(routers[i].child && routers[i].child.length) {
                     let child = routers[i].child;
                     for(let c in child) {
-                        if(child[c].link && this.check_path(this.removeFirstSlash(child[c].link), current_url, !!child[c].param)) {
+                        if(child[c].link && this.check_path(child[c], current_url)) {
                             ++c;
                             selected.push(`${i}-${c}`);
                             opened.push(i);

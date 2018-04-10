@@ -29,7 +29,7 @@
     color: #999;
 }
 
-.appIconStyle {
+.uploadImgStyle {
     width: 90px;
     max-height: 90px;
 }
@@ -101,7 +101,18 @@
     color: #f50;
 }
 
-.companyBox {
+.toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.addBox {
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.searchBox {
     width: 400px;
     margin-bottom: 20px;
 }

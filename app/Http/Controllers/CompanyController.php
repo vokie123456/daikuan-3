@@ -68,11 +68,12 @@ class CompanyController extends Controller
     }
 
     //删除公司
-    public function delete(Request $request)
+    public function delete($id)
     {
-        $id = $request->get('id');
         if(!$id) {
             $this->set_error('缺少参数');
+        }else if($this->company->delCheck($id)) {
+            $this->set_error('该公司下有关联APP, 无法删除!');
         }else {
             $result = $this->company->delCompany($id);
             if($result) {

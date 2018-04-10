@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreAppPost;
-use App\Repositories\AppRepository;
-use App\Http\Resources\AppResource;
+use App\Repositories\CategoryRepository;
+use App\Http\Resources\CategoryResource;
+use App\Http\Requests\StoreCategoryPost;
 
-class AppController extends Controller
+class CategoryController extends Controller
 {
-    protected $appRepository;
-
-    public function __construct(AppRepository $appRepository)
+    protected $category;
+    
+    public function __construct(CategoryRepository $category)
     {
-        $this->appRepository = $appRepository;
+        $this->category = $category;
     }
 
     /**
@@ -25,9 +25,9 @@ class AppController extends Controller
     public function index(Request $request)
     {
         // DB::enableQueryLog();
-        $datas = AppResource::collection($this->appRepository->getList($request->all()));
+        $datas = CategoryResource::collection($this->category->getList($request->all()));
         // error_log(print_r(DB::getQueryLog(), true));
-        $this->set_success('获取成功')->set_data('apps', $datas);
+        $this->set_success('获取成功')->set_data('category', $datas);
         return response()->json($this->get_result());
     }
 
@@ -37,19 +37,16 @@ class AppController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAppPost $request)
+    public function store(StoreCategoryPost $request)
     {
         //
-        $path = $request->file('appicon')->store('icon', 'public');
-        if($path) {
-            $datas = $request->all();
-            $datas['appicon'] = $path;
-            $ret = $this->appRepository->create($datas);
-            if($ret) $this->set_success('添加成功')->set_data('ret', $ret);
-            else $this->set_error('添加失败');
-        }else {
-            $this->set_error('图片存储失败');
+        $datas = $request->all();
+        if($request->hasFile('image')) {
+            $datas['image'] = $request->file('image')->store('category', 'public');
         }
+        $ret = $this->category->create($datas);
+        if($ret) $this->set_success('添加成功')->set_data('ret', $ret);
+        else $this->set_error('添加失败');
         return response()->json($this->get_result());
     }
 
@@ -61,13 +58,16 @@ class AppController extends Controller
      */
     public function show($id)
     {
-        //
-        $app = $this->appRepository->getApp($id);
-        if($app) {
-            $result = new AppResource($app);
-            $this->set_success('获取成功')->set_data('app', $result);
+        $category = $this->category->getById($id);
+        if($id) {
+            if($category) {
+                $result = new CategoryResource($category);
+                $this->set_success('获取成功')->set_data('category', $result);
+            }else {
+                $this->set_error('获取失败');
+            }
         }else {
-            $this->set_error('获取失败');
+            $this->set_error('缺少参数');
         }
         return response()->json($this->get_result());
     }
@@ -79,28 +79,27 @@ class AppController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreAppPost $request)
+    public function update(StoreCategoryPost $request)
     {
         //
         $datas = $request->all();
-        if($request->hasFile('appicon')) {
-            $datas['appicon'] = $request->file('appicon')->store('icon', 'public');
+        if($request->hasFile('image')) {
+            $datas['image'] = $request->file('image')->store('category', 'public');
         }
-        if($datas['appicon']) {
-            $ret = $this->appRepository->update($datas);
+        if(!isset($datas['id'])) {
+            $this->set_error('缺少参数');
+        }else {
+            $ret = $this->category->update($datas);
             if($ret) $this->set_success('更新成功')->set_data('ret', $ret);
             else $this->set_error('更新失败');
-        }else {
-            $this->set_error('无图片数据');
         }
         return response()->json($this->get_result());
     }
 
-
     public function updateStatus(Request $request)
     {
         if($request->get('id')) {
-            $ret = $this->appRepository->updateStatus($request->get('id'), $request->get('status'));
+            $ret = $this->category->updateStatus($request->get('id'), $request->get('status'));
             if($ret) $this->set_success('更新成功')->set_data('ret', $ret);
             else $this->set_error('更新失败');
         }else {
@@ -117,12 +116,12 @@ class AppController extends Controller
      */
     public function destroy($id)
     {
-        if($id) {
-            $ret = $this->appRepository->destroy($id);
+        if(!$id) {
+            $this->set_error('缺少参数');
+        }else {
+            $ret = $this->category->delete($id);
             if($ret) $this->set_success('删除成功')->set_data('ret', $ret);
             else $this->set_error('删除失败');
-        }else {
-            $this->set_error('缺少参数');
         }
         return response()->json($this->get_result());
     }

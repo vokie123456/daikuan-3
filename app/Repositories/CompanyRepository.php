@@ -58,6 +58,11 @@ class CompanyRepository
         return $this->company->where('id', $id)->update($company);
     }
 
+    public function delCheck($id)
+    {
+        return \App\Models\App::where('company_id', $id)->first();
+    }
+
     public function delCompany($id)
     {
         return $this->company->where('id', $id)->delete();

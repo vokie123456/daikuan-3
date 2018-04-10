@@ -28,6 +28,7 @@ class CreateAppsTable extends Migration
             $table->string('repayments', 1000)->default('')->comment('还款方式(json)');
             $table->integer('apply_number')->default(0)->comment('申请人数');
             $table->unsignedTinyInteger('recommend')->default(0)->comment('推荐指数: 0-10(1个为半星)');
+            $table->integer('sort')->unsigned()->default(0)->comment('排序序号');
             $table->unsignedTinyInteger('status')->default(1)->comment('状态: 0 禁止, 1 正常');
             $table->timestamps();
             $table->foreign('company_id')->references('id')->on('companies');

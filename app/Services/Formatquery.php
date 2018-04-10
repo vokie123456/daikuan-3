@@ -70,7 +70,7 @@ class Formatquery {
     }
     
     //设置参数
-    public function setParams($params) {
+    public function setParams($params = []) {
         if(!empty($params['sort']) && !empty($this->sortArr)) {
             if(in_array($params['sort'], $this->sortArr)) {
                 $this->query['sort'] = $params['sort'];
@@ -84,52 +84,51 @@ class Formatquery {
         $this->query['offset'] = !empty($params['offset']) ? $params['offset'] : 0;
         $this->query['limit'] = (!empty($params['limit']) && $params['limit'] > 0) ? 
             ($params['limit'] > $this->maxLimit ? $this->maxLimit : $params['limit']) : $this->defalutLimit;
-        if(!empty($params['search']) && !empty($this->searchArr)) {
-            $searchs = is_array($params['search']) ? $params['search'] : json_decode($params['search'], true);
-            $searchs = (!empty($searchs) && is_array($searchs)) ? $searchs : array();
-            $default_searchs = array();
-            foreach($this->searchArr as $key => $val) {
-                //取出默认值
-                if(isset($val['value'])) $default_searchs[$key] = $val['value'];
-                //验证搜索设置是否正确
-                else if(is_null($val) || !is_array($val)) $this->searchArr[$key] = array();
-            }
-            $searchs = array_merge($default_searchs, $searchs);
-            foreach($searchs as $key => $val) {
-                /**
-                 * 验证是否允许搜索
-                 * 1. 是否在允许范围内
-                 * 2. 搜索内容是否为空
-                 */
-                if(isset($this->searchArr[$key]) && $this->allowEmpty($val)) {
-                    $string = null;
-                    $value = addslashes(trim($val));
-                    $item = $this->searchArr[$key];
-                    $name = !empty($item['alias']) ? $item['alias'] : $key;
-                    $name = $this->formartkey($name);
-                    if(!empty($item) && is_array($item)) {
-                        if(isset($item['allow']) && is_array($item['allow']) && !in_array($val, $item['allow']) && !isset($item['value'])) {
-                            //如果包含搜索范围, 且在范围之外, 也没有默认值, 则不予搜索
-                            continue;
-                        }else if(isset($item['except']) && is_array($item['except']) && in_array($val, $item['except'])) {
-                            //如果存在特殊字段的处理, 则优先给予处理
-                            if(isset($item['except_func']) && is_callable($item['except_func'])) {
-                                $string = call_user_func($item['except_func'], $value);
-                            }
-                        }else if(isset($item['myfunction']) && is_callable($item['myfunction'])) {
-                            //如果存在自定义处理函数, 则用自定义函数处理
-                            $string = call_user_func($item['myfunction'], $value);
-                        }else if(!empty($item['rule'])) {
-                            //此处慎用sprintf, 因为$item['rule']可能含有%会导致错误
-                            $string = str_replace('%s', $value, $item['rule']);
+
+        $searchs = !empty($params['search']) ? (is_array($params['search']) ? $params['search'] : json_decode($params['search'], true)) : [];
+        $searchs = (!empty($searchs) && is_array($searchs)) ? $searchs : array();
+        $default_searchs = array();
+        foreach($this->searchArr as $key => $val) {
+            //取出默认值
+            if(isset($val['value'])) $default_searchs[$key] = $val['value'];
+            //验证搜索设置是否正确
+            else if(is_null($val) || !is_array($val)) $this->searchArr[$key] = array();
+        }
+        $searchs = array_merge($default_searchs, $searchs);
+        foreach($searchs as $key => $val) {
+            /**
+             * 验证是否允许搜索
+             * 1. 是否在允许范围内
+             * 2. 搜索内容是否为空
+             */
+            if(isset($this->searchArr[$key]) && $this->allowEmpty($val)) {
+                $string = null;
+                $value = addslashes(trim($val));
+                $item = $this->searchArr[$key];
+                $name = !empty($item['alias']) ? $item['alias'] : $key;
+                $name = $this->formartkey($name);
+                if(!empty($item) && is_array($item)) {
+                    if(isset($item['allow']) && is_array($item['allow']) && !in_array($val, $item['allow']) && !isset($item['value'])) {
+                        //如果包含搜索范围, 且在范围之外, 也没有默认值, 则不予搜索
+                        continue;
+                    }else if(isset($item['except']) && is_array($item['except']) && in_array($val, $item['except'])) {
+                        //如果存在特殊字段的处理, 则优先给予处理
+                        if(isset($item['except_func']) && is_callable($item['except_func'])) {
+                            $string = call_user_func($item['except_func'], $value);
                         }
+                    }else if(isset($item['myfunction']) && is_callable($item['myfunction'])) {
+                        //如果存在自定义处理函数, 则用自定义函数处理
+                        $string = call_user_func($item['myfunction'], $value);
+                    }else if(!empty($item['rule'])) {
+                        //此处慎用sprintf, 因为$item['rule']可能含有%会导致错误
+                        $string = str_replace('%s', $value, $item['rule']);
                     }
-                    $string = str_replace('%alias%', $name, $string);
-                    //如果上面的情况都未出现, 则用默认的条件
-                    if(!$string) $string = "{$name} = '{$value}'";
-                    $this->query['searchs'][$key] = $value;
-                    $this->query['wheres'][] = $string;
                 }
+                $string = str_replace('%alias%', $name, $string);
+                //如果上面的情况都未出现, 则用默认的条件
+                if(!$string) $string = "{$name} = '{$value}'";
+                $this->query['searchs'][$key] = $value;
+                $this->query['wheres'][] = $string;
             }
         }
         return $this;

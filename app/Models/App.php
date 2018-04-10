@@ -21,6 +21,7 @@ class App extends Model
     //     'terms',
     //     'repayments',
     //     'apply_number',
+    //     'sort',
     //     'recommend',
     //     'status',
     // ];

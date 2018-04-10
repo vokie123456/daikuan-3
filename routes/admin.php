@@ -10,19 +10,27 @@
 */
 
 
-Route::post('getadmininfo', 'Admin\AdminController@getInfo');
-Route::get('getappcompanies', 'CompanyController@index');
-Route::post('addappcompany', 'CompanyController@create');
-Route::post('updatecompany', 'CompanyController@update');
-Route::post('delcompany', 'CompanyController@delete');
+Route::post('admin/info', 'Admin\AdminController@getInfo');
+Route::get('companies', 'CompanyController@index');
+Route::post('company/create', 'CompanyController@create');
+Route::post('company/update', 'CompanyController@update');
+Route::get('company/delete/{id}', 'CompanyController@delete');
 Route::get('getapps', 'AppController@index');
 Route::get('getapp/{id}', 'AppController@show')->where('id', '[0-9]+');
-Route::post('appstore', 'AppController@store');
-Route::post('updateapp', 'AppController@update');
-Route::post('updateappstatus', 'AppController@updateStatus');
-Route::get('deleteapp/{id}', 'AppController@destroy')->where('id', '[0-9]+');
+Route::post('app/store', 'AppController@store');
+Route::post('app/update', 'AppController@update');
+Route::post('appstatus/update', 'AppController@updateStatus');
+Route::get('app/delete/{id}', 'AppController@destroy')->where('id', '[0-9]+');
+Route::get('getcategories', 'CategoryController@index');
+Route::post('category/create', 'CategoryController@store');
+Route::post('category/update', 'CategoryController@update');
+Route::get('getcategory/{id}', 'CategoryController@show')->where('id', '[0-9]+');
+Route::post('categorystatus/update', 'CategoryController@updateStatus');
+Route::get('category/delete/{id}', 'CategoryController@destroy')->where('id', '[0-9]+');
+Route::get('getcategoryapps/{id?}', 'CategoryAppController@index')->where('id', '[0-9]+');
+Route::post('setcategoryapps', 'CategoryAppController@migrate');
 
-Route::view('{a?}/{b?}/{c?}', 'admin');
+Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 
 // Route::redirect('/', '/admin/a', 301);
 // Route::get('home', 'HomeController@index')->name('home');
