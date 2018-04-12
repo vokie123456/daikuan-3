@@ -12,11 +12,17 @@ class LoginController extends Controller
     
     public function login()
     {
-        if(
+        $username = request('telephone');
+        $password = request('password');
+        if(!$username) {
+            $this->set_error('用户名不能为空!');
+        }else if(!$password) {
+            $this->set_error('密码不能为空!');
+        }else if(
             Auth::attempt([
-                'telephone' => request('telephone'), 
-                'password' => request('password')]
-            )
+                'telephone' => $username,
+                'password' => $password,
+            ])
         ){
             $user = Auth::user();
             $token = $user->createToken('DaiKuan')->accessToken;

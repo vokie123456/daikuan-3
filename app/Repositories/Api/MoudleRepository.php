@@ -43,13 +43,18 @@ class MoudleRepository
 
     public function getCategory($type = 1)
     {
-        
-        return Category::where('type', $type)
+        $categories = Category::where('type', $type)
                 ->select(['id', 'name', 'image'])
                 ->where('status', 1)
                 ->orderBy('sort', 'asc')
                 ->orderBy('created_at', 'asc')
-                ->get();
+                ->get()->toArray();
+        foreach($categories as $key => $val) {
+            if(!empty($val['image'])) {
+                $categories[$key]['image'] = url('storage/' . $val['image']);
+            }
+        }
+        return $categories;
     }
 
     public function getApps($type = 0)
