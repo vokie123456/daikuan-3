@@ -1,0 +1,3 @@
+ul.summary > li:last-of-type {
+    display: none;
+}

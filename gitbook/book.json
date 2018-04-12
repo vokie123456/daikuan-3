@@ -1,0 +1,19 @@
+{
+    "title": "文档",
+    "language": "zh-hans",
+    "author": "linzeyong",
+    "description": "贷款超市的api文档!",
+    "direction": "rtl",
+    "styles": {
+        "website": "styles/website.css"
+    },
+    "plugins": [
+        "-sharing"
+    ],
+    "structure": {
+        "summary": "SUMMARY.md"
+    },
+    "variables": {
+        "host": "http://dkcs.shidingzc.com/"
+    }
+}
