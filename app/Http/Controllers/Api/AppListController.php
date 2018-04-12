@@ -19,7 +19,7 @@ class AppListController extends Controller
     //
     public function getDatas($id)
     {
-        $datas = $this->category->getCategoryByType($id);
+        $datas = $this->category->getCategoryAppById($id);
         $this->set_success('获取成功')->set_data('datas', $datas);
         return response()->json($this->get_result());
     }

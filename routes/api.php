@@ -18,7 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('login', 'Api\LoginController@login');
-Route::get('home', 'Api\HomeController@getDatas');
+Route::get('moudle/home', 'Api\MoudleController@homeDatas');
+Route::get('moudle/loan', 'Api\MoudleController@loanDatas');
+Route::get('moudle/secloan', 'Api\MoudleController@secloanDatas');
 Route::get('category/apps/{id}', 'Api\AppListController@getDatas')->where('id', '[0-9]+');
 
 Route::group(['middleware' => 'auth:api'], function(){

@@ -2,13 +2,27 @@
 namespace App\Repositories\Api;
 
 use App\Models\App as AppModel;
-use Illuminate\Support\Facades\DB;
 
 class AppRepository
 {
-    public function getAppByInId(Array $ids = [], $sort_str)
+    /**
+     * 通过app的多个id, 获取APPs
+     * 
+     * @param  Int    $ids         ids
+     * @param  Int    $sort        排序分式: 0, 1, 2, 3
+     * @param  Bool   $isPaginate  是否分页
+     * @param  Array
+     */
+    public function getAppByInId(Array $ids = [], $sort, $isPaginate = true)
     {
-        $origin_apps = AppModel::whereIn('id', $ids)
+        $sorts = [
+            '`created_at` desc', 
+            '`created_at` asc', 
+            '`sort` desc, `created_at` desc', 
+            '`sort` asc, `created_at` desc',
+        ];
+        $_sort = isset($sorts[$sort]) ? $sorts[$sort] : $sorts[0];
+        $query = AppModel::whereIn('id', $ids)
                 ->select(
                     'id', 
                     'name', 
@@ -20,11 +34,12 @@ class AppRepository
                     'moneys',
                     'terms'
                 )
-                ->orderByRaw($sort_str)
-                ->get()->toArray();
-        $target_apps = [];
+                ->orderByRaw($_sort);
+        $origin_apps = ($isPaginate ? $query->simplePaginate(15) : $query->get())->toArray();
         $rate_types = ['日', '周', '月', '年'];
-        foreach($origin_apps as $key => $val) {
+        $target_apps = [];
+        $datas = $isPaginate ? $origin_apps['data'] : $origin_apps;
+        foreach($datas as $key => $val) {
             $moneys = json_decode($val['moneys'], true);
             $terms = json_decode($val['terms'], true);
             $app = [
@@ -36,14 +51,24 @@ class AppRepository
                 'term_rand' => $terms[0]['value'] . $terms[0]['type'],
                 'apply_number' => $val['apply_number'],
                 'synopsis' => $val['synopsis'],
-                'rate' => $val['rate'],
+                'rate' => floatval($val['rate']),
                 'rate_type_name' => $rate_types[$val['rate_type']],
             ];
             if(count($terms) > 1) {
                 $last_term = $terms[count($terms) - 1];
                 $app['term_rand'] .= ('-' . $last_term['value'] . $last_term['type']);
             }
-            $target_apps[] = $app;
+
+            if($isPaginate) {
+                $target_apps['data'][] = $app;
+            }else {
+                $target_apps[] = $app;
+            }
+        }
+
+        if($isPaginate) {
+            $target_apps['current_page'] = $origin_apps['current_page'];
+            $target_apps['per_page'] = $origin_apps['per_page'];
         }
 
         return $target_apps;

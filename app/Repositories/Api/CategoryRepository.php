@@ -11,34 +11,59 @@ class CategoryRepository
     
     public function __construct()
     {
+        // 这里不能使用注入
         $this->app = new AppRepository();
     }
 
-    public function getCategoryByType($type, $with_app = true)
+    /**
+     * 通过type类型, 获取该类型下的信息
+     * 
+     * @param  Int    $type        类型id
+     * @param  Bool   $withApp     是否附带查询该类型下的APP
+     * @param  Array
+     */
+    public function getCategoryByType($type, $withApp = true)
     {
-        $query = Category::select(['id', 'name', 'image', 'sort_app']);
-        if($with_app) $query = $query->with('apps');
-
-        $categories = $query->where('type', $type)->where('status', 1)
-                ->orderBy('sort', 'asc')
-                ->orderBy('created_at', 'asc')
-                ->get()->toArray();
-        $sorts = [
-            '`created_at` desc', 
-            '`created_at` asc', 
-            '`sort` desc, `created_at` desc', 
-            '`sort` asc, `created_at` desc',
-        ];
+        $query = Category::select(['id', 'name', 'image', 'sort_app'])
+            ->where('type', $type)->where('status', 1)
+            ->orderBy('sort', 'asc')->orderBy('created_at', 'asc');
+        if($withApp) $query = $query->with('apps');
+        $categories = $query->get()->toArray();
+        
         foreach($categories as $key => $val) {
-            if(!empty($val['image'])) {
-                $categories[$key]['image'] = url('storage/' . $val['image']);
-            }
+            if(!empty($val['image'])) $categories[$key]['image'] = url('storage/' . $val['image']);
             if(!empty($val['apps'])) {
                 $apps_id = array_map(function($item) {return $item['app_id'];}, $val['apps']);
-                $_sort = isset($sorts[$val['sort_app']]) ? $sorts[$val['sort_app']] : $sorts[0];
-                $categories[$key]['apps'] = $this->app->getAppByInId($apps_id, $_sort);
+                $categories[$key]['apps'] = $this->app->getAppByInId($apps_id, $val['sort_app'], false);
             }
+            if(isset($val['sort_app'])) unset($categories[$key]['sort_app']);
         }
         return $categories;
+    }
+
+    /**
+     * 通过类别id, 获取该类别下的APP
+     * 
+     * @param  Int    $id          id
+     * @param  Bool   $isPaginate  是否分页
+     * @param  Array
+     */
+    public function getCategoryAppById($id, $isPaginate = true)
+    {
+        $category = Category::with('apps')
+            ->select(['id', 'name', 'image', 'sort_app'])
+            ->where('id', $id)->where('status', 1)
+            ->first();
+        if($category) {
+            $category = $category->toArray();
+            if(!empty($category['image'])) $category['image'] = url('storage/' . $category['image']);
+            if(!empty($category['apps'])) {
+                $apps_id = array_map(function($item) {return $item['app_id'];}, $category['apps']);
+                $category['apps'] = $this->app->getAppByInId($apps_id, $category['sort_app'], $isPaginate);
+            }
+            if(isset($category['sort_app'])) unset($category['sort_app']);
+        }
+        
+        return $category;
     }
 }

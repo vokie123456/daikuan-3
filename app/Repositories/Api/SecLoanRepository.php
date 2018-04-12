@@ -3,12 +3,13 @@ namespace App\Repositories\Api;
 
 use App\Repositories\Api\CategoryRepository;
 
-class MoudleRepository
+class SecLoanRepository
 {
     protected $category;
     
     public function __construct()
     {
+        // 这里不能使用注入
         $this->category = new CategoryRepository();
     }
 
@@ -19,7 +20,7 @@ class MoudleRepository
                 'id' => 1,
                 'name' => '测试广告1',
                 'type' => 0,
-                'app_id' => 12,
+                'app_id' => 1,
                 'url' => '#',
                 'image' => url('storage/banner/1-01-1.png'),
                 'start_time' => '2018-04-10 14:02:13',
@@ -28,40 +29,25 @@ class MoudleRepository
                 'id' => 3,
                 'name' => '测试广告2',
                 'type' => 0,
-                'app_id' => 13,
+                'app_id' => 1,
                 'url' => '#',
                 'image' => url('storage/banner/1-01-2.png'),
-                'start_time' => '2018-04-10 14:02:13',
-                'end_time' => '2018-06-10 14:02:13',
-            ], [
-                'id' => 4,
-                'name' => '测试广告3',
-                'type' => 0,
-                'app_id' => 14,
-                'url' => '#',
-                'image' => url('storage/banner/1-01-3.png'),
                 'start_time' => '2018-04-10 14:02:13',
                 'end_time' => '2018-06-10 14:02:13',
             ],
         ];
     }
 
-    protected function getHomeIcon()
-    {
-        return $this->category->getCategoryByType(1, false);
-    }
-
-    protected function getApps($type = 0)
-    {
-        return $this->category->getCategoryByType($type);
-    }
-
     public function getDatas()
     {
-        return [
-            'banners' => $this->getBanner(),
-            'icons' => $this->getHomeIcon(),
-            'category_apps' => $this->getApps(),
+        $datas = [
+            'banner' => $this->getBanner(),
+            'category' => null,
         ];
+        $categories = $this->category->getCategoryByType(3, false);
+        if(isset($categories[0])) {
+            $datas['category'] = $this->category->getCategoryAppById($categories[0]['id']);
+        }
+        return $datas;
     }
 }
