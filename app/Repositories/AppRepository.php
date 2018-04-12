@@ -41,6 +41,8 @@ class AppRepository
     public function format_data($datas)
     {
         $datas['rates'] = json_decode($datas['rates'], true);
+        $moneys = json_decode($datas['moneys'], true);
+        $moneys = array_map(function($val) {return floatval($val);}, $moneys);
         $_data = array(
             'name' => $datas['name'],
             'weburl' => $datas['weburl'],
@@ -50,7 +52,7 @@ class AppRepository
             'details' => $datas['details'] ? $datas['details'] : '',
             'rate' => (float)$datas['rates']['value'],
             'rate_type' => (int)$datas['rates']['type'],
-            'moneys' => $datas['moneys'],
+            'moneys' => json_encode($moneys),
             'terms' => $datas['terms'],
             'repayments' => $datas['repayments'],
             'apply_number' => (int)$datas['apply_number'],

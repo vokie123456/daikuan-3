@@ -73,6 +73,7 @@ class SomeInput extends React.Component {
         const { 
             getFieldDecorator, 
             getFieldValue, 
+            setFieldsValue,
             name, 
             initialValue, 
             label, 
@@ -88,7 +89,8 @@ class SomeInput extends React.Component {
         
         // getFieldDecorator(name + '_key', {initialValue: initialValue});
         const keys = getFieldValue(name + '_key');
-        if(!keys || typeof(getFieldValue(name)) == 'undefined') return null;
+        const keys2 = getFieldValue(name);
+        if(!keys) return null;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -112,7 +114,6 @@ class SomeInput extends React.Component {
         }];
         let _buttonText = buttonText ? buttonText : '添加 ' + label;
         const formItems = keys.map((item, index) => {
-            // inputParams.defaultValue = k;
             return (
                 <FormItem
                     {...(index === 0 ? formItemLayout : tailFormItemLayout)}

@@ -20,5 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'Api\LoginController@login');
 
 Route::group(['middleware' => 'auth:api'], function(){
-    Route::post('details', 'API\LoginController@details');
+    Route::get('home', 'Api\HomeController@getDatas');
+    Route::post('details', 'Api\LoginController@details');
 });

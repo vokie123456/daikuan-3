@@ -228,7 +228,7 @@ class FormComponent extends React.Component {
                     label={(
                         <span>
                             类别排序&nbsp;
-                            <Tooltip title="优先以序号降序排列, 否则以时间降序排列">
+                            <Tooltip title="优先以序号升序排列, 否则以添加时间升序排列">
                                 <Icon type="question-circle-o" />
                             </Tooltip>
                         </span>

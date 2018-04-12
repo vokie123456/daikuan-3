@@ -14,4 +14,9 @@ class Category extends Model
 
     //不用自动添加created_at和updated_at
     public $timestamps = false;
+
+    public function apps()
+    {
+        return $this->hasMany('App\Models\CategoryApp', 'category_id', 'id');
+    }
 }

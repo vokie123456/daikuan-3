@@ -576,7 +576,11 @@ class AppCreate extends React.Component {
 
 const AppCreateInit = Form.create({
     mapPropsToFields(props) {
-        let inits = props.inits || {};
+        let inits = props.inits || {
+            terms: [{value: '', type: '天'}],
+            moneys: [''],
+            repayments: [''],
+        };
         for(let i in inits) {
             inits[i] = Form.createFormField({value: inits[i]});
         }
