@@ -582,6 +582,9 @@ const AppCreateInit = Form.create({
             repayments: [''],
         };
         for(let i in inits) {
+            if(i == 'moneys') {
+                inits[i] = inits[i].map(function(val) {return String(val);});
+            }
             inits[i] = Form.createFormField({value: inits[i]});
         }
         return inits;

@@ -13,9 +13,8 @@ yarn-error.log
 .env
 
 /public/js/app.js
-public/js/admin.js
-
-api_document
+/public/js/admin.js
+/public/api
 
 .DS_Store
 app/.DS_Store

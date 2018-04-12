@@ -18,8 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('login', 'Api\LoginController@login');
+Route::get('home', 'Api\HomeController@getDatas');
+Route::get('category/apps/{id}', 'Api\AppListController@getDatas')->where('id', '[0-9]+');
 
 Route::group(['middleware' => 'auth:api'], function(){
-    Route::get('home', 'Api\HomeController@getDatas');
-    Route::post('details', 'Api\LoginController@details');
 });

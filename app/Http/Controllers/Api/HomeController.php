@@ -19,11 +19,7 @@ class HomeController extends Controller
     //
     public function getDatas()
     {
-        $datas = [
-            'banners' => $this->homeRepository->getBanner(),
-            'icons' => $this->homeRepository->getCategory(1),
-            'category_apps' => $this->homeRepository->getApps(0),
-        ];
+        $datas = $this->homeRepository->getDatas();
         $this->set_success('获取成功')->set_data('datas', $datas);
         return response()->json($this->get_result());
     }
