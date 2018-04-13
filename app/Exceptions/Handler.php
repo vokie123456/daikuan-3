@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -25,6 +27,13 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return starts_with(Route::currentRouteName(), 'admin')
+            ? redirect(route('admin.login.show'))
+            : parent::unauthenticated($request, $exception);
+    }
 
     /**
      * Report or log an exception.

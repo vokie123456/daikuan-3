@@ -15,24 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::group([
-//     // 'prefix' => 'admin',
-//     'namespace' => 'Admin'
-// ], function () {
-//     Route::get('login', 'LoginController@showLoginForm')->name('admin.login');
-//     Route::post('login', 'LoginController@login');
-//     Route::post('logout', 'LoginController@logout');
-//     Route::get('/', 'DashboardController@index');
-// });
 
 Auth::routes();
 
 Route::get('home', 'HomeController@index')->name('home');
-
-Route::group([
-    // 'namespace' => 'Admin',
-    'prefix' => 'admin',
-    'middleware' => 'auth'
-], function () {
-    require_once(__DIR__ . '/admin.php');
-});

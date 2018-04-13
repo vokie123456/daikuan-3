@@ -93,10 +93,10 @@ class RateGroup extends React.Component {
                     onChange={this.handleTypeChange}
                     onBlur={this.triggerChange}
                 >
-                    <Option value="0">% /日</Option>
-                    <Option value="1">% /周</Option>
-                    <Option value="2">% /月</Option>
-                    <Option value="3">% /年</Option>
+                    <Option value={0}>% /日</Option>
+                    <Option value={1}>% /周</Option>
+                    <Option value={2}>% /月</Option>
+                    <Option value={3}>% /年</Option>
                 </Select>
             </span>
         );
