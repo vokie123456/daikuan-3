@@ -17,6 +17,7 @@ import {
 
 import Api from '../public/api';
 import Utils from '../public/utils';
+import { RateTypes, DateUnits } from '../public/global';
 import SomeInput from './some_input';
 
 const { TextArea } = Input;
@@ -37,7 +38,7 @@ class RateGroup extends React.Component {
         const value = this.props.value || {};
         this.state = {
             value: value.value || '',
-            type: value.type || '0',
+            type: value.type || 0,
         };
     }
     
@@ -93,10 +94,9 @@ class RateGroup extends React.Component {
                     onChange={this.handleTypeChange}
                     onBlur={this.triggerChange}
                 >
-                    <Option value={0}>% /日</Option>
-                    <Option value={1}>% /周</Option>
-                    <Option value={2}>% /月</Option>
-                    <Option value={3}>% /年</Option>
+                    {RateTypes.map((item, index) => {
+                        return <Option key={index} value={index}>{item}</Option>
+                    })}
                 </Select>
             </span>
         );
@@ -164,10 +164,9 @@ class TermGroup extends React.Component {
                             onChange={this.handleTypeChange}
                             onBlur={this.triggerChange}
                         >
-                            <Option value="天">天</Option>
-                            <Option value="周">周</Option>
-                            <Option value="月">月</Option>
-                            <Option value="年">年</Option>
+                            {DateUnits.map((item, index) => {
+                                return <Option key={index} value={item}>{item}</Option>
+                            })}
                         </Select>
                     )}
                 />
@@ -457,7 +456,7 @@ class AppCreate extends React.Component {
                     required={true}
                 >
                     {getFieldDecorator('rates', {
-                        initialValue: getFieldValue('rates') || { value: '', type: '0' },
+                        initialValue: getFieldValue('rates') || { value: '', type: 0 },
                         rules: [{ validator: this.checkRate }],
                     })(
                         <RateGroup />
@@ -603,7 +602,7 @@ export default class App extends React.Component {
         if(match && match.params && match.params.id) {
             Utils.axios({
                 key: 'app',
-                url: Api.getApp + '/' + match.params.id,
+                url: Api.getApp + match.params.id,
                 isAlert: false,
                 method: 'get',
             }, (result) => {

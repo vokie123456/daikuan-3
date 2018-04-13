@@ -31,7 +31,7 @@ class CategoryRepository
         $categories = $query->get()->toArray();
         
         foreach($categories as $key => $val) {
-            if(!empty($val['image'])) $categories[$key]['image'] = url('storage/' . $val['image']);
+            if(!empty($val['image'])) $categories[$key]['image'] = url(config('my.site.storage') . $val['image']);
             if(!empty($val['apps'])) {
                 $apps_id = array_map(function($item) {return $item['app_id'];}, $val['apps']);
                 $categories[$key]['apps'] = $this->app->getAppByInId($apps_id, $val['sort_app'], false);
@@ -56,7 +56,7 @@ class CategoryRepository
             ->first();
         if($category) {
             $category = $category->toArray();
-            if(!empty($category['image'])) $category['image'] = url('storage/' . $category['image']);
+            if(!empty($category['image'])) $category['image'] = url(config('my.site.storage') . $category['image']);
             if(!empty($category['apps'])) {
                 $apps_id = array_map(function($item) {return $item['app_id'];}, $category['apps']);
                 $category['apps'] = $this->app->getAppByInId($apps_id, $category['sort_app'], $isPaginate);

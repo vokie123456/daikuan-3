@@ -18,6 +18,11 @@ class CategoryRepository
         return $this->category->find($id);
     }
 
+    public function getAll()
+    {
+        return $this->category->orderBy('created_at', 'asc')->get()->toArray();
+    }
+
     public function getList($request = []) 
     {
         $config = array(
@@ -70,7 +75,7 @@ class CategoryRepository
     public function update($datas)
     {
         $_data = $this->format_data($datas);
-        $_data['image'] = str_replace('/storage/', '', $_data['image']);
+        $_data['image'] = rm_path_prev_storage($_data['image']);
         return $this->category->where('id', $datas['id'])->update($_data);
     }
 

@@ -34,7 +34,7 @@ class StoreCategoryPost extends FormRequest
         if(!empty(request('type')) && request('type') == 1) {
             $rules['image'] = 'bail|required|image|max:200';
             if(!empty(request('image')) && is_string(request('image'))) {
-                $img = str_replace('/storage/', '', request('image'));
+                $img = rm_path_prev_storage(request('image'));
                 if(Storage::disk('public')->exists($img)) {
                     unset($rules['image']);
                 }

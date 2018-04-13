@@ -15,6 +15,7 @@ yarn-error.log
 /public/js/app.js
 /public/js/admin.js
 /public/api
+/public/test.php
 
 .DS_Store
 app/.DS_Store

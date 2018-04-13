@@ -9,6 +9,7 @@ import AppCompany from '../app/company';
 import Category from '../category';
 import CategoryForm from '../category/form';
 import CategoryApps from '../category/apps';
+import BannerForm from '../banner/form';
 
 const { Content, } = Layout;
 
@@ -23,6 +24,7 @@ export default class ContentComponent extends React.Component {
                 <Route path="/category/:type" exact component={Category} />
                 <Route path="/category/:type/form/:id?" component={CategoryForm} />
                 <Route path="/categories/apps" component={CategoryApps} />
+                <Route path="/banner/form/:id?" component={BannerForm} />
             </Content>
         );
     }

@@ -26,17 +26,17 @@ class StoreAppPost extends FormRequest
      */
     public function rules()
     {
-        $icon_rule = 'bail|required|image|dimensions:ratio=1|max:200';
+        $image_rule = 'bail|required|image|dimensions:ratio=1|max:200';
         if(!empty(request('appicon')) && is_string(request('appicon'))) {
-            $img = str_replace('/storage/', '', request('appicon'));
+            $img = rm_path_prev_storage(request('appicon'));
             if(Storage::disk('public')->exists($img)) {
-                $icon_rule = 'required|max:255';
+                $image_rule = 'required|max:255';
             }
         }
         return [
             'name' => 'required|string|max:45',
             'weburl' => 'required|url|max:255',
-            'appicon' => $icon_rule,
+            'appicon' => $image_rule,
             'company_id' => 'required|integer|min:1',
             'rates' => [
                 'required',

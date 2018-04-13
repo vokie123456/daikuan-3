@@ -22,7 +22,7 @@ Route::post('logout','Admin\Auth\LoginController@postLogout')
     ->middleware('auth:admin')
     ->name('admin.logout');
 
-// Route::get('/','Admin\HomeController@index')->name('admin.home');
+Route::get('home','Admin\HomeController@index')->name('admin.home');
 
 Route::group([
     // 'namespace' => 'Admin',
@@ -43,6 +43,7 @@ Route::group([
     Route::post('appstatus/update', 'AppController@updateStatus');
     Route::get('app/delete/{id}', 'AppController@destroy')->where('id', '[0-9]+');
     Route::get('getcategories', 'CategoryController@index');
+    Route::get('getcategories/group', 'CategoryController@getAllToGroup');
     Route::post('category/create', 'CategoryController@store');
     Route::post('category/update', 'CategoryController@update');
     Route::get('getcategory/{id}', 'CategoryController@show')->where('id', '[0-9]+');
@@ -50,6 +51,9 @@ Route::group([
     Route::get('category/delete/{id}', 'CategoryController@destroy')->where('id', '[0-9]+');
     Route::get('getcategoryapps/{id?}', 'CategoryAppController@index')->where('id', '[0-9]+');
     Route::post('setcategoryapps', 'CategoryAppController@migrate');
+    Route::post('banner/create', 'BannerController@store');
+    Route::post('banner/update', 'BannerController@update');
+    Route::get('getbanner/{id}', 'BannerController@show')->where('id', '[0-9]+');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

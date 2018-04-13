@@ -31,6 +31,27 @@ class CategoryController extends Controller
         return response()->json($this->get_result());
     }
 
+    public function getAllToGroup()
+    {
+        $result = $this->category->getAll();
+        $datas = [];
+        $types = config('my.site.moudle_type');
+        foreach($result as $key => $val) {
+            if(!isset($datas[$val['type']])) {
+                $datas[$val['type']] = [
+                    'name' => $types[$val['type']],
+                    'child' => [],
+                ];
+            }
+            $datas[$val['type']]['child'][] = [
+                'id' => $val['id'],
+                'name' => $val['name'],
+            ];
+        }
+        $this->set_success('获取成功')->set_data('category', array_values($datas));
+        return response()->json($this->get_result());
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -58,8 +79,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = $this->category->getById($id);
         if($id) {
+            $category = $this->category->getById($id);
             if($category) {
                 $result = new CategoryResource($category);
                 $this->set_success('获取成功')->set_data('category', $result);

@@ -87,6 +87,9 @@ class Apps extends React.Component {
     render() {
         const { datas, showSearch, companyName, } = this.state;
         const columns = [{
+            title: 'ID',
+            dataIndex: 'id',
+        }, {
             title: 'APP图标',
             dataIndex: 'appicon',
             render: (value, record) => {

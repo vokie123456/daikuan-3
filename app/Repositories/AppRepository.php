@@ -74,7 +74,7 @@ class AppRepository
     public function update($datas)
     {
         $_data = $this->format_data($datas);
-        $_data['icon'] = str_replace('/storage/', '', $_data['icon']);
+        $_data['icon'] = rm_path_prev_storage($_data['icon']);
         return $this->appRepository->where('id', $datas['id'])->update($_data);
     }
 

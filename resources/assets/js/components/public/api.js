@@ -26,7 +26,7 @@ var urls = {
     //获取APP列表
     getApps: host + 'getapps',
     //获取单个APP信息
-    getApp: host + 'getapp',
+    getApp: host + 'getapp/',
     //添加APP
     addApp: host + 'app/store',
     //更新App
@@ -37,8 +37,10 @@ var urls = {
     deletaApp: host + 'app/delete',
     //获取所有类别
     getCategories: host + 'getcategories',
+    //获取按组分类的所有类别
+    getCategoryGroup: host + 'getcategories/group',
     //获取单个类别
-    getCategory: host + 'getcategory',
+    getCategory: host + 'getcategory/',
     //添加类别
     addCategory: host + 'category/create',
     //更新类别
@@ -51,6 +53,12 @@ var urls = {
     getCategoryApps: host + 'getcategoryapps/',
     //设置分类下的APP
     setCategoryApps: host + 'setcategoryapps',
+    //添加广告
+    addBanner: host + 'banner/create',
+    //更新广告
+    updateBanner: host + 'banner/update',
+    //获取单个广告信息
+    getBanner: host + 'getbanner/',
 };
 
 export default urls;

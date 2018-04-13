@@ -22,7 +22,7 @@ class AppRepository
             '`sort` asc, `created_at` desc',
         ];
         $_sort = isset($sorts[$sort]) ? $sorts[$sort] : $sorts[0];
-        $query = AppModel::whereIn('id', $ids)
+        $query = AppModel::where('status', 1)->whereIn('id', $ids)
                 ->select(
                     'id', 
                     'name', 
@@ -45,7 +45,7 @@ class AppRepository
             $app = [
                 'id' => $val['id'],
                 'name' => $val['name'],
-                'icon' => url('storage/' . $val['icon']),
+                'icon' => url(config('my.site.storage') . $val['icon']),
                 'money_max' => max($moneys),
                 'money_rand' => $this->get_rand_string($moneys, true),
                 'term_rand' => $terms[0]['value'] . $terms[0]['type'],

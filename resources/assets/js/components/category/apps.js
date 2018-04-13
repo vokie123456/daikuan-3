@@ -21,10 +21,7 @@ export default class Apps extends React.Component {
     getCategories = () => {
         Utils.axios({
             key: 'category',
-            url: Api.getCategories,
-            params: {
-                search: {type: -1},
-            },
+            url: Api.getCategoryGroup,
             isAlert: false,
             method: 'get',
         }, (result) => {
@@ -32,26 +29,28 @@ export default class Apps extends React.Component {
                 this.setState({
                     categories: result,
                 });
-                this.getDatas(result[0].id);
+                // this.getDatas(result[0].child[0].id || 0);
             }
         });
     };
     
     getDatas = (id) => {
-        Utils.axios({
-            url: Api.getCategoryApps + id,
-            method: 'get',
-            key: 'datas',
-            isAlert: false,
-        }, (result) => {
-            const targetKeys = result.target || [];
-            const dataSource = result.source || [];
-            this.setState({ 
-                targetKeys,
-                dataSource,
-                category_id: id,
+        if(id && id > 0) {
+            Utils.axios({
+                url: Api.getCategoryApps + id,
+                method: 'get',
+                key: 'datas',
+                isAlert: false,
+            }, (result) => {
+                const targetKeys = result.target || [];
+                const dataSource = result.source || [];
+                this.setState({ 
+                    targetKeys,
+                    dataSource,
+                    category_id: id,
+                });
             });
-        });
+        }
     }
 
     filterOption = (search, option) => {
@@ -74,16 +73,29 @@ export default class Apps extends React.Component {
 
     render() {
         const { targetKeys, dataSource, categories, category_id } = this.state;
-        if(!category_id) return null;
+        // if(!category_id) return null;
         return (
             <div style={{ width: '80%', margin: '10px auto'}}>
                 <Select 
-                    defaultValue={category_id} 
+                    defaultValue={0} 
                     onChange={this.getDatas}
-                    style={{ marginBottom: 30, width: 200, }}
+                    style={{ marginBottom: 30, width: 300, }}
                 >
+                    <Select.Option key={0} value={0}>
+                        请选择类别
+                    </Select.Option>
                     {categories.map((item, index) => {
-                        return <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>;
+                        return (
+                            <Select.OptGroup key={index + 1} label={item.name}>
+                                {item.child.map((t, i) => {
+                                    return (
+                                        <Select.Option key={index + '-' + i} value={t.id}>
+                                            {t.name}
+                                        </Select.Option>
+                                    );
+                                })}
+                            </Select.OptGroup>
+                        );
                     })}
                 </Select>
                 <Transfer

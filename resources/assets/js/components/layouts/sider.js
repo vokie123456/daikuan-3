@@ -47,6 +47,8 @@ const routers = [
         icon : 'notification',
         child: [{
             title: '添加广告',
+            link : '/banner/form',
+            contain: true,
         }, {
             title: '广告列表',
         }],
