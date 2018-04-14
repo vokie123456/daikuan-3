@@ -9,6 +9,7 @@ import AppCompany from '../app/company';
 import Category from '../category';
 import CategoryForm from '../category/form';
 import CategoryApps from '../category/apps';
+import Banners from '../banner/index';
 import BannerForm from '../banner/form';
 
 const { Content, } = Layout;
@@ -19,12 +20,15 @@ export default class ContentComponent extends React.Component {
             <Content style={styles.content}>
                 <Route path="/" exact component={Home} />
                 <Route path="/apps" exact component={Apps} />
-                <Route path="/apps/create/:id?" component={AppCreate} />
+                <Route path="/apps/create" exact component={AppCreate} />
+                <Route path="/apps/update/:id" component={AppCreate} />
                 <Route path="/apps/company" component={AppCompany} />
                 <Route path="/category/:type" exact component={Category} />
                 <Route path="/category/:type/form/:id?" component={CategoryForm} />
                 <Route path="/categories/apps" component={CategoryApps} />
-                <Route path="/banner/form/:id?" component={BannerForm} />
+                <Route path="/banners" exact component={Banners} />
+                <Route path="/banner/create" component={BannerForm} />
+                <Route path="/banner/update/:id" component={BannerForm} />
             </Content>
         );
     }

@@ -68,6 +68,7 @@ var utils = {
         })
         .catch((error) => {
             console.log('axios错误: ', error);
+            message.error(String(error));
         });
     },
 };

@@ -29,7 +29,7 @@ Route::group([
     // 'prefix' => 'admin',
     'middleware' => 'auth:admin'
 ], function () {
-    Route::view('/', 'admin')->name('admin.home');
+    Route::view('/', 'admin')->name('admin');
 
     Route::post('admin/info', 'Admin\AdminController@getInfo');
     Route::get('companies', 'CompanyController@index');
@@ -53,7 +53,10 @@ Route::group([
     Route::post('setcategoryapps', 'CategoryAppController@migrate');
     Route::post('banner/create', 'BannerController@store');
     Route::post('banner/update', 'BannerController@update');
+    Route::get('getbanners', 'BannerController@index');
     Route::get('getbanner/{id}', 'BannerController@show')->where('id', '[0-9]+');
+    Route::post('bannerstatus/update', 'BannerController@updateStatus');
+    Route::get('banner/delete/{id}', 'BannerController@destroy')->where('id', '[0-9]+');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

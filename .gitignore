@@ -17,6 +17,8 @@ yarn-error.log
 /public/api
 /public/test.php
 
+gitbook/_book
+
 .DS_Store
 app/.DS_Store
 app/Models/.DS_Store

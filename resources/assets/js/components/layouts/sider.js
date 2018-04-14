@@ -17,7 +17,6 @@ const routers = [
         child: [{
             title: '添加APP',
             link : '/apps/create',
-            contain: true,
         }, {
             title: '公司列表',
             link : '/apps/company',
@@ -47,10 +46,10 @@ const routers = [
         icon : 'notification',
         child: [{
             title: '添加广告',
-            link : '/banner/form',
-            contain: true,
+            link : '/banner/create',
         }, {
             title: '广告列表',
+            link : '/banners',
         }],
     }, {
         title: '推广统计',
@@ -159,7 +158,7 @@ var styles = {
     logo: {
         height: '32px',
         background: 'rgba(255,255,255,.2)',
-        margin: '30px 16px',
+        margin: '30px',
         borderRadius: '3px',
     },
 };

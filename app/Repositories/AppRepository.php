@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\App as AppModel;
+use App\Models\CategoryApp;
 use App\Services\Formatquery;
 
 class AppRepository
@@ -87,6 +88,8 @@ class AppRepository
 
     public function destroy($id)
     {
-        return $this->appRepository->where('id', $id)->delete();
+        $ret = CategoryApp::where('app_id', $id)->delete();
+        if($ret) $ret = $this->appRepository->where('id', $id)->delete();
+        return $ret;
     }
 }

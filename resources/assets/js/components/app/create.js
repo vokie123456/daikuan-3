@@ -614,10 +614,7 @@ export default class App extends React.Component {
     render() {
         const { params = {} } = this.props.match;
         let datas = this.state.datas;
-        if(!params.id && datas) {
-            window.location.reload();
-            return null;
-        }else if(params.id && !datas) {
+        if(params.id && !datas) {
             return null;
         }
         return <AppCreateInit {...Object.assign({}, this.props, {inits: datas})} />

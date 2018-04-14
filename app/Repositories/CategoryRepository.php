@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use App\Models\CategoryApp;
 use App\Services\Formatquery;
 
 class CategoryRepository
@@ -84,6 +85,11 @@ class CategoryRepository
         return $this->category
                 ->where('id', $id)
                 ->update(['status' => ($status ? 1 : 0)]);
+    }
+
+    public function checkDelete($id)
+    {
+        return CategoryApp::where('category_id', $id)->first();
     }
 
     public function delete($id)

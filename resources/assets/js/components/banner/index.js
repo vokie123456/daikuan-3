@@ -4,10 +4,11 @@ import { Table, Input, Icon, Button, Switch, Popconfirm, message } from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
+import { BannerPositions } from '../public/global';
 
 const Search = Input.Search;
 
-class Apps extends React.Component {
+class Banners extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,13 +30,13 @@ class Apps extends React.Component {
     fetch = (params = {}) => {
         this.setState({ loading: true });
         Utils.axios({
-            key: 'apps',
-            url: Api.getApps,
+            key: 'banners',
+            url: Api.getBanners,
             params: params,
             isAlert: false,
             method: 'get',
         }, (result) => {
-            // console.log(result);
+            console.log(result);
             this.setState({
                 datas: result,
                 loading: false,
@@ -43,8 +44,8 @@ class Apps extends React.Component {
             })
         });
     };
-    //app列表
-    getAppList = (search = '') => {
+    //广告列表
+    getBannerList = (search = '') => {
         let limit = this.pagination.pageSize || '';
         let offset = limit ? ((this.pagination.current || 1) - 1) * limit : '';
         let order = this.sort.order || '';
@@ -65,7 +66,7 @@ class Apps extends React.Component {
     //切换状态
     onChangeStatus = (value, id) => {
         Utils.axios({
-            url: Api.updateAppStatus,
+            url: Api.updateBannerStatus,
             data: {
                 id: id,
                 status: value ? 1 : 0,
@@ -76,7 +77,7 @@ class Apps extends React.Component {
     onDelete = (id) => {
         Utils.axios({
             key: 'ret',
-            url: Api.deletaApp + id,
+            url: Api.delBanner + id,
             method: 'get',
         }, (result) => {
             const datas = [...this.state.datas];
@@ -87,11 +88,8 @@ class Apps extends React.Component {
     render() {
         const { datas, } = this.state;
         const columns = [{
-            title: 'ID',
-            dataIndex: 'id',
-        }, {
-            title: 'APP图标',
-            dataIndex: 'appicon',
+            title: '广告图片',
+            dataIndex: 'image',
             render: (value, record) => {
                 return (
                     value ? 
@@ -100,16 +98,23 @@ class Apps extends React.Component {
                 );
             }
         }, {
-            title: 'APP名称',
+            title: '广告名称',
             dataIndex: 'name',
             sorter: true,
         }, {
-            title: '公司名称',
-            dataIndex: 'company_name',
+            title: '显示位置',
+            dataIndex: 'position',
+            sorter: true,
+            render: (value, record) => {
+                return BannerPositions[value] ? BannerPositions[value] : '';
+            },
+        }, {
+            title: '起始时间',
+            dataIndex: 'start_time',
             sorter: true,
         }, {
-            title: '添加时间',
-            dataIndex: 'created_at',
+            title: '结束时间',
+            dataIndex: 'end_time',
             sorter: true,
         }, {
             title: '当前状态',
@@ -131,7 +136,7 @@ class Apps extends React.Component {
                 return (
                     <Button.Group>
                         <Button>
-                            <Link to={'/apps/update/' + record.id}>Edit</Link>
+                            <Link to={'/banner/update/' + record.id}>Edit</Link>
                         </Button>
                         <Button>
                             <Popconfirm title="确定要删除?" onConfirm={() => this.onDelete(record.id)}>
@@ -147,7 +152,7 @@ class Apps extends React.Component {
                 <div className="toolbar">
                     <div className="searchBox">
                         <Search
-                            onSearch={this.getAppList}
+                            onSearch={this.getBannerList}
                             enterButton="Search"
                             size="large"
                         />
@@ -168,7 +173,7 @@ class Apps extends React.Component {
                         this.pagination = pagination;
                         this.filter = filter;
                         this.sort = sort;
-                        this.getAppList();
+                        this.getBannerList();
                     }}
                 />
             </div>
@@ -178,17 +183,15 @@ class Apps extends React.Component {
 
 const styles = {};
 styles.icon = {
-    width: '60px',
     maxHeight: '60px',
     margin: '-8px 0',
     borderRadius: '3px',
 };
 styles.emptyIcon = {
-    width: '60px',
-    height: '60px',
+    maxHeight: '60px',
     backgroundColor: '#eee',
     margin: '-8px 0',
     borderRadius: '3px',
 };
 
-export default Apps;
+export default Banners;

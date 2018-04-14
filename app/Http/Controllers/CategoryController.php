@@ -119,10 +119,14 @@ class CategoryController extends Controller
 
     public function updateStatus(Request $request)
     {
-        if($request->get('id')) {
-            $ret = $this->category->updateStatus($request->get('id'), $request->get('status'));
-            if($ret) $this->set_success('更新成功')->set_data('ret', $ret);
-            else $this->set_error('更新失败');
+        $id = $request->get('id');
+        $status = $request->get('status');
+        if($id) {
+            $ret = $this->category->updateStatus($id, $status);
+            if($ret) {
+                $str = $status ? '成功开启' : '成功关闭';
+                $this->set_success($str)->set_data('ret', $ret);
+            } else $this->set_error('更新失败');
         }else {
             $this->set_error('缺少参数');
         }
@@ -139,6 +143,8 @@ class CategoryController extends Controller
     {
         if(!$id) {
             $this->set_error('缺少参数');
+        }else if($this->category->checkDelete($id)) {
+            $this->set_error('该类别下存在关联APP, 无法删除!');
         }else {
             $ret = $this->category->delete($id);
             if($ret) $this->set_success('删除成功')->set_data('ret', $ret);

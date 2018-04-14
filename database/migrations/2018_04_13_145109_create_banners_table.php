@@ -26,7 +26,6 @@ class CreateBannersTable extends Migration
             $table->integer('sort')->unsigned()->default(0)->comment('排序序号');
             $table->unsignedTinyInteger('status')->default(1)->comment('状态: 0 禁止, 1 正常');
             $table->timestamps();
-            $table->foreign('app_id')->references('id')->on('apps');
         });
     }
 

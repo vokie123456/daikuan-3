@@ -34,7 +34,7 @@ var urls = {
     //更新App状态
     updateAppStatus: host + 'appstatus/update',
     //删除App
-    deletaApp: host + 'app/delete',
+    deletaApp: host + 'app/delete/',
     //获取所有类别
     getCategories: host + 'getcategories',
     //获取按组分类的所有类别
@@ -59,6 +59,12 @@ var urls = {
     updateBanner: host + 'banner/update',
     //获取单个广告信息
     getBanner: host + 'getbanner/',
+    //获取广告列表
+    getBanners: host + 'getbanners',
+    //更新广告状态
+    updateBannerStatus: host + 'bannerstatus/update',
+    //删除广告
+    delBanner: host + 'banner/delete/',
 };
 
 export default urls;

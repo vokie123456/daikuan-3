@@ -63,8 +63,8 @@ class FormComponent extends React.Component {
                     url: _id ? Api.updateBanner : Api.addBanner,
                     data: formdata,
                 }, (result) => {
-                    // let redirect = '/banner/' + this.type_id;
-                    // this.setState({ redirect });
+                    let redirect = '/banners';
+                    this.setState({ redirect });
                 }, (result) => {
                     if(result && result.errors) {
                         var errors = {};
