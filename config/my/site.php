@@ -6,4 +6,7 @@ return [
 
     // public的文件目录(软链接)
     'storage' => 'storage/',
+
+    // 这里模块文字需与 'moudle_type' 一致
+    'banner_position' => ['首页', '贷款'],
 ];

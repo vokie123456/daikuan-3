@@ -2,40 +2,33 @@
 namespace App\Repositories\Api;
 
 use App\Repositories\Api\CategoryRepository;
+use App\Repositories\BannerRepository;
+use App\Http\Resources\Api\BannerResource;
 
 class SecLoanRepository
 {
+    protected $banner;
     protected $category;
     
-    public function __construct()
+    public function __construct(CategoryRepository $category, BannerRepository $banner)
     {
-        // 这里不能使用注入
-        $this->category = new CategoryRepository();
+        $this->banner = $banner;
+        $this->category = $category;
     }
 
     protected function getBanner()
     {
-        return [
-            [
-                'id' => 1,
-                'name' => '测试广告1',
-                'type' => 0,
-                'app_id' => 1,
-                'url' => '#',
-                'image' => url('storage/banner/1-01-1.png'),
-                'start_time' => '2018-04-10 14:02:13',
-                'end_time' => '2018-06-10 14:02:13',
-            ], [
-                'id' => 3,
-                'name' => '测试广告2',
-                'type' => 0,
-                'app_id' => 1,
-                'url' => '#',
-                'image' => url('storage/banner/1-01-2.png'),
-                'start_time' => '2018-04-10 14:02:13',
-                'end_time' => '2018-06-10 14:02:13',
+        $query = [
+            'sort' => 'sort',
+            'order' => 'asc',
+            'search' => [
+                'position' => array_search(config('my.site.moudle_type')[2], config('my.site.banner_position')),
+                'show_time' => date('Y-m-d H:i:s'),
+                'status' => 1,
             ],
         ];
+        $data = $this->banner->getList($query);
+        return BannerResource::collection($data);
     }
 
     public function getDatas()

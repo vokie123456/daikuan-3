@@ -7,12 +7,11 @@ use App\Repositories\Api\AppRepository;
 
 class CategoryRepository
 {
-    protected $app;
+    protected $appRepository;
     
-    public function __construct()
+    public function __construct(AppRepository $appRepository)
     {
-        // 这里不能使用注入
-        $this->app = new AppRepository();
+        $this->appRepository = $appRepository;
     }
 
     /**
@@ -34,7 +33,7 @@ class CategoryRepository
             if(!empty($val['image'])) $categories[$key]['image'] = url(config('my.site.storage') . $val['image']);
             if(!empty($val['apps'])) {
                 $apps_id = array_map(function($item) {return $item['app_id'];}, $val['apps']);
-                $categories[$key]['apps'] = $this->app->getAppByInId($apps_id, $val['sort_app'], false);
+                $categories[$key]['apps'] = $this->appRepository->getAppByInId($apps_id, $val['sort_app'], false);
             }
             if(isset($val['sort_app'])) unset($categories[$key]['sort_app']);
         }
@@ -59,7 +58,7 @@ class CategoryRepository
             if(!empty($category['image'])) $category['image'] = url(config('my.site.storage') . $category['image']);
             if(!empty($category['apps'])) {
                 $apps_id = array_map(function($item) {return $item['app_id'];}, $category['apps']);
-                $category['apps'] = $this->app->getAppByInId($apps_id, $category['sort_app'], $isPaginate);
+                $category['apps'] = $this->appRepository->getAppByInId($apps_id, $category['sort_app'], $isPaginate);
             }
             if(isset($category['sort_app'])) unset($category['sort_app']);
         }

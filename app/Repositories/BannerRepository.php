@@ -27,9 +27,23 @@ class BannerRepository
                 'position',
                 'start_time',
                 'end_time',
+                'sort',
             ),
             'searchArr' => array(
                 'name'  => ['rule' => '%alias% like \'%%s%\'',],
+                'stime' => [
+                    'alias' => 'start_time',
+                    'rule' => '%alias% >= \'%s\'',
+                ],
+                'etime' => [
+                    'alias' => 'end_time',
+                    'rule' => '%alias% <= \'%s\'',
+                ],
+                'show_time' => [
+                    'rule' => '`start_time` <= \'%s\' AND `end_time` >= \'%s\'',
+                ],
+                'position' => true,
+                'status' => true,
             ),
         );
         $formatquery = new Formatquery($config);

@@ -36,7 +36,7 @@ class Banners extends React.Component {
             isAlert: false,
             method: 'get',
         }, (result) => {
-            console.log(result);
+            // console.log(result);
             this.setState({
                 datas: result,
                 loading: false,

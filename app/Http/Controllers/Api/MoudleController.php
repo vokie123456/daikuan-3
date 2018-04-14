@@ -11,23 +11,20 @@ use App\Repositories\Api\CategoryRepository;
 class MoudleController extends Controller
 {        
     //首页
-    public function homeDatas()
+    public function homeDatas(HomeRepository $homeRepository)
     {
-        $homeRepository = new HomeRepository();
         return $this->response($homeRepository->getDatas());
     }
 
     //贷款
-    public function loanDatas()
+    public function loanDatas(CategoryRepository $category)
     {
-        $category = new CategoryRepository();
         return $this->response($category->getCategoryByType(2, false));
     }
 
     //秒放贷
-    public function secloanDatas()
+    public function secloanDatas(SecLoanRepository $secLoanRepository)
     {
-        $secLoanRepository = new SecLoanRepository();
         return $this->response($secLoanRepository->getDatas());
     }
 
