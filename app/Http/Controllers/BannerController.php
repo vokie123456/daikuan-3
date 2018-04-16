@@ -52,6 +52,21 @@ class BannerController extends Controller
         return response()->json($this->get_result());
     }
 
+    public function checkError(&$datas, $file = null)
+    {
+        if($datas['start_time'] > $datas['end_time']) {
+            return '起始时间不能大于结束时间!';
+        }else if(isset($datas['app_id']) && !$this->banner->checkAppId($datas['app_id'])) {
+            return '无效的APP id!';
+        }else  {
+            if($file) {
+                $datas['image'] = $file->store('banner', 'public');
+                if(!$datas['image']) return '保存图片失败';
+            }
+        }
+        return null;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -62,17 +77,17 @@ class BannerController extends Controller
     {
         //
         $datas = $request->all();
-        if(isset($datas['app_id']) && !$this->banner->checkAppId($datas['app_id'])) {
-            $this->set_error('无效的APP id!');
-        }else {
-            if($request->hasFile('image')) {
-                $datas['image'] = $request->file('image')->store('banner', 'public');
-            }
+        $file = $request->hasFile('image') ? $request->file('image') : null;
+        $error = $this->checkError($datas, $file);
+        if(!$file) {
+            $this->set_error('图片不能为空');
+        }else if(!$error) {
             $ret = $this->banner->create($datas);
-            if($ret) $this->set_success('添加成功')->set_data('ret', $ret);
+            if($ret) $this->set_success('添加成功');
             else $this->set_error('添加失败');
+        }else {
+            $this->set_error($error);
         }
-        
         return response()->json($this->get_result());
     }
 
@@ -83,18 +98,21 @@ class BannerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(StoreBannerPost $request)
     {
         $datas = $request->all();
-        if($request->hasFile('image')) {
-            $datas['image'] = $request->file('image')->store('banner', 'public');
-        }
         if(!isset($datas['id'])) {
             $this->set_error('缺少参数');
         }else {
-            $ret = $this->banner->update($datas);
-            if($ret) $this->set_success('更新成功')->set_data('ret', $ret);
-            else $this->set_error('更新失败');
+            $file = $request->hasFile('image') ? $request->file('image') : null;
+            $error = $this->checkError($datas, $file);
+            if(!$error) {
+                $ret = $this->banner->update($datas);
+                if($ret) $this->set_success('更新成功');
+                else $this->set_error('更新失败');
+            }else {
+                $this->set_error($error);
+            }
         }
         return response()->json($this->get_result());
     }

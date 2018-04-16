@@ -19,7 +19,7 @@ class LoginController extends Controller
         $data = $request->only('email', 'password');
         $result = Auth::guard('admin')->attempt($data, true);
         if ($result) {
-            return redirect(route('admin.home'));
+            return redirect(route('admin'));
         } else {
             return redirect()->back()
                 ->with('email', $request->get('email'))

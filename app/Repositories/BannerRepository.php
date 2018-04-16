@@ -72,7 +72,7 @@ class BannerRepository
             'name' => $datas['name'],
             'position' => (int)$datas['position'],
             'type' => (int)$datas['type'],
-            'app_id' => (int)$datas['app_id'],
+            'app_id' => (int)$datas['app_id'] > 0 ? $datas['app_id'] : null,
             'url' => isset($datas['url']) ? (string)$datas['url'] : '',
             'image' => isset($datas['image']) ? (string)$datas['image'] : '',
             'start_time' => isset($datas['start_time']) ? $datas['start_time'] : null,

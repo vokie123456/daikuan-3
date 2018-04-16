@@ -27,8 +27,8 @@ class StoreBannerPost extends FormRequest
     public function rules()
     {
         $image_rule = 'image|max:300';
-        if(!empty(request('appicon')) && is_string(request('appicon'))) {
-            $img = rm_path_prev_storage(request('appicon'));
+        if(!empty(request('image')) && is_string(request('image'))) {
+            $img = rm_path_prev_storage(request('image'));
             if(Storage::disk('public')->exists($img)) {
                 $image_rule = 'max:255';
             }
@@ -37,8 +37,8 @@ class StoreBannerPost extends FormRequest
             'name' => 'required|string|max:45',
             'position' => 'required|in:0,1',
             'type' => 'required|in:0,1',
-            // 'app_id' => 'required_without:url|integer|min:0',
-            // 'url' => 'required_without:app_id|url|max:255',
+            'app_id' => 'nullable|integer|min:0',
+            'url' => 'required_if:type,1|nullable|url|max:255',
             'image' => $image_rule,
             'start_time' => 'required|date',
             'end_time' => 'required|date',
@@ -62,6 +62,19 @@ class StoreBannerPost extends FormRequest
             'start_time' => '起始时间',
             'end_time' => '结束时间',
             'sort' => '排序序号',
+        ];
+    }
+
+    /**
+     * 定义验证规则的错误消息
+     *
+     * @return array
+     * @translator laravelacademy.org
+     */
+    public function messages()
+    {
+        return [
+            'url.required_if' => '广告跳至web页面,请填写url地址.',
         ];
     }
 

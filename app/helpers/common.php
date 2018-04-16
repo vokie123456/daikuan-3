@@ -36,3 +36,10 @@ if(!function_exists('rm_path_prev_storage')) {
         return preg_replace('/^[\/]?storage\//i', '', $path);
     }
 }
+
+if(!function_exists('check_mobile')) {
+    //检查手机号码格式
+    function check_mobile($tel) {
+        return (bool)preg_match("/^1[34578]{1}\d{9}$/", $tel);
+    }
+}

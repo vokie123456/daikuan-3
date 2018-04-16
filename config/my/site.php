@@ -9,4 +9,7 @@ return [
 
     // 这里模块文字需与 'moudle_type' 一致
     'banner_position' => ['首页', '贷款'],
+
+    // 用户性别
+    'sexs' => ['未知', '男', '女'],
 ];
