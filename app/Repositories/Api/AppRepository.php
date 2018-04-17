@@ -5,6 +5,45 @@ use App\Models\App as AppModel;
 
 class AppRepository
 {
+    public function getAppById($id)
+    {
+        $app = AppModel::select(
+            'id', 
+            'name', 
+            'icon', 
+            'marks',
+            'recommend',
+            'apply_number', 
+            'synopsis', 
+            'details',
+            'rate',
+            'rate_type',
+            'moneys',
+            'terms',
+            'repayments',
+            'status'
+        )->where('id', $id)->first();
+        if($app) {
+            $app = $app->toArray();
+            $moneys = json_decode($app['moneys'], true);
+            $terms = json_decode($app['terms'], true);
+            $rate_types = config('my.site.rate_types');
+
+            $app['icon'] = url(config('my.site.storage') . $app['icon']);
+            $app['money_max'] = max($moneys);
+            $app['money_rand'] = $this->get_rand_string($moneys, true);
+            $app['term_rand'] = $terms[0]['value'] . $terms[0]['type'];
+            $app['rate'] = floatval($app['rate']);
+            $app['rate_type_name'] = $rate_types[$app['rate_type']];
+            $app['repayments'] = json_decode($app['repayments'], true);
+            if(count($terms) > 1) {
+                $last_term = $terms[count($terms) - 1];
+                $app['term_rand'] .= ('/' . $last_term['value'] . $last_term['type']);
+            }
+        }
+        return $app;
+    }
+
     /**
      * 通过app的多个id, 获取APPs
      * 
@@ -32,11 +71,13 @@ class AppRepository
                     'rate',
                     'rate_type',
                     'moneys',
-                    'terms'
+                    'terms',
+                    'marks',
+                    'isNew'
                 )
                 ->orderByRaw($_sort);
         $origin_apps = ($isPaginate ? $query->simplePaginate(15) : $query->get())->toArray();
-        $rate_types = ['日', '周', '月', '年'];
+        $rate_types = config('my.site.rate_types');
         $target_apps = [];
         $datas = $isPaginate ? $origin_apps['data'] : $origin_apps;
         foreach($datas as $key => $val) {
@@ -53,6 +94,8 @@ class AppRepository
                 'synopsis' => $val['synopsis'],
                 'rate' => floatval($val['rate']),
                 'rate_type_name' => $rate_types[$val['rate_type']],
+                'marks' => (isset($val['marks'])) ? json_decode($val['marks'], true) : null,
+                'isNew' => isset($val['isNew']) ? $val['isNew'] : 0,
             ];
             if(count($terms) > 1) {
                 $last_term = $terms[count($terms) - 1];

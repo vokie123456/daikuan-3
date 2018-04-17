@@ -89,7 +89,6 @@ class SomeInput extends React.Component {
         
         // getFieldDecorator(name + '_key', {initialValue: initialValue});
         const keys = getFieldValue(name + '_key');
-        const keys2 = getFieldValue(name);
         if(!keys) return null;
         const formItemLayout = {
             labelCol: {

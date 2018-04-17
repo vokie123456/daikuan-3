@@ -17,7 +17,8 @@ class UserResource extends JsonResource
         return [
             'telephone' => $this->telephone,
             'name' => $this->name,
-            'sex' => config('my.site.sexs')[$this->sex],
+            'sex' => $this->sex,
+            'sex_name' => config('my.site.sexs')[$this->sex],
             'telephone' => $this->telephone,
             'birthday' => $this->birthday ? $this->birthday : '',
             'email' => $this->email,

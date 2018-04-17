@@ -32,11 +32,13 @@ class AppResource extends JsonResource
             ],
             'moneys' => json_decode($this->moneys, true),
             'terms' => json_decode($this->terms, true),
+            'marks' => json_decode($this->marks, true),
             'repayments' => json_decode($this->repayments, true),
             'apply_number' => $this->apply_number,
             'sort' => $this->sort,
             'recommend' => round(intval($this->recommend) / 2, 1),
             'status' => $this->status ? true : false,
+            'isNew' => $this->isNew ? true : false,
             'created_at' => $this->created_at,
         ];
     }

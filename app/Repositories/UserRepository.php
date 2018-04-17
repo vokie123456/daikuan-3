@@ -14,9 +14,8 @@ class UserRepository
 
     public function create(Array $data)
     {
-        if(!isset($data['created_at'])) {
-            $data['created_at'] = date('Y-m-d H:i:s');
-        }
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
         return $this->user->insert($data);
     }
 

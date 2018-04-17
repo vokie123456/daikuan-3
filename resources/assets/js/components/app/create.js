@@ -244,9 +244,10 @@ class AppCreate extends React.Component {
                         i == 'moneys' ||
                         i == 'rates' ||
                         i == 'repayments' ||
-                        i == 'terms'
+                        i == 'terms' ||
+                        i == 'marks'
                     ) ? JSON.stringify(values[i]) : values[i];
-                    if(i == 'status') _value = _value ? 1 : 0;
+                    if(i == 'status' || i == 'isNew') _value = _value ? 1 : 0;
                     formdata.append(i, _value);
                 }
                 Utils.axios({
@@ -489,6 +490,16 @@ class AppCreate extends React.Component {
                     {..._props}
                     initialValue={getFieldValue('repayments') || ['']}
                 />
+                <SomeInput 
+                    name="marks"
+                    label="标签"
+                    maxCount={2}
+                    inputParams={{maxLength: 6}}
+                    isRequired={false}
+                    clearDefaultRule={true}
+                    {..._props}
+                    initialValue={getFieldValue('marks') || ['']}
+                />
                 <FormItem
                     {...formItemLayout}
                     label="简介"
@@ -564,6 +575,17 @@ class AppCreate extends React.Component {
                         <Switch />
                     )}
                 </FormItem>
+                <FormItem
+                    {...formItemLayout}
+                    label="是否最新"
+                >
+                    {getFieldDecorator('isNew', { 
+                        valuePropName: 'checked',
+                        initialValue: false,
+                    })(
+                        <Switch />
+                    )}
+                </FormItem>
 
                 <FormItem {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit">保存</Button>
@@ -579,6 +601,7 @@ const AppCreateInit = Form.create({
             terms: [{value: '', type: '天'}],
             moneys: [''],
             repayments: [''],
+            marks: [''],
         };
         for(let i in inits) {
             if(i == 'moneys') {

@@ -55,11 +55,13 @@ class AppRepository
             'rate_type' => (int)$datas['rates']['type'],
             'moneys' => json_encode($moneys),
             'terms' => $datas['terms'],
+            'marks' => $datas['marks'],
             'repayments' => $datas['repayments'],
             'apply_number' => (int)$datas['apply_number'],
             'sort' => (int)$datas['sort'],
             'recommend' => intval(floatval($datas['recommend']) * 2),
             'status' => (isset($datas['status']) && $datas['status']) ? 1 : 0,
+            'isNew' => (isset($datas['isNew']) && $datas['isNew']) ? 1 : 0,
             'updated_at' => date('Y-m-d H:i:s'),
         );
         return $_data;

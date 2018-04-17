@@ -10,13 +10,13 @@ namespace App\Http\Controllers;
  */
 
 
-define('INIT_ERRNO', '1');
+define('INIT_ERRNO', 1);
 define('INIT_ERROR', '');
 define('INIT_ERRNO_KEY', 'errno');
 define('INIT_ERROR_KEY', 'error');
 
 trait ApiResponse {
-	protected $_successno = '0';
+	protected $_successno = 0;
 	protected $_initerrno = INIT_ERRNO;
 	protected $_initerror = INIT_ERROR;
 	protected $_errno = INIT_ERRNO_KEY;
