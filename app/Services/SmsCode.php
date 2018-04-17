@@ -16,7 +16,7 @@ class SmsCode {
         'accesskey' => 'FuM1v4Fw3Z4Gs0dV',
         'secret' => '4LqKyfcNnEF3fdKoQD3kubjkQ36KWYwM',
         'sign' => '【贷款超市】',
-        'templateId' => 4300,
+        'templateId' => 3318,
         'scheduleSendTime'=>''
     ];
 
@@ -27,14 +27,14 @@ class SmsCode {
         }
     }
 
-    public function send_code($phone, $code, $time) {
+    public function send_code($phone, $code) {
         $datas = [
             'accesskey' => $this->_config['accesskey'],
             'secret' => $this->_config['secret'],
             'sign' => $this->_config['sign'],
             'templateId' => $this->_config['templateId'],
             'mobile' => $phone,
-            'content' => $code . '##' . $time,
+            'content' => $code,
             'scheduleSendTime'=>''
         ];
         return $this->_curl_setopt($datas);

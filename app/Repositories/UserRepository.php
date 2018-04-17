@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository
 {
@@ -22,5 +23,21 @@ class UserRepository
     public function getUserByPhone($phone)
     {
         return $this->user->where('telephone', $phone)->first();
+    }
+
+    public function check_password($user_id, $password)
+    {
+        $_password = $this->user->select('password')->where('id', $user_id)->value('password');
+        return Hash::check($password, $_password);
+    }
+
+    public function update_info_by_id($user_id, Array $data)
+    {
+        return $this->user->where('id', $user_id)->update($data);
+    }
+
+    public function update_info_by_telephone($telephone, Array $data)
+    {
+        return $this->user->where('telephone', $telephone)->update($data);
     }
 }

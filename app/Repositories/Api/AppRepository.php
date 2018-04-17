@@ -21,7 +21,8 @@ class AppRepository
             'moneys',
             'terms',
             'repayments',
-            'status'
+            'status',
+            'isNew'
         )->where('id', $id)->first();
         if($app) {
             $app = $app->toArray();
