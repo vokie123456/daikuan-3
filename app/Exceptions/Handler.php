@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -55,6 +57,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        $error = $exception->getMessage();
+        if($error = 'Unauthenticated.' && method_exists($exception, 'guards') && in_array('api', $exception->guards())) {
+            return response([
+                'error' => 'token认证失败',
+                'errno' => 403,
+            ], 403);
+        }
+
         return parent::render($request, $exception);
     }
 }

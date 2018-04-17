@@ -53,11 +53,11 @@ var utils = {
             if(res.data) {
                 let result = res.data;
                 if(_config.isAlert && result.error) {
-                    if(result.errno == 0) message.success(result.error);
+                    if(result.errno == '0') message.success(result.error);
                     else message.error(result.error);
                 }
                 let data = (_config.key && result[_config.key]) ? result[_config.key] : result;
-                if(result.errno == 0 || fail === true || _config.force) {  //成功或强制执行
+                if(result.errno == '0' || fail === true || _config.force) {  //成功或强制执行
                     success && success(data);
                 }else if(fail) {  //失败
                     fail(data);
