@@ -81,9 +81,9 @@ class SmsCodeRepository
             if(!$row) {
                 $err = '该手机未发送过验证码!';
             }else if($row->code != $code) {
-                $err = '该验证码不正确!';
+                $err = '验证码不正确!';
             }else if($row->isUse) {
-                $err = '该验证码已被验证过了!';
+                $err = '该验证码已被使用!';
             }else if($row->expires_at && strtotime($row->expires_at) < time()) {
                 $err = '该验证码已过期!';
             }

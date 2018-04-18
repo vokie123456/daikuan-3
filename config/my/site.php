@@ -15,4 +15,7 @@ return [
 
     // 利率单位
     'rate_types' => ['日', '周', '月', '年'],
+
+    // 推荐类型(对应的表名)
+    'recomm_types' => [1 => 'users', 2 => 'companies']
 ];

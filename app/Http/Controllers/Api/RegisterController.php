@@ -52,7 +52,7 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(Request $request, UserRepository $userRepository)
     {
         $validator = $this->validator($request->all());
         if($validator->fails()) {
@@ -60,26 +60,16 @@ class RegisterController extends Controller
         }else {
             $telephone = $request->get('telephone');
             $code = $request->get('code');
-            $password = $request->get('password');
-            $error = $this->smscode->checkCodeByPhone($telephone, $code, 0);
-            if($error) {
-                $this->set_error($error);
+            $error1 = $this->smscode->checkCodeByPhone($telephone, $code, 0);
+            if($error1) {
+                $this->set_error($error1);
             }else {
-                $user = new UserRepository();
-                if($user->getUserByPhone($telephone)) {
-                    $this->set_error('该手机已注册!');
+                $error2 = $userRepository->create($request->all());
+                if($error2) {
+                    $this->set_error($error2);
                 }else {
-                    $data = [
-                        'telephone' => $telephone,
-                        'password' => bcrypt($password),
-                    ];
-                    $ret = $user->create($data);
-                    if($ret) {
-                        $this->set_success('用户添加成功!');
-                        $this->smscode->setUsed($telephone, $code, 0);
-                    }else {
-                        $this->set_error('用户添加失败!');
-                    }
+                    $this->set_success('用户添加成功!');
+                    $this->smscode->setUsed($telephone, $code, 0);
                 }
             }
         }

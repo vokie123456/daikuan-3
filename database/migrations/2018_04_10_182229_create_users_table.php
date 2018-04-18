@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->default('')->comment('邮箱');
             $table->string('profession')->default('')->comment('职业');
             $table->string('address')->default('')->comment('地址');
-            $table->string('share_code')->default('')->comment('分享码');
             $table->timestamps();
         });
     }

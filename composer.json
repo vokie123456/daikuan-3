@@ -28,7 +28,8 @@
             "App\\": "app/"
         },
         "files": [
-            "app/helpers/common.php"
+            "app/helpers/common.php",
+            "app/helpers/encry.php"
         ]
     },
     "autoload-dev": {
