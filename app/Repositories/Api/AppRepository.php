@@ -53,7 +53,7 @@ class AppRepository
      * @param  Bool   $isPaginate  是否分页
      * @param  Array
      */
-    public function getAppByInId(Array $ids = [], $sort, $isPaginate = true)
+    public function getAppByInId(Array $ids = [], $sort = 0, $isPaginate = true)
     {
         $sorts = [
             '`created_at` desc', 
@@ -61,7 +61,7 @@ class AppRepository
             '`sort` desc, `created_at` desc', 
             '`sort` asc, `created_at` desc',
         ];
-        $_sort = isset($sorts[$sort]) ? $sorts[$sort] : $sorts[0];
+        $_sort = ($sort && isset($sorts[$sort])) ? $sorts[$sort] : $sorts[0];
         $query = AppModel::where('status', 1)->whereIn('id', $ids)
                 ->select(
                     'id', 
@@ -79,7 +79,7 @@ class AppRepository
                 ->orderByRaw($_sort);
         $origin_apps = ($isPaginate ? $query->simplePaginate(15) : $query->get())->toArray();
         $rate_types = config('my.site.rate_types');
-        $target_apps = [];
+        $target_apps = ['data' => []];
         $datas = $isPaginate ? $origin_apps['data'] : $origin_apps;
         foreach($datas as $key => $val) {
             $moneys = json_decode($val['moneys'], true);
@@ -110,7 +110,7 @@ class AppRepository
             }
         }
 
-        if($isPaginate) {
+        if($isPaginate && count($target_apps['data'])) {
             $target_apps['current_page'] = $origin_apps['current_page'];
             $target_apps['per_page'] = $origin_apps['per_page'];
         }

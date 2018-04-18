@@ -33,4 +33,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('user/updatepassword', 'Api\UserController@reset_password');
     Route::post('user/updatemobile/getcode', 'Api\UserController@update_telephone_send_code');
     Route::post('user/updatemobile', 'Api\UserController@update_telephone');
+    Route::post('user/update', 'Api\UserController@update');
+    Route::post('app/togglecollection/{id}', 'Api\UserCollController@toggleCollection')->where('id', '[0-9]+');
+    Route::get('getcollections', 'Api\UserCollController@getCollections');
+    Route::get('getrecords', 'Api\UserRecController@getRecords');
 });

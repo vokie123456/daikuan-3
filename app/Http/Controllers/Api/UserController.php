@@ -21,14 +21,54 @@ class UserController extends Controller
     {
         $this->smscode = $smscode;
         $this->userRepository = $userRepository;
-        // Auth::user()  也可以
+        // Auth::user()  也行
         $this->user = Auth::guard('api')->user();
     }
 
     public function getInfo()
     {
-        // $user = Auth::user();
-        $this->set_success('获取成功!')->set_data('user', new UserResource($this->user));
+        $user = new UserResource($this->user);
+        if(isset($this->user['status']) && $this->user['status']) {
+            $this->set_success('获取成功!')->set_data('user', $user);
+        }else {
+            $this->set_error('该帐号已被禁止!');
+        }
+        return response()->json($this->get_result());
+    }
+
+    public function validator($datas)
+    {
+        return Validator::make($datas, [
+            'name' => 'required|string|min:2',
+            'sex' => 'nullable|integer|in:1,2',
+            'birthday' => 'nullable|string|date',
+            'email' => 'nullable|email',
+            'profession' => 'nullable|string',
+            'address' => 'nullable|string',
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $datas = $request->all();
+        $validator = $this->validator($datas);
+        if($validator->fails()) {
+            $this->set_error($validator->errors()->first());
+        }else {
+            $data = [
+                'name' => $datas['name'],
+                'sex' => isset($datas['sex']) ? intval($datas['sex']) : 0,
+                'birthday' => !empty($datas['birthday']) ? date('Y-m-d H:i:s', strtotime($datas['birthday'])) : null,
+                'email' => !empty($datas['email']) ? $datas['email'] : '',
+                'profession' => !empty($datas['profession']) ? $datas['profession'] : '',
+                'address' => !empty($datas['address']) ? $datas['address'] : '',
+            ];
+            if($this->userRepository->update_info_by_id($this->user->id, $data)) {
+                $this->set_success('用户资料修改成功!');
+            }else {
+                $this->set_error('用户资料修改失败!');
+            }
+        }
         return response()->json($this->get_result());
     }
 

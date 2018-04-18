@@ -25,8 +25,9 @@ class UserRepository
         if($this->getUserByPhone($request['telephone'])) {
             return '该手机号码已注册!';
         }else {
-            if(isset($request['recomm'])) {
-                $ret = get_id_by_url_encode($request['recomm']);
+            $key = config('my.site.recomm');
+            if(isset($request[$key])) {
+                $ret = get_id_by_url_encode($request[$key]);
                 $types = config('my.site.recomm_types');
                 if($ret && in_array($ret['key'], $types) && $ret['val'] > 0) {
                     $find = DB::table($ret['key'])->where('id', $ret['val'])->first();

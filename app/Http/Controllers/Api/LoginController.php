@@ -23,10 +23,14 @@ class LoginController extends Controller
                 'telephone' => $username,
                 'password' => $password,
             ])
-        ){
+        ) {
             $user = Auth::user();
-            $token = $user->createToken('DaiKuan')->accessToken;
-            $this->set_success('登录成功')->set_data('token', $token);
+            if(isset($user['status']) && $user['status']) {
+                $token = $user->createToken('DaiKuan')->accessToken;
+                $this->set_success('登录成功')->set_data('token', $token);
+            }else {
+                $this->set_error('该帐号已被禁止!');
+            }
         }else {
             $this->set_error('用户名或密码错误!');
         }
