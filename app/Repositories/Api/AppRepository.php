@@ -79,7 +79,8 @@ class AppRepository
                 ->orderByRaw($_sort);
         $origin_apps = ($isPaginate ? $query->simplePaginate(15) : $query->get())->toArray();
         $rate_types = config('my.site.rate_types');
-        $target_apps = ['data' => []];
+        $target_apps = [];
+        if($isPaginate) $target_apps['data'] = [];
         $datas = $isPaginate ? $origin_apps['data'] : $origin_apps;
         foreach($datas as $key => $val) {
             $moneys = json_decode($val['moneys'], true);

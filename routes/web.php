@@ -12,7 +12,16 @@
 */
 
 Route::get('/', function () {
+    // event(new \App\Events\PusherEvent([
+    //     'name' => 'test',
+    //     'message' => 'now time: ' . date('Y-m-d H:i:s'),
+    // ]));    
     return view('welcome');
+});
+
+
+Route::get('/pusher', function () {
+    return view('pusher');
 });
 
 
