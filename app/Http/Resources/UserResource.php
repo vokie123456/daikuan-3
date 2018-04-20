@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'sex' => $this->sex,
             'sex_name' => config('my.site.sexs')[$this->sex],
             'telephone' => $this->telephone,
-            'birthday' => $this->birthday ? $this->birthday : '',
+            'birthday' => $this->birthday ? substr($this->birthday, 0, 10) : '',
             'email' => $this->email,
             'profession' => $this->profession,
             'address' => $this->address,

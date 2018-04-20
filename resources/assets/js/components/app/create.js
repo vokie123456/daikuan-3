@@ -493,7 +493,7 @@ class AppCreate extends React.Component {
                 <SomeInput 
                     name="marks"
                     label="标签"
-                    maxCount={2}
+                    maxCount={1}
                     inputParams={{maxLength: 6}}
                     isRequired={false}
                     clearDefaultRule={true}

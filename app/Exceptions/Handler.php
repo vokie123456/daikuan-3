@@ -61,8 +61,8 @@ class Handler extends ExceptionHandler
         if($error = 'Unauthenticated.' && method_exists($exception, 'guards') && in_array('api', $exception->guards())) {
             return response([
                 'error' => 'token认证失败',
-                'errno' => 403,
-            ], 403);
+                'errno' => 401,
+            ], 401);
         }
 
         return parent::render($request, $exception);

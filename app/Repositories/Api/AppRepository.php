@@ -10,8 +10,7 @@ class AppRepository
         $app = AppModel::select(
             'id', 
             'name', 
-            'icon', 
-            'marks',
+            'icon',
             'recommend',
             'apply_number', 
             'synopsis', 
@@ -21,8 +20,7 @@ class AppRepository
             'moneys',
             'terms',
             'repayments',
-            'status',
-            'isNew'
+            'status'
         )->where('id', $id)->first();
         if($app) {
             $app = $app->toArray();
@@ -36,7 +34,7 @@ class AppRepository
             $app['term_rand'] = $terms[0]['value'] . $terms[0]['type'];
             $app['rate'] = floatval($app['rate']);
             $app['rate_type_name'] = $rate_types[$app['rate_type']];
-            $app['repayments'] = json_decode($app['repayments'], true);
+            $app['repayments'] = implode('/', json_decode($app['repayments'], true));
             if(count($terms) > 1) {
                 $last_term = $terms[count($terms) - 1];
                 $app['term_rand'] .= ('/' . $last_term['value'] . $last_term['type']);
@@ -85,6 +83,7 @@ class AppRepository
         foreach($datas as $key => $val) {
             $moneys = json_decode($val['moneys'], true);
             $terms = json_decode($val['terms'], true);
+            $marks = isset($val['marks']) ? json_decode($val['marks'], true) : null;
             $app = [
                 'id' => $val['id'],
                 'name' => $val['name'],
@@ -96,7 +95,7 @@ class AppRepository
                 'synopsis' => $val['synopsis'],
                 'rate' => floatval($val['rate']),
                 'rate_type_name' => $rate_types[$val['rate_type']],
-                'marks' => (isset($val['marks'])) ? json_decode($val['marks'], true) : null,
+                'marks' => ($marks && !empty($marks)) ? $marks[0] : '',
                 'isNew' => isset($val['isNew']) ? $val['isNew'] : 0,
             ];
             if(count($terms) > 1) {
