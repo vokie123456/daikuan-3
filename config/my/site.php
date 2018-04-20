@@ -21,4 +21,7 @@ return [
 
     // 推荐码键名
     'recomm' => 'recomm',
+
+    // register url
+    'register_path' => 'register/index.html',
 ];

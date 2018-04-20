@@ -72,7 +72,7 @@ class SmsCodeRepository
 
     public function checkCodeByPhone($phone, $code, $type)
     {
-        $err = $this->sendPrevCheck($phone, false);
+        $err = $this->sendPrevCheck($phone, $type, false);
         if(!$err) {
             $row = $this->sms_code->select('isUse', 'code', 'expires_at')
                 ->where('telephone', $phone)->where('type', $type)

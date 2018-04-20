@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>download</title>
+	<style>
+		body{
+			background-color: #ed4b45;
+			margin: 0;
+			padding: 0;
+		}
+		img{
+			width: 100%;
+			display: block;
+			vertical-align: bottom;
+		}
+		a{
+			position: absolute;
+			width: 5.12rem;
+			height: 1.19rem;
+			left: 2.84rem;
+			top: 16.26rem; 
+		}
+		#mcover {
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: rgba(0, 0, 0, 0.7);
+		    display: none;
+		    z-index: 2000;
+		}
+		#mcover img {
+		    position: fixed;
+		    right: 18px;
+		    top: 18px;
+		    width: 80%;
+		    z-index: 999;	
+		}
+	</style>
+</head>
+<body>
+	<img src="download.jpg" alt="" >
+	<a href="javascript:;" onclick="document.getElementById('mcover').style.display='block';"></a>
+	<div id="mcover">
+	     <img src="weixin_tip.png">
+	</div>
+	<script>  
+	(function (doc, win) {
+	        var docEl = doc.documentElement,
+	            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+	            recalc = function () {
+	                var clientWidth = docEl.clientWidth;
+	                if (!clientWidth) return;
+	                if(clientWidth>=1080){
+	                    docEl.style.fontSize = '100px';
+	                }else{
+	                    docEl.style.fontSize = 100 * (clientWidth / 1080) + 'px';
+	                }
+	            };
+
+	        if (!doc.addEventListener) return;
+	        win.addEventListener(resizeEvt, recalc, false);
+	        doc.addEventListener('DOMContentLoaded', recalc, false);
+	    })(document, window);
+	</script> 
+</body>
+</html>
+
+                             

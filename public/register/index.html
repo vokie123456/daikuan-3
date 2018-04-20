@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<script src="../js/jquery-2.1.4.min.js"></script>
+	<script>  
+	(function (doc, win) {
+	        var docEl = doc.documentElement,
+	            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+	            recalc = function () {
+	                var clientWidth = docEl.clientWidth;
+	                if (!clientWidth) return;
+	                if(clientWidth>=1080){
+	                    docEl.style.fontSize = '100px';
+	                }else{
+	                    docEl.style.fontSize = 100 * (clientWidth / 1080) + 'px';
+	                }
+	            };
+
+	        if (!doc.addEventListener) return;
+	        win.addEventListener(resizeEvt, recalc, false);
+	        doc.addEventListener('DOMContentLoaded', recalc, false);
+	    })(document, window);
+	</script> 
+	<title>register</title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+ 		body{
+			background: #f68b0d;   
+		} 
+		img{
+			display: block;
+			vertical-align: bottom; 
+		}
+		input{
+			display: inline-block;
+			outline: none;
+			border: none;
+			height: 1rem;
+			line-height: 1rem;
+			width: 6rem;
+			font-size: 0.4rem;
+		}
+		input[type="text"]{
+			color: #404040;
+		}
+		label{
+			display: inline-block;
+			width: 2.15rem;
+			padding-left: 0.41rem;
+		}
+		input::-webkit-input-placeholder { 
+			color: #b0b0b0;
+			font-size: 0.4rem;
+		}
+		input:-moz-placeholder {  /* Mozilla Firefox 4 to 18*/ 
+		　　color: #b0b0b0;
+			font-size: 0.4rem;
+		}
+		input::-moz-placeholder {  /* Mozilla Firefox 19+*/ 
+		　　color: #b0b0b0;
+			font-size: 0.4rem;
+		}
+		input:-ms-input-placeholder { /* Internet Explorer 10+*/ 
+			color: #b0b0b0;
+			font-size: 0.4rem;
+		}
+		.con{
+			font-size: 0.36rem;
+			color: #404040;
+			height: 16.56rem;
+			background: url(Easy_Operation.jpg) 0rem 8.5rem no-repeat;   
+			background-size: 100%;
+		}
+		.con .item{
+			width: 9.35rem;
+			height: 1.58rem;
+			line-height: 1.58rem;
+			margin: 0 auto;
+			margin-bottom: 0.47rem;
+			border: 1px #ad9935 solid;
+		  	border-radius: 0.12rem;
+		  	font-size: 0.4rem;
+		  	background: #fff;
+		}
+		.con .yzm{
+			width: 9.35rem;
+			height: 1.58rem;
+			line-height: 1.58rem;
+			margin: 0 auto;
+			margin-bottom: 0.47rem;
+		}
+		.con .yzm .item{
+			display: inline-block;
+			width: 6rem;
+			margin-left: -1px;
+		}
+		.con .yzm input[type="text"]{
+			width: 3rem;
+		}
+		.con .yzm input[type="button"]{
+			float: right;
+			width: 3rem;
+			height: 1.58rem;
+			line-height: 1.58rem;
+			border-radius: 0.12rem;
+			color: #fff;
+			background-color: #e92517;  
+		}
+		.con a{
+			display: block;
+			width: 9.29rem;
+			height: 1.6rem;
+			border-radius: 0.8rem;
+			line-height: 1.6rem;
+			text-align: center;
+			margin: 0 auto;
+			margin-top: 0.65rem;
+			font-size: 0.45rem;
+			color: #fff;
+			background-color: #e92517;  
+			text-decoration: none;
+		}
+
+		/*提示框*/
+		p {
+			display: none;
+			position: absolute;
+			left: 2rem; 
+			top: 40%;
+			width: 6.8rem;
+		    border-radius: 0.3rem;
+			color: #f0f0f0;
+			background-color: rgba(0,0,0,0.7);
+			font-size: 0.46rem;
+			text-align: center;
+		}
+		span {
+			display: inline-block;
+			text-align: left;
+			padding: 0.6rem 0.25rem;
+		}
+	</style>
+</head>
+<body>
+	
+	<img src="Easy_loan.jpg" alt="" width="100%">
+	<div class="con">
+		<form name="form" id="form">
+		    <div class="item">  
+		    	<label for="">账号</label>   
+		        <input type="text" name="telephone" placeholder="请输入手机号码" class="telephone" autofocus>
+		    </div>
+		    <div class="yzm">	
+		    	<div class="item">     
+		    		<label for="">手机验证码</label>     
+		    	    <input type="text" name="code" placeholder="请输入验证码" class="code">   
+		    	</div>  
+		    	<input type="button" value="获取验证码" class="sjyzm" id="btnSendCode"> 
+	    	</div>
+		    <div class="item">     
+		    	<label for="">密码</label>   
+		        <input type="password" name="password" placeholder="请输入6-18位密码" class="password">
+		    </div>  
+	    	<a href="javascript:;" class="register">立即注册</a>
+	    </form>
+	</div>  
+
+	<p><span>请输入正确的手机号码</span></p>
+	<p><span>请输入正确的验证码</span></p>
+	<p><span>请输入6-18位密码</span></p>
+	<p class="error"><span></span></p>
+
+	<script>
+			var code;
+			$("#btnSendCode").click(function() {
+				if(!$(".telephone").val().match(/^(13[0-9]|14[4-8]|15([0-3]|[5-9])|166|17(3|[5-8])|18([0-9])|19([8]|[9]))\d{8}$/)){
+	 		 		$("p").eq(0).show().delay(2000).fadeOut(1000);
+	 		  	}else{
+	    		    var form = document.getElementById("form");
+	    		    var fd = new FormData(form);
+	    	        $.ajax({  
+	    				"crossDomain": true,
+	    				"url": "http://www.wangtougongshe.com/api/register/getcode",
+	    				"method": "POST",
+	    				"headers": {},
+	    				"dataType":"json",
+	    				"processData": false,
+	    				"contentType": false,
+	    				"mimeType": "multipart/form-data",
+	    				"data": fd,
+	    				error: function (jxhr, textStatus, errorThrown) {},  
+	    				success: function (data, status){ 
+							if(data && data.errno == 0) {
+								code = data.code;
+
+								count = 60;  
+								$("#btnSendCode").attr("disabled", "true");  
+								$("#btnSendCode").val(+ count + "秒后重新发送");  
+								$("#btnSendCode").css("background-color","#888");
+								InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次  	  
+							}else if(data && data.error) {
+								console.log(data.error);
+								$(".error span").text(data.error).parent().show().delay(2000).fadeOut(1000);
+							}
+	    				}  
+	    	        }); 
+			    } 
+			});	
+
+			$(".register").click(function() {
+				if(!$(".telephone").val().match(/^(13[0-9]|14[4-8]|15([0-3]|[5-9])|166|17(3|[5-8])|18([0-9])|19([8]|[9]))\d{8}$/)){
+	 		 		$("p").eq(0).show().delay(2000).fadeOut(1000);
+	 		  	}else if($(".code").val() != code){
+	 		 		$("p").eq(1).show().delay(2000).fadeOut(1000);
+	 		  	}else if(!$(".password").val().match(/^\w{6,18}$/)){
+					$("p").eq(2).show().delay(2000).fadeOut(1000);
+				}else{  
+	    		    var form = document.getElementById("form");
+	    		    var fd = new FormData(form);
+	    		    var recomm = getUrlParam("recomm") || ''; 
+	    	        $.ajax({  
+	    				"crossDomain": true,
+	    				"url": "http://www.wangtougongshe.com/api/register?recomm="+recomm,
+	    				"method": "POST",
+	    				"headers": {},
+	    				"processData": false,
+	    				"contentType": false,
+	    				"mimeType": "multipart/form-data",
+						"data": fd,
+						"dataType":"json",
+	    				error: function(XMLHttpRequest, textStatus, errorThrown) { },  
+	    				success: function(data, status) {
+							console.log(data);
+							if(data && data.errno == 0) {
+								window.open('./download.html', '_self');
+							}else if(data && data.error) {
+								$(".error span").text(data.error).parent().show().delay(2000).fadeOut(1000);
+							}
+	    				}  
+	    	        });  
+			    } 
+			});	
+	 
+			function SetRemainTime() {  
+			    if (count == 0) {                  
+			        window.clearInterval(InterValObj); //停止计时器  
+			        $("#btnSendCode").removeAttr("disabled"); //启用按钮  
+			        $("#btnSendCode").val("获取验证码"); 
+			        $("#btnSendCode").css("background-color","#e92517"); 
+			    }  
+			    else {  
+			        count--;  
+			        $("#btnSendCode").val(+ count + "秒后重新发送");  
+			    }  
+			}  
+
+			function getUrlParam(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+				var r = window.location.search.substr(1).match(reg); //匹配目标参数
+				if (r != null) return unescape(r[2]); return null; //返回参数值
+			}			
+	</script>
+</body>
+</html>
+
+                             
