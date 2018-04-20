@@ -33,10 +33,13 @@ class HomeRepository
 
     public function getDatas()
     {
+        $apps = $this->category->getCategoryByType(0);
         return [
             'banners' => $this->getBanner(),
             'icons' => $this->category->getCategoryByType(1, false),
-            'category_apps' => $this->category->getCategoryByType(0),
+            // 'category_apps' => $this->category->getCategoryByType(0),
+            'recomm_apps' => isset($apps[0]) ? $apps[0] : null,
+            'hot_apps' => isset($apps[1]) ? $apps[1] : null,
         ];
     }
 }
