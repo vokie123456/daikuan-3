@@ -2,9 +2,16 @@
 namespace App\Repositories\Api;
 
 use App\Models\App as AppModel;
+use App\Http\Resources\Api\AppListResource;
+use Illuminate\Support\Facades\Log;
 
 class AppRepository
 {
+    public function getSimpleAppById($id)
+    {
+        return AppModel::select('id', 'weburl', 'status')->where('id', $id)->first();
+    }
+
     public function getAppById($id)
     {
         $app = AppModel::select(
@@ -27,7 +34,7 @@ class AppRepository
             $moneys = json_decode($app['moneys'], true);
             $terms = json_decode($app['terms'], true);
             $rate_types = config('my.site.rate_types');
-
+            $app['recommend'] = round($app['recommend'] / 2, 1);
             $app['icon'] = url(config('my.site.storage') . $app['icon']);
             $app['money_max'] = max($moneys);
             $app['money_rand'] = $this->get_rand_string($moneys, true);
@@ -75,44 +82,19 @@ class AppRepository
                     'isNew'
                 )
                 ->orderByRaw($_sort);
-        $origin_apps = ($isPaginate ? $query->simplePaginate(15) : $query->get())->toArray();
-        $rate_types = config('my.site.rate_types');
+        $origin_apps = $isPaginate ? $query->simplePaginate(15) : $query->get();
+        $_origin_apps = $origin_apps->toArray();
         $target_apps = [];
         if($isPaginate) $target_apps['data'] = [];
-        $datas = $isPaginate ? $origin_apps['data'] : $origin_apps;
-        foreach($datas as $key => $val) {
-            $moneys = json_decode($val['moneys'], true);
-            $terms = json_decode($val['terms'], true);
-            $marks = isset($val['marks']) ? json_decode($val['marks'], true) : null;
-            $app = [
-                'id' => $val['id'],
-                'name' => $val['name'],
-                'icon' => url(config('my.site.storage') . $val['icon']),
-                'money_max' => max($moneys),
-                'money_rand' => $this->get_rand_string($moneys, true),
-                'term_rand' => $terms[0]['value'] . $terms[0]['type'],
-                'apply_number' => $val['apply_number'],
-                'synopsis' => $val['synopsis'],
-                'rate' => floatval($val['rate']),
-                'rate_type_name' => $rate_types[$val['rate_type']],
-                'marks' => ($marks && !empty($marks)) ? $marks[0] : '',
-                'isNew' => isset($val['isNew']) ? $val['isNew'] : 0,
-            ];
-            if(count($terms) > 1) {
-                $last_term = $terms[count($terms) - 1];
-                $app['term_rand'] .= ('-' . $last_term['value'] . $last_term['type']);
-            }
-
-            if($isPaginate) {
-                $target_apps['data'][] = $app;
-            }else {
-                $target_apps[] = $app;
-            }
+        if($isPaginate) {
+            $target_apps['data'] = AppListResource::collection($origin_apps);
+        }else {
+            $target_apps = AppListResource::collection($origin_apps);
         }
 
-        if($isPaginate && count($target_apps['data'])) {
-            $target_apps['current_page'] = $origin_apps['current_page'];
-            $target_apps['per_page'] = $origin_apps['per_page'];
+        if($isPaginate && count($_origin_apps['data'])) {
+            $target_apps['current_page'] = $_origin_apps['current_page'];
+            $target_apps['per_page'] = $_origin_apps['per_page'];
         }
 
         return $target_apps;

@@ -3,6 +3,7 @@ namespace App\Repositories\Api;
 
 use App\Models\User_collection;
 use App\Repositories\Api\AppRepository;
+use App\Http\Resources\Api\AppListResource;
 
 class UserCollRepository
 {
@@ -53,8 +54,18 @@ class UserCollRepository
 
     public function getCollections($user_id)
     {
-        $appRepository = new AppRepository();
-        $appids = $this->user_collection->where('user_id', $user_id)->pluck('app_id')->toArray();
-        return $appRepository->getAppByInId($appids);
+        $datas = $this->user_collection->select('apps.*')
+            ->where('user_collections.user_id', $user_id)
+            ->leftJoin('apps', 'apps.id', '=', 'user_collections.app_id')
+            ->orderBy('user_collections.created_at', 'desc')->simplePaginate(15);
+        $_datas = $datas->toArray();
+        if(count($_datas['data'])) {
+            return [
+                'data' => AppListResource::collection($datas),
+                'current_page' => $_datas['current_page'],
+                'per_page' => $_datas['per_page'],
+            ];
+        }
+        return null;
     }
 }

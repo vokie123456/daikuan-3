@@ -28,6 +28,9 @@ class DeviceRepository
                 $row->created_at = date('Y-m-d H:i:s');
             }
 
+            $user = Auth::guard('api')->user();
+            if($user) $row->user_id = $user->id;
+
             $row->name = $datas['name'];
             $row->operator = isset($datas['operator']) ? $datas['operator'] : '';
             $row->model = isset($datas['model']) ? $datas['model'] : '';
@@ -35,10 +38,6 @@ class DeviceRepository
             $row->phone_sys_version = isset($datas['phone_sys_version']) ? $datas['phone_sys_version'] : '';
             $row->request_ip = request()->getClientIp();
             $row->updated_at = date('Y-m-d H:i:s');
-            
-            $user = Auth::guard('api')->user();
-            if($user) $row->user_id = $user->id;
-
             return $row->save();
         }
         return false;

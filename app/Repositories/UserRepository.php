@@ -62,4 +62,13 @@ class UserRepository
     {
         return $this->user->where('telephone', $telephone)->update($data);
     }
+
+    public function activate($user_id)
+    {
+        return $this->user->where('id', $user_id)
+            ->where('activated_at', NULL)
+            ->update([
+                'activated_at' => date('Y-m-d H:i:s'),
+            ]);
+    }
 }

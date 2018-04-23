@@ -22,7 +22,7 @@ class UserRecController extends Controller
     public function getRecords()
     {
         $apps = $this->userRecRepository->getRecords($this->user->id);
-        $this->set_success('获取成功')->set_data('apps', !empty($apps['data']) ? $apps : null);
+        $this->set_success('获取成功')->set_data('apps', $apps);
         return response()->json($this->get_result());
     }
 }

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 
 class LoginController extends Controller
 {
@@ -25,7 +26,9 @@ class LoginController extends Controller
             ])
         ) {
             $user = Auth::user();
-            if(isset($user['status']) && $user['status']) {
+            if($user->status) {
+                $userRepository = new UserRepository();
+                $userRepository->activate($user->id);
                 $token = $user->createToken('DaiKuan')->accessToken;
                 $this->set_success('登录成功')->set_data('token', $token);
             }else {

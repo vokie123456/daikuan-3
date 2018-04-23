@@ -8,6 +8,4 @@ class User_record extends Model
 {
     //
     protected $guarded = [];
-    
-    public $timestamps = false;
 }
