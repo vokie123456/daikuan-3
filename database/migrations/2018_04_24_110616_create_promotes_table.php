@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserRecordsTable extends Migration
+class CreatePromotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateUserRecordsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_records', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('promotes', function (Blueprint $table) {
             $table->integer('app_id')->unsigned()->comment('APPid');
-            $table->integer('user_id')->nullable()->unsigned()->comment('用户id');
-            $table->string('ip', 32)->default('')->comment('请求ip');
+            $table->integer('user_id')->unsigned()->comment('用户id');
             $table->timestamp('created_at')->useCurrent()->comment('添加时间');
             $table->foreign('app_id')->references('id')->on('apps');
             $table->foreign('user_id')->references('id')->on('users');
@@ -31,6 +29,6 @@ class CreateUserRecordsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_records');
+        Schema::dropIfExists('promotes');
     }
 }

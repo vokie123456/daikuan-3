@@ -29,13 +29,16 @@ class UserRecRepository
 
     public function addRecord($app_id, $user_id)
     {
-        $record = [
-            'app_id' => $app_id,
-            'user_id' => $user_id,
-            'ip' => request()->getClientIp(),
-            'created_at' => date('Y-m-d H:i:s'),
-        ];
-        $this->user_record->insert($record);
+        $ip = request()->getClientIp();
+        $sql = $this->user_record->where('app_id', $app_id)
+            ->where('user_id', $user_id)
+            ->where('created_at', '>', date('Y-m-d'));
+        if($user_id) {
+            $sql->delete();
+        }else if($sql->where('ip', $ip)->count() >= config('my.site.same_ip_day_number')) {
+            return;
+        }
+        $this->user_record->insert(compact('app_id', 'user_id', 'ip'));
     }
 
     public function getRecords($user_id)
@@ -53,5 +56,17 @@ class UserRecRepository
             ];
         }
         return null;
+    }
+
+    public function getCountByToday()
+    {
+        $members = $this->user_record->whereRaw('user_id IS NOT NULL')->where('created_at', '>', date('Y-m-d'))->count();
+        $tourists = $this->user_record->where('user_id', null)->where('created_at', '>', date('Y-m-d'))->count();
+        return $members . '+' . $tourists;
+    }
+
+    public function getCountByDate($date)
+    {
+        return $this->user_record->where('created_at', '>', $date)->get()->toArray();
     }
 }

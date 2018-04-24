@@ -24,4 +24,7 @@ return [
 
     // register url
     'register_path' => 'register/index.html',
+    
+    // 同一ip每日限制的条数
+    'same_ip_day_number' => 3,
 ];

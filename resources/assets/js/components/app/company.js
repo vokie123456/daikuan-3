@@ -155,7 +155,7 @@ class AppCompany extends React.Component {
         const { datas } = this.state;
         Utils.axios({
             url: Api.addAppCompany,
-            params: {name: value,},
+            data: {name: value,},
             key: 'company',
         }, (result) => {
             this.setState({
@@ -169,7 +169,7 @@ class AppCompany extends React.Component {
         return (value) => {
             Utils.axios({
                 url: Api.updateCompany,
-                params: {
+                data: {
                     name: value,
                     id: key,
                 },

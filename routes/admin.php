@@ -23,6 +23,7 @@ Route::post('logout','Admin\Auth\LoginController@postLogout')
     ->name('admin.logout');
 
 Route::get('home','Admin\HomeController@index')->name('admin.home');
+Route::get('home/counts','Admin\HomeController@getCounts');
 
 Route::group([
     // 'namespace' => 'Admin',

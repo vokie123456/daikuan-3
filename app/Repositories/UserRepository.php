@@ -71,4 +71,20 @@ class UserRepository
                 'activated_at' => date('Y-m-d H:i:s'),
             ]);
     }
+
+    public function getCountByToday()
+    {
+        $activates = $this->user->whereRaw('recomm_id IS NOT NULL')->where('activated_at', '>', date('Y-m-d'))->count();
+        $recomms = $this->user->whereRaw('recomm_id IS NOT NULL')->where('created_at', '>', date('Y-m-d'))->count();
+        $no_recomms = $this->user->where('recomm_id', null)->where('created_at', '>', date('Y-m-d'))->count();
+        return [
+            'activate' => $activates,
+            'register' => $recomms . '+' . $no_recomms,
+        ];
+    }
+
+    public function getCountByDate($date, $date_key = 'created_at')
+    {
+        return $this->user->where($date_key, '>', $date)->get()->toArray();
+    }
 }

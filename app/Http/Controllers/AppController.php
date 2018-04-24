@@ -121,6 +121,8 @@ class AppController extends Controller
      */
     public function destroy($id)
     {
+        exit('暂不提供删除!');
+        
         if($id) {
             $ret = $this->appRepository->destroy($id);
             if($ret) $this->set_success('删除成功')->set_data('ret', $ret);

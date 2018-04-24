@@ -129,16 +129,9 @@ class Apps extends React.Component {
             title: '操作',
             render: (text, record) => {
                 return (
-                    <Button.Group>
-                        <Button>
-                            <Link to={'/apps/update/' + record.id}>Edit</Link>
-                        </Button>
-                        <Button>
-                            <Popconfirm title="确定要删除?" onConfirm={() => this.onDelete(record.id)}>
-                                <a href="#">Delete</a>
-                            </Popconfirm>
-                        </Button>
-                    </Button.Group>
+                    <Button>
+                        <Link to={'/apps/update/' + record.id}>Edit</Link>
+                    </Button>
                 );
             },
         }];

@@ -8,6 +8,7 @@ use App\Repositories\Api\AppRepository;
 use App\Repositories\Api\CategoryRepository;
 use App\Repositories\Api\UserRecRepository;
 use App\Repositories\Api\UserCollRepository;
+use App\Repositories\Api\PromoteRepository ;
 use Illuminate\Support\Facades\Auth;
 
 class AppController extends Controller
@@ -50,29 +51,22 @@ class AppController extends Controller
         return response()->json($this->get_result());
     }
 
-    public function getAppWebUrl($id, UserRecRepository $userRecRepository)
+    public function getAppWebUrl($id, PromoteRepository $promoteRepository)
     {
         $user = Auth::guard('api')->user();
-        $status = 200;
-        if($user && $user->id) {
-            if($user->status) {
-                $app = $this->appRepository->getSimpleAppById($id);
-                if(!$app) {
-                    $this->set_error('找不到APP');
-                }else if(!$app['status']) {
-                    $this->set_error('该APP已下架');
-                }else if(!$userRecRepository->click_promote($app->id, $user->id)) {
-                    $this->set_error('非法请求');
-                }else {
-                    $this->set_success('获取成功')->set_data('weburl', $app['weburl']);
-                }
+        if($user->status) {
+            $app = $this->appRepository->getSimpleAppById($id);
+            if(!$app) {
+                $this->set_error('找不到APP');
+            }else if(!$app['status']) {
+                $this->set_error('该APP已下架');
             }else {
-                $this->set_error('该帐号已被禁止!');
+                $promoteRepository->click_promote($app->id, $user->id);
+                $this->set_success('获取成功')->set_data('weburl', $app['weburl']);
             }
         }else {
-            $status = 403;
-            $this->set_error('token认证失败')->set_errno(403);
+            $this->set_error('该帐号已被禁止!');
         }
-        return response($this->get_result(), $status);
+        return response()->json($this->get_result());
     }
 }

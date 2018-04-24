@@ -40,5 +40,6 @@ var styles = {
         margin: '12px 12px 0',
         borderRadius: '4px',
         padding: '20px',
+        display: 'flex',
     },
 };

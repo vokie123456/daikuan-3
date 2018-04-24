@@ -65,6 +65,8 @@ var urls = {
     updateBannerStatus: host + 'bannerstatus/update',
     //删除广告
     delBanner: host + 'banner/delete/',
+    //获取主页的数据量
+    getCounts: host + 'home/counts',
 };
 
 export default urls;
