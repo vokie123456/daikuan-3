@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\DB;
 use App\Repositories\CategoryRepository;
 use App\Http\Resources\CategoryResource;
 use App\Http\Requests\StoreCategoryPost;
@@ -24,9 +23,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        // DB::enableQueryLog();
         $datas = CategoryResource::collection($this->category->getList($request->all()));
-        // error_log(print_r(DB::getQueryLog(), true));
         $this->set_success('获取成功')->set_data('category', $datas);
         return response()->json($this->get_result());
     }

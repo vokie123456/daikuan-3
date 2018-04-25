@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Validator;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
 use App\Repositories\CompanyRepository;
@@ -21,9 +20,7 @@ class CompanyController extends Controller
     //获取公司列表
     public function index(Request $request)
     {
-        // DB::enableQueryLog();
         $datas = CompanyResource::collection($this->company->getList($request->all()));
-        // error_log(print_r(DB::getQueryLog(), true));
         $this->set_success('获取成功')->set_data('companies', $datas);
         return response()->json($this->get_result());
     }

@@ -23,9 +23,7 @@ class BannerController extends Controller
      */
     public function index(Request $request)
     {
-        // DB::enableQueryLog();
         $datas = BannerResource::collection($this->banner->getList($request->all()));
-        // error_log(print_r(DB::getQueryLog(), true));
         $this->set_success('获取成功')->set_data('banners', $datas);
         return response()->json($this->get_result());
     }

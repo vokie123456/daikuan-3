@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Log;
 
 class AppRepository
 {
+    public function getAppsForRand()
+    {
+        return AppModel::select('name', 'moneys')->orderBy('created_at', 'desc')
+            ->take(100)->get()->toArray();
+    }
+
     public function getSimpleAppById($id)
     {
         return AppModel::select('id', 'weburl', 'status')->where('id', $id)->first();
