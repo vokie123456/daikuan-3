@@ -56,7 +56,7 @@ var utils = {
                     if(result.errno == 0) message.success(result.error);
                     else message.error(result.error);
                 }
-                let data = (_config.key && result[_config.key]) ? result[_config.key] : result;
+                let data = _config.key ? result[_config.key] : result;
                 if(result.errno == 0 || fail === true || _config.force) {  //成功或强制执行
                     success && success(data);
                 }else if(fail) {  //失败

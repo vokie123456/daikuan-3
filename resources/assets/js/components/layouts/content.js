@@ -11,6 +11,7 @@ import CategoryForm from '../category/form';
 import CategoryApps from '../category/apps';
 import Banners from '../banner/index';
 import BannerForm from '../banner/form';
+import Users from '../user';
 
 const { Content, } = Layout;
 
@@ -29,6 +30,7 @@ export default class ContentComponent extends React.Component {
                 <Route path="/banners" exact component={Banners} />
                 <Route path="/banner/create" component={BannerForm} />
                 <Route path="/banner/update/:id" component={BannerForm} />
+                <Route path="/users" exact component={Users} />                
             </Content>
         );
     }
@@ -40,6 +42,6 @@ var styles = {
         margin: '12px 12px 0',
         borderRadius: '4px',
         padding: '20px',
-        display: 'flex',
+        display: '-webkit-box',
     },
 };

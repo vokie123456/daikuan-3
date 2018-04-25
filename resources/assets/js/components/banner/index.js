@@ -14,7 +14,6 @@ class Banners extends React.Component {
         this.state = {
             datas: [],
             loading: false,
-            filterDropdownVisible: false,
         };
         
         this.pagination = {};
@@ -40,7 +39,6 @@ class Banners extends React.Component {
             this.setState({
                 datas: result,
                 loading: false,
-                filterDropdownVisible: false,
             })
         });
     };
@@ -66,12 +64,20 @@ class Banners extends React.Component {
     //切换状态
     onChangeStatus = (value, id) => {
         Utils.axios({
+            key: 'status',
             url: Api.updateBannerStatus,
             data: {
                 id: id,
                 status: value ? 1 : 0,
             },
-        });
+        }, (result) => {
+            let status = result !== undefined ? !!result : !value;
+            this.setState({ 
+                datas: this.state.datas.map((item, index) => {
+                    return item.id == id ? Object.assign({}, item, {status: status}) : item;
+                })
+            });
+        }, true);
     }
     //删除app
     onDelete = (id) => {
@@ -124,8 +130,8 @@ class Banners extends React.Component {
                 return (
                     <Switch 
                         checkedChildren="开启" 
-                        unCheckedChildren="关闭" 
-                        defaultChecked={value ? true : false}
+                        unCheckedChildren="关闭"
+                        checked={value ? true : false}
                         onChange={value => this.onChangeStatus(value, record.id)}
                     />
                 );
@@ -148,7 +154,7 @@ class Banners extends React.Component {
             },
         }];
         return (
-            <div>
+            <div className="webkit-flex">
                 <div className="toolbar">
                     <div className="searchBox">
                         <Search
@@ -168,6 +174,8 @@ class Banners extends React.Component {
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
+                        total: datas.length,
+                        showTotal: total => `共 ${total} 条记录`,
                     }}
                     onChange={(pagination, filter, sort) => {
                         this.pagination = pagination;

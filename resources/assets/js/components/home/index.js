@@ -105,7 +105,7 @@ class Home extends React.Component {
         if(!datas) return null;
         // console.log(this.option);
         return (
-            <div style={styles.body}>
+            <div style={styles.body} className="divStyle">
                 <div style={styles.blockBox}>
                     {!datas ? null : block.map((item, index) => {
                         let count = datas[item.key] || 0;
@@ -130,7 +130,6 @@ var styles = {
     body: {
         display: 'flex',
         flexDirection: 'column',
-        flex: 1,
     },
     blockBox: {
         display: 'flex',

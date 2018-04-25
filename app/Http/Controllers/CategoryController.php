@@ -122,10 +122,11 @@ class CategoryController extends Controller
         $id = $request->get('id');
         $status = $request->get('status');
         if($id) {
+            $status = (bool)$status;
             $ret = $this->category->updateStatus($id, $status);
             if($ret) {
                 $str = $status ? '成功开启' : '成功关闭';
-                $this->set_success($str)->set_data('ret', $ret);
+                $this->set_success($str)->set_data('status', $status);
             } else $this->set_error('更新失败');
         }else {
             $this->set_error('缺少参数');

@@ -4,6 +4,15 @@
     z-index: 90;
 }
 
+.webkit-flex {
+    -webkit-box-flex: 1;
+    flex: auto;
+}
+
+.divStyle {
+    width: 100%;
+}
+
 
 .formStyle {
     width: 80%;

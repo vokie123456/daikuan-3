@@ -4,16 +4,16 @@ import { Table, Input, Icon, Button, Switch, Popconfirm, message } from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
+import { RegisterTypes } from '../public/global';
 
 const Search = Input.Search;
 
-class Apps extends React.Component {
+class Users extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             datas: [],
             loading: false,
-            filterDropdownVisible: false,
         };
         
         this.pagination = {};
@@ -29,8 +29,8 @@ class Apps extends React.Component {
     fetch = (params = {}) => {
         this.setState({ loading: true });
         Utils.axios({
-            key: 'apps',
-            url: Api.getApps,
+            key: 'users',
+            url: Api.getUsers,
             params: params,
             isAlert: false,
             method: 'get',
@@ -39,12 +39,12 @@ class Apps extends React.Component {
             this.setState({
                 datas: result,
                 loading: false,
-                filterDropdownVisible: false,
+                status: null,
             })
         });
     };
-    //app列表
-    getAppList = (search = '') => {
+    //用户列表
+    getUserList = (search = '') => {
         let limit = this.pagination.pageSize || '';
         let offset = limit ? ((this.pagination.current || 1) - 1) * limit : '';
         let order = this.sort.order || '';
@@ -65,8 +65,8 @@ class Apps extends React.Component {
     //切换状态
     onChangeStatus = (value, id) => {
         Utils.axios({
+            url: Api.updateUserStatus,
             key: 'status',
-            url: Api.updateAppStatus,
             data: {
                 id: id,
                 status: value ? 1 : 0,
@@ -82,73 +82,72 @@ class Apps extends React.Component {
     }
     //删除app
     onDelete = (id) => {
-        Utils.axios({
-            key: 'ret',
-            url: Api.deletaApp + id,
-            method: 'get',
-        }, (result) => {
-            const datas = [...this.state.datas];
-            this.setState({ datas: datas.filter(item => item.id !== id) });
-        });
+        // Utils.axios({
+        //     key: 'ret',
+        //     url: Api.delBanner + id,
+        //     method: 'get',
+        // }, (result) => {
+        //     const datas = [...this.state.datas];
+        //     this.setState({ datas: datas.filter(item => item.id !== id) });
+        // });
     }
 
     render() {
-        const { datas, } = this.state;
+        const { datas } = this.state;
         const columns = [{
-            title: 'ID',
-            dataIndex: 'id',
-        }, {
-            title: 'APP图标',
-            dataIndex: 'appicon',
-            render: (value, record) => {
-                return (
-                    value ? 
-                        <img src={value} style={styles.icon} /> : 
-                        <div style={styles.emptyIcon}></div>
-                );
-            }
-        }, {
-            title: 'APP名称',
+            title: '姓名',
             dataIndex: 'name',
             sorter: true,
         }, {
-            title: '公司名称',
-            dataIndex: 'company_name',
-            sorter: true,
+            title: '手机',
+            dataIndex: 'telephone',
         }, {
-            title: '添加时间',
-            dataIndex: 'created_at',
+            title: '注册方式',
+            dataIndex: 'recomm_type',
             sorter: true,
+            render: (value, record) => {
+                return RegisterTypes[value] ? RegisterTypes[value] : '';
+            },
         }, {
             title: '当前状态',
             dataIndex: 'status',
             sorter: true,
             render: (value, record) => {
                 return (
-                    <Switch 
+                    <Switch
                         checkedChildren="开启" 
-                        unCheckedChildren="关闭" 
+                        unCheckedChildren="关闭"
+                        // defaultChecked
                         checked={value ? true : false}
                         onChange={value => this.onChangeStatus(value, record.id)}
                     />
                 );
             }
         }, {
+            title: '注册时间',
+            dataIndex: 'created_at',
+            sorter: true,
+        }, {
             title: '操作',
             render: (text, record) => {
                 return (
-                    <Button>
-                        <Link to={'/apps/update/' + record.id}>Edit</Link>
-                    </Button>
+                    <Button.Group>
+                        <Button>
+                            <Link to={'#'}>Edit</Link>
+                        </Button>
+                        <Button>
+                            <Link to={'#'}>重置密码</Link>
+                        </Button>
+                    </Button.Group>
                 );
             },
         }];
         return (
-            <div className="divStyle">
+            <div className="webkit-flex">
                 <div className="toolbar">
                     <div className="searchBox">
                         <Search
-                            onSearch={this.getAppList}
+                            onSearch={this.getUserList}
                             enterButton="Search"
                             size="large"
                         />
@@ -171,7 +170,7 @@ class Apps extends React.Component {
                         this.pagination = pagination;
                         this.filter = filter;
                         this.sort = sort;
-                        this.getAppList();
+                        this.getUserList();
                     }}
                 />
             </div>
@@ -181,17 +180,15 @@ class Apps extends React.Component {
 
 const styles = {};
 styles.icon = {
-    width: '60px',
     maxHeight: '60px',
     margin: '-8px 0',
     borderRadius: '3px',
 };
 styles.emptyIcon = {
-    width: '60px',
-    height: '60px',
+    maxHeight: '60px',
     backgroundColor: '#eee',
     margin: '-8px 0',
     borderRadius: '3px',
 };
 
-export default Apps;
+export default Users;

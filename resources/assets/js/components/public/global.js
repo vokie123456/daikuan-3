@@ -46,6 +46,12 @@ const BannerTypes = [
     'web页面',
 ];
 
+const RegisterTypes = [
+    '自行注册',
+    '好友推荐',
+    '公司推广',
+];
+
 
 export {
     RateTypes,
@@ -54,4 +60,5 @@ export {
     Moudles,
     BannerPositions,
     BannerTypes,
+    RegisterTypes,
 };

@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Services\Formatquery;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
@@ -12,6 +13,26 @@ class UserRepository
     public function __construct()
     {
         $this->user = new User();
+    }
+
+    public function getList($request = []) 
+    {
+        $config = array(
+            'defSort'   => 'created_at',
+            'defOrder'  => 'desc',
+            'sortArr'   => array('created_at', 'name', 'status',  'recomm_type'),
+            'searchArr' => array(
+                'name'  => ['rule' => '%alias% like \'%%s%\'',],
+            ),
+        );
+        $formatquery = new Formatquery($config);
+        $query = $formatquery->setParams($request)->getParams();
+        // error_log(print_r($query, true));
+        return $this->user->orderBy($query['sort'], $query['order'])
+                ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1)
+                ->skip($query['offset'])
+                ->take($query['limit'])
+                ->get();
     }
 
     public function create($request)
@@ -40,6 +61,13 @@ class UserRepository
         }
         $ret = $this->user->insert($user);
         return $ret ? null : '添加用户失败!';
+    }
+
+    public function updateStatus($id, $status)
+    {
+        return $this->user
+                ->where('id', $id)
+                ->update(['status' => ($status ? 1 : 0)]);
     }
 
     public function getUserByPhone($phone)

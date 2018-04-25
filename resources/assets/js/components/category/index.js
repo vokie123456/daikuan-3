@@ -76,12 +76,20 @@ class Categories extends React.Component {
     //切换状态
     onChangeStatus = (value, id) => {
         Utils.axios({
+            key: 'status',
             url: Api.updateCategoryStatus,
             data: {
                 id: id,
                 status: value ? 1 : 0,
             },
-        });
+        }, (result) => {
+            let status = result !== undefined ? !!result : !value;
+            this.setState({ 
+                datas: this.state.datas.map((item, index) => {
+                    return item.id == id ? Object.assign({}, item, {status: status}) : item;
+                })
+            });
+        }, true);
     }
     //删除类别
     onDelete = (id) => {
@@ -121,7 +129,7 @@ class Categories extends React.Component {
                     <Switch 
                         checkedChildren="开启" 
                         unCheckedChildren="关闭" 
-                        defaultChecked={value ? true : false}
+                        checked={value ? true : false}
                         onChange={value => this.onChangeStatus(value, record.id)}
                     />
                 );
@@ -157,7 +165,7 @@ class Categories extends React.Component {
         }
 
         return (
-            <div>
+            <div className="webkit-flex">
                 <div className="toolbar">
                     <div className="addBox">
                         <Button type="primary" size="large">
@@ -182,6 +190,8 @@ class Categories extends React.Component {
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
+                        total: datas.length,
+                        showTotal: total => `共 ${total} 条记录`,
                     }}
                     onChange={(pagination, filter, sort) => {
                         this.pagination = pagination;

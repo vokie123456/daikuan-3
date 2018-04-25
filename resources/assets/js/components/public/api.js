@@ -67,6 +67,10 @@ var urls = {
     delBanner: host + 'banner/delete/',
     //获取主页的数据量
     getCounts: host + 'home/counts',
+    //获取用户列表
+    getUsers: host + 'getusers',
+    //更新用户状态
+    updateUserStatus: host + 'userstatus/update',
 };
 
 export default urls;

@@ -58,6 +58,8 @@ Route::group([
     Route::get('getbanner/{id}', 'BannerController@show')->where('id', '[0-9]+');
     Route::post('bannerstatus/update', 'BannerController@updateStatus');
     Route::get('banner/delete/{id}', 'BannerController@destroy')->where('id', '[0-9]+');
+    Route::get('getusers', 'UserController@index');
+    Route::post('userstatus/update', 'UserController@updateStatus');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

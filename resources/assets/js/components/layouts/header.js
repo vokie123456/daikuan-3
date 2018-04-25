@@ -27,9 +27,9 @@ export default class HeaderComponent extends React.Component {
             >
                 <Row type="flex" justify="end">
                     <Dropdown overlay={menu}>
-                        <Link to="/" className="ant-dropdown-link">
+                        <a className="ant-dropdown-link" href="javascript:void(0)">
                             {admin.name} <Icon type="down" />
-                        </Link>
+                        </a>
                     </Dropdown>
                 </Row>
             </Header>

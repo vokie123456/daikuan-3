@@ -251,7 +251,7 @@ class AppCompany extends React.Component {
             },
         }];
         return (
-            <div>
+            <div className="divStyle">
                 <div className="toolbar" style={{width: 400}}>
                     <div className="addBox">
                         <Search
@@ -280,6 +280,8 @@ class AppCompany extends React.Component {
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
+                        total: datas.length,
+                        showTotal: total => `共 ${total} 条记录`,
                     }}
                     onChange={(pagination, filter, sort) => {
                         this.pagination = pagination;

@@ -23,8 +23,6 @@ const routers = [
         }, {
             title: 'APP列表',
             link : '/apps',
-        }, {
-            title: '添加模版',
         }],
     }, {
         title: '类别管理',
@@ -57,7 +55,8 @@ const routers = [
         child: [{
             title: '流量统计',
         }, {
-            title: '用户统计',
+            title: '用户列表',
+            link : '/users',
         }],
     }, {
         title: '设置',
