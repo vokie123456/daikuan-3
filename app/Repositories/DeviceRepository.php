@@ -33,8 +33,10 @@ class DeviceRepository
 
             $row->name = $datas['name'];
             $row->operator = isset($datas['operator']) ? $datas['operator'] : '';
+            $row->network_type = isset($datas['network_type']) ? $datas['network_type'] : '';
             $row->model = isset($datas['model']) ? $datas['model'] : '';
             $row->phone_model = isset($datas['phone_model']) ? $datas['phone_model'] : '';
+            $row->sys_name = isset($datas['sys_name']) ? $datas['sys_name'] : '';
             $row->phone_sys_version = isset($datas['phone_sys_version']) ? $datas['phone_sys_version'] : '';
             $row->request_ip = request()->getClientIp();
             $row->updated_at = date('Y-m-d H:i:s');
