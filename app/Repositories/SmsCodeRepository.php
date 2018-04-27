@@ -31,7 +31,7 @@ class SmsCodeRepository
         }else if(!check_mobile($phone)) {
             $err = '手机号码格式不正确!';
         }else if($checkCount && $this->getDayCount($phone, $type) >= $this->_maxCount) {
-            $err = "同一个手机当天最多只能发送{$this->_maxCount}个!";
+            $err = "同一个手机当天最多只能发送{$this->_maxCount}条!";
         }
         return $err;
     }

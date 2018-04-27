@@ -33,7 +33,6 @@
             if(datas.length) {
                 var i = 0;
                 setInterval(function() {
-                    console.log(i);
                     var message = '[' + getNowFormatDate() + '] ' + datas[i] + '<br />';
                     var html = document.getElementById('content').innerHTML || '';
                     document.getElementById('content').innerHTML = message + html;

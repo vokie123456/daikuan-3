@@ -30,7 +30,7 @@ Route::group([
     // 'prefix' => 'admin',
     'middleware' => 'auth:admin'
 ], function () {
-    Route::view('/', 'admin')->name('admin');
+    Route::view('', 'admin')->name('admin');
 
     Route::post('admin/info', 'Admin\AdminController@getInfo');
     Route::get('companies', 'CompanyController@index');

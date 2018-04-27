@@ -97,7 +97,7 @@ class UserController extends Controller
 
     public function update_telephone_send_code(Request $request)
     {
-        $error = $this->smscode->send_sms_code($request->get('telephone'), 2, true, ['templateId' => 4335]);
+        $error = $this->smscode->send_sms_code($request->get('telephone'), 2, false, ['templateId' => 4335]);
         if($error) {
             $this->set_error($error);
         }else {

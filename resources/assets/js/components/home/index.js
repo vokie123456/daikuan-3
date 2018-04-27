@@ -208,7 +208,7 @@ class Home extends React.Component {
     render() {
         const { datas, } = this.state;
         if(!datas) return null;
-        console.log(this.option);
+        // console.log(this.option);
         return (
             <div style={styles.body} className="divStyle">
                 <div style={styles.blockBox}>
