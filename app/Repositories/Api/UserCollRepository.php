@@ -26,8 +26,7 @@ class UserCollRepository
             'ret' => false,
         ];
         if($this->checkUserIsCollection($app_id, $user_id)) {
-            $ret = $this->user_collection->where('app_id', $app_id)->where('user_id', $user_id)
-                ->where('created_at', '>', date('Y-m-d'))->delete();
+            $ret = $this->user_collection->where('app_id', $app_id)->where('user_id', $user_id)->delete();
             if($ret) {
                 $result['type'] = 0;
                 $result['ret'] = true;

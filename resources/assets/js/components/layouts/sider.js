@@ -113,12 +113,14 @@ export default class SiderComponent extends React.Component {
                 trigger={<span><Icon type={'appstore'} /></span>}
                 collapsedWidth={0}
                 breakpoint="lg"
+                //style={{background: '#fff'}}
             >
                 <div className="logo" style={styles.logo} />
                 <Menu
                     defaultSelectedKeys={selected}
                     defaultOpenKeys={opened}
                     mode="inline"
+                    //theme="light"
                     theme="dark"
                 >
                     {routers.map((item, index) => {

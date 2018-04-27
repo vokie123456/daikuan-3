@@ -37,13 +37,34 @@ class Home extends React.Component {
         this.normal = true;
         this.option = {
             title: {
-                text: '近七天流量'
+                text: '近七天流量',
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                confine: true,
+                backgroundColor: '#fff',
+                padding: 20,
+                lineHeight: 60,
+                textStyle: {
+                    color: '#777',
+                    fontSize: 14,
+                },
+                borderColor: '#aaa',
+                extraCssText: 'box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);',
+                axisPointer: {
+                    lineStyle: {
+                        width: 1,
+                        color: 'rgba(20, 20, 20, 0.2)',
+                        type: 'dashed',
+                    },
+                },
             },
             legend: {
-                data:[]
+                data:[],
+                itemGap: 20,
+                textStyle: {
+                    color: 'gray',
+                },
             },
             grid: {
                 left: '3%',
@@ -59,12 +80,94 @@ class Home extends React.Component {
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: []
+                data: [],
+                axisLine : {
+                    show: false,
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {
+                    color: '#666',
+                    //fontSize: 13,
+                    fontWeight: 500,
+                },
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                axisLine: {
+                    show: false,
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {
+                    color: '#999',
+                    //fontSize: 13,
+                    fontWeight: 500,
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        width: 2,
+                        type: 'dotted', //dashed
+                        color: 'rgba(200, 200, 200, 0.6)',
+                    },
+                },
             },
-            series: [],
+            series: [{
+                type: "line",
+                data: [],
+                lineStyle: {
+                    color: '#8fc9fb',
+                    width: 3,
+                },
+                itemStyle: {
+                    color: '#8fc9fb',
+                },
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+            }, {
+                type: "line",
+                data: [],
+                lineStyle: {
+                    color: '#f69898',
+                    width: 3,
+                },
+                itemStyle: {
+                    color: '#f69898',
+                },
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+            }, {
+                type: "line",
+                data: [],
+                lineStyle: {
+                    color: '#d897eb',
+                    width: 3,
+                },
+                itemStyle: {
+                    color: '#d897eb',
+                },
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+            }, {
+                type: "line",
+                data: [],
+                lineStyle: {
+                    color: '#63ea91',
+                    width: 3,
+                },
+                itemStyle: {
+                    color: '#63ea91',
+                },
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+            }, ],
         };
     }
 
@@ -83,11 +186,13 @@ class Home extends React.Component {
                     this.option.legend.data = result.datas.legend || [];
                     this.option.xAxis.data = result.datas.xaxis || [];
                     let series = result.datas.series || [];
-                    for(let i in series) {
-                        series[i].type = 'line';
-                        series[i].stack = '总量';
-                    }
-                    this.option.series = series;
+                    this.option.series = this.option.series.map((item, index) => {
+                        if(series[index]) {
+                            return Object.assign({}, item, series[index]);
+                        }else {
+                            return item;
+                        }
+                    });
                     let myChart = echarts.init(this.refs.echarts);
                     myChart.setOption(this.option);
                     window.addEventListener("resize", myChart.resize);
@@ -103,7 +208,7 @@ class Home extends React.Component {
     render() {
         const { datas, } = this.state;
         if(!datas) return null;
-        // console.log(this.option);
+        console.log(this.option);
         return (
             <div style={styles.body} className="divStyle">
                 <div style={styles.blockBox}>

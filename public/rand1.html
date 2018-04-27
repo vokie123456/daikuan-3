@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="content"></div>
+
+    <script>
+        var getNowFormatDate = function() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+            return currentdate;
+        }
+
+        var hand_pusher = function(datas) {
+            if(datas.length) {
+                var i = 0;
+                setInterval(function() {
+                    console.log(i);
+                    var message = '[' + getNowFormatDate() + '] ' + datas[i] + '<br />';
+                    var html = document.getElementById('content').innerHTML || '';
+                    document.getElementById('content').innerHTML = message + html;
+                    i++;
+                }, 2000);
+            }
+        };
+
+        var data = null;
+        var xhr = new XMLHttpRequest();
+        // xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                try {
+                    var result = JSON.parse(this.responseText);
+                    if(result && result.datas && result.datas.pushers) {
+                        hand_pusher(result.datas.pushers);
+                    }
+                }catch(e) {
+                    alert(e.message);
+                }
+            }
+        });
+
+        xhr.open("GET", "http://wangtougongshe.com/api/moudle/home");
+        xhr.send(data);
+    </script>
+</body>
+</html>

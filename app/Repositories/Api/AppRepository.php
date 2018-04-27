@@ -9,8 +9,12 @@ class AppRepository
 {
     public function getAppsForRand()
     {
-        return AppModel::select('name', 'moneys')->orderBy('created_at', 'desc')
-            ->take(100)->get()->toArray();
+        return AppModel::select('name', 'moneys')
+                ->where('status', 1)
+                ->orderBy('created_at', 'desc')
+                ->take(100)
+                ->get()
+                ->toArray();
     }
 
     public function getSimpleAppById($id)

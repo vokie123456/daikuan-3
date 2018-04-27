@@ -52,6 +52,12 @@ const RegisterTypes = [
     '公司推广',
 ];
 
+const SexNames = [
+    '未知',
+    '男',
+    '女',
+];
+
 
 export {
     RateTypes,
@@ -61,4 +67,5 @@ export {
     BannerPositions,
     BannerTypes,
     RegisterTypes,
+    SexNames,
 };

@@ -60,6 +60,8 @@ Route::group([
     Route::get('banner/delete/{id}', 'BannerController@destroy')->where('id', '[0-9]+');
     Route::get('getusers', 'UserController@index');
     Route::post('userstatus/update', 'UserController@updateStatus');
+    Route::put('user/resetpassword', 'UserController@resetPassword');
+    Route::get('getuser/{id}', 'UserController@getInfoById')->where('id', '[0-9]+');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

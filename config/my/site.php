@@ -27,4 +27,7 @@ return [
     
     // 同一ip每日限制的条数
     'same_ip_day_number' => 3,
+
+    // 重置后的密码
+    'reset_password' => '123456',
 ];

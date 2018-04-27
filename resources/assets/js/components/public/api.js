@@ -69,8 +69,12 @@ var urls = {
     getCounts: host + 'home/counts',
     //获取用户列表
     getUsers: host + 'getusers',
+    //获取单个用户
+    getUser: host + 'getuser/',
     //更新用户状态
     updateUserStatus: host + 'userstatus/update',
+    //重置用户密码
+    resetUserPasswrod: host + 'user/resetpassword',
 };
 
 export default urls;

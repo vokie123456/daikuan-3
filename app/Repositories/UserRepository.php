@@ -15,6 +15,29 @@ class UserRepository
         $this->user = new User();
     }
 
+    public function getInfoById($id)
+    {
+        $user = $this->user->with(['devices' => function($query) {
+            $query->orderBy('updated_at', 'desc')->take(1);
+        }])->where('id', $id)->first();
+        if($user && $user->recomm_id && in_array($user->recomm_type, [1, 2])) {
+            if($user->recomm_type == 1) {
+                $ret = DB::table('users')->select('id', 'telephone')->where('id', $user->recomm_id)->first();
+                if($ret) {
+                    $user = $user->toArray();
+                    $user['recommer'] = $ret;
+                }
+            }else {
+                $ret = DB::table('companies')->select('id', 'name')->where('id', $user->recomm_id)->first();
+                if($ret) {
+                    $user = $user->toArray();
+                    $user['recommer'] = $ret;
+                }
+            }
+        }
+        return $user;
+    }
+
     public function getList($request = []) 
     {
         $config = array(
@@ -23,6 +46,11 @@ class UserRepository
             'sortArr'   => array('created_at', 'name', 'status',  'recomm_type'),
             'searchArr' => array(
                 'name'  => ['rule' => '%alias% like \'%%s%\'',],
+                'telephone' => null,
+                'user_recomm' => [
+                    'alias' => 'recomm_id',
+                    'rule' => '%alias% = %s AND `recomm_type` = 1',
+                ],
             ),
         );
         $formatquery = new Formatquery($config);

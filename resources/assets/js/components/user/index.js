@@ -1,12 +1,22 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Table, Input, Icon, Button, Switch, Popconfirm, message } from 'antd';
+import { 
+    Table, 
+    Input, 
+    Icon, 
+    Button, 
+    Switch, 
+    Popconfirm, 
+    message,
+    Select,
+} from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
 import { RegisterTypes } from '../public/global';
 
 const Search = Input.Search;
+const Option = Select.Option;
 
 class Users extends React.Component {
     constructor(props) {
@@ -20,6 +30,7 @@ class Users extends React.Component {
         this.filter = {};
         this.sort = {};
         this.search = '';
+        this.type = 'name';
     }
 
     componentDidMount() {
@@ -28,6 +39,11 @@ class Users extends React.Component {
     //获取列表数据
     fetch = (params = {}) => {
         this.setState({ loading: true });
+        const recommer = this.props.recommer || null;
+        if(recommer) {
+            params.search = params.search || {};
+            params.search['user_recomm'] = recommer;
+        }
         Utils.axios({
             key: 'users',
             url: Api.getUsers,
@@ -55,10 +71,9 @@ class Users extends React.Component {
             'sort': this.sort.field || '',
             'offset': offset,
             'limit': limit,
-            'search': {
-                name: search,
-            },
+            'search': {},
         };
+        params.search[this.type] = search;
         // console.log(params);
         this.fetch(params);
     };
@@ -80,16 +95,14 @@ class Users extends React.Component {
             });
         }, true);
     }
-    //删除app
-    onDelete = (id) => {
-        // Utils.axios({
-        //     key: 'ret',
-        //     url: Api.delBanner + id,
-        //     method: 'get',
-        // }, (result) => {
-        //     const datas = [...this.state.datas];
-        //     this.setState({ datas: datas.filter(item => item.id !== id) });
-        // });
+    //重置密码
+    resetPassword = (id) => {
+        Utils.axios({
+            key: 'ret',
+            url: Api.resetUserPasswrod,
+            method: 'put',
+            data: {id: id},
+        });
     }
 
     render() {
@@ -133,10 +146,12 @@ class Users extends React.Component {
                 return (
                     <Button.Group>
                         <Button>
-                            <Link to={'#'}>Edit</Link>
+                            <Link to={'users/' + record.id}>查看</Link>
                         </Button>
                         <Button>
-                            <Link to={'#'}>重置密码</Link>
+                            <Popconfirm title="确定要重置密码?" onConfirm={() => this.resetPassword(record.id)}>
+                                <a href="#">重置密码</a>
+                            </Popconfirm>
                         </Button>
                     </Button.Group>
                 );
@@ -145,6 +160,19 @@ class Users extends React.Component {
         return (
             <div className="webkit-flex">
                 <div className="toolbar">
+                    <Select 
+                        size="large"
+                        defaultValue={this.type} 
+                        style={{
+                            width: 120,
+                            height: 40,
+                            marginRight: 10,
+                        }}
+                        onChange={value => this.type = value}
+                    >
+                        <Option value="name">姓名</Option>
+                        <Option value="telephone">手机</Option>
+                    </Select>
                     <div className="searchBox">
                         <Search
                             onSearch={this.getUserList}
