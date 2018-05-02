@@ -39,10 +39,11 @@ class AppController extends Controller
             $user = Auth::guard('api')->user();
             $app['isCollection'] = false;
             $user_id = null;
+            $app['share_url'] = config('my.site.register_path');
             if($user && $user->id) {
                 $user_id = $user->id;
                 $key = config('my.site.recomm');
-                $app['share_url'] = "?{$key}=" . create_url_encode_by_id('users', $user->id);
+                $app['share_url'] .= "?{$key}=" . create_url_encode_by_id('users', $user->id);
                 $app['isCollection'] = (bool)$userCollRepository->checkUserIsCollection($app['id'], $user->id);
             }
             $userRecRepository->addRecord($app['id'], $user_id);

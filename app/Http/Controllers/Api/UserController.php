@@ -27,9 +27,11 @@ class UserController extends Controller
 
     public function getInfo()
     {
-        $user = new UserResource($this->user);
-        if(isset($this->user['status']) && $this->user['status']) {
-            $this->set_success('获取成功!')->set_data('user', $user);
+        if($this->user->status) {
+            $user = new UserResource($this->user);
+            $key = config('my.site.recomm');
+            $share_url = config('my.site.register_path') . "?{$key}=" . create_url_encode_by_id('users', $user->id);
+            $this->set_success('获取成功!')->set_data('user', $user)->set_data('share_url', $share_url);
         }else {
             $this->set_error('该帐号已被禁止!');
         }
