@@ -28,6 +28,7 @@ Route::get('moudle/secloan', 'Api\MoudleController@secloanDatas');
 Route::get('category/apps/{id}', 'Api\AppController@getDatas')->where('id', '[0-9]+');
 Route::get('getapp/{id}', 'Api\AppController@getApp')->where('id', '[0-9]+');
 Route::post('devices', 'Api\DeviceController@save');
+Route::get('getvsersion', 'Api\VersionController@getNowVersion');
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('user/getinfo', 'Api\UserController@getInfo');
