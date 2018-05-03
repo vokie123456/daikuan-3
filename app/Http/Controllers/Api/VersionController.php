@@ -16,10 +16,7 @@ class VersionController extends Controller
                 'version' => 1,
                 'url' => '#',
                 'type' => 0, // 0 普通更新, 1 强制更新
-                'text' => [
-                    '1. 修复已知Bug', 
-                    '2. 优化UI样式',
-                ],
+                'text' => '发现新版本, 请更新.',
             ),
         );
         return response()->json($result);

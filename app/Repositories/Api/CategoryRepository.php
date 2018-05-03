@@ -59,6 +59,8 @@ class CategoryRepository
             if(!empty($category['apps'])) {
                 $apps_id = array_map(function($item) {return $item['app_id'];}, $category['apps']);
                 $category['apps'] = $this->appRepository->getAppByInId($apps_id, $category['sort_app'], $isPaginate);
+            }else if($isPaginate) {
+                $category['apps']['data'] = [];
             }
             if(isset($category['sort_app'])) unset($category['sort_app']);
         }
