@@ -26,7 +26,6 @@ Route::get('moudle/home', 'Api\MoudleController@homeDatas');
 Route::get('moudle/loan', 'Api\MoudleController@loanDatas');
 Route::get('moudle/secloan', 'Api\MoudleController@secloanDatas');
 Route::get('category/apps/{id}', 'Api\AppController@getDatas')->where('id', '[0-9]+');
-Route::get('getapp/{id}', 'Api\AppController@getApp')->where('id', '[0-9]+');
 Route::post('devices', 'Api\DeviceController@save');
 Route::get('getvsersion', 'Api\VersionController@getNowVersion');
 
@@ -40,4 +39,5 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('getcollections', 'Api\UserCollController@getCollections');
     Route::get('getrecords', 'Api\UserRecController@getRecords');
     Route::get('app/weburl/{id}', 'Api\AppController@getAppWebUrl')->where('id', '[0-9]+');
+    Route::get('getapp/{id}', 'Api\AppController@getApp')->where('id', '[0-9]+');
 });
