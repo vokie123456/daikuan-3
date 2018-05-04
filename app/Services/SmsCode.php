@@ -15,9 +15,9 @@ class SmsCode {
         'url' => 'http://api.1cloudsp.com/api/v2/send',
         'accesskey' => 'FuM1v4Fw3Z4Gs0dV',
         'secret' => '4LqKyfcNnEF3fdKoQD3kubjkQ36KWYwM',
-        'sign' => '【贷款超市】',
+        'sign' => '【真要贷】',
         'templateId' => 3318,
-        'scheduleSendTime'=>''
+        'scheduleSendTime' => ''
     ];
 
     //构造函数
@@ -35,7 +35,7 @@ class SmsCode {
             'templateId' => $this->_config['templateId'],
             'mobile' => $phone,
             'content' => $code,
-            'scheduleSendTime'=>''
+            'scheduleSendTime' => ''
         ];
         return $this->_curl_setopt($datas);
     }

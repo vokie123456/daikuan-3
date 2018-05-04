@@ -60,22 +60,24 @@ class FormComponent extends React.Component {
                     this.setState({ redirect });
                 }, (result) => {
                     if(result && result.errors) {
-                        var errors = {};
+                        let errors = {};
+                        let _error = null;
                         for(let j in result.errors) {
                             if(result.errors[j]) {
                                 errors[j] = {
                                     // value: values[j],
                                 };
                                 if(typeof(result.errors[j]) == 'string') {
+                                    if(!_error) _error = result.errors[j];
                                     errors[j]['errors'] = [new Error(result.errors[j])];
                                 }else if(result.errors[j][0]) {
+                                    if(!_error) _error = result.errors[j][0];
                                     errors[j]['errors'] = [new Error(result.errors[j][0])];
                                 }
                             }
                         }
-                        // console.log(errors);
                         form.setFields(errors);
-                        message.warning('保存失败!');
+                        message.warning(_error || '保存失败!');
                     }
                 });
             }
