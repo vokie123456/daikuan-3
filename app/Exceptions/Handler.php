@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
             return response([
                 'error' => 'token认证失败',
                 'errno' => 401,
-            ], 401);
+            ], 200);
         }
 
         return parent::render($request, $exception);
