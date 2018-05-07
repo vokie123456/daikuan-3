@@ -108,10 +108,17 @@ class Formatquery {
                 $name = !empty($item['alias']) ? $item['alias'] : $key;
                 $name = $this->formartkey($name);
                 if(!empty($item) && is_array($item)) {
-                    if(isset($item['allow']) && is_array($item['allow']) && !in_array($val, $item['allow']) && !isset($item['value'])) {
-                        //如果包含搜索范围, 且在范围之外, 也没有默认值, 则不予搜索
-                        continue;
-                    }else if(isset($item['except']) && is_array($item['except']) && in_array($val, $item['except'])) {
+                    if(isset($item['allow']) && is_array($item['allow']) && !in_array($val, $item['allow'])) {
+                        if(isset($item['value'])) {
+                            //如果存在默认值和允许范围，且不在允许范围内(值只能为默认值)
+                            $value = $item['value'];
+                        }else {
+                            //如果包含搜索范围, 且在范围之外, 也没有默认值, 则不予搜索
+                            continue;
+                        }
+                    }
+                    
+                    if(isset($item['except']) && is_array($item['except']) && in_array($val, $item['except'])) {
                         //如果存在特殊字段的处理, 则优先给予处理
                         if(isset($item['except_func']) && is_callable($item['except_func'])) {
                             $string = call_user_func($item['except_func'], $value);

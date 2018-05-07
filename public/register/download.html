@@ -6,7 +6,7 @@
 	<title>APP下载</title>
 	<style>
 		body{
-			background-color: #ed4b45;
+			background-color: #e8423c;
 			margin: 0;
 			padding: 0;
 		}
@@ -14,13 +14,6 @@
 			width: 100%;
 			display: block;
 			vertical-align: bottom;
-		}
-		a{
-			position: absolute;
-			width: 5.12rem;
-			height: 1.19rem;
-			left: 2.84rem;
-			top: 16.26rem; 
 		}
 		#mcover {
 		    position: fixed;
@@ -39,11 +32,35 @@
 		    width: 80%;
 		    z-index: 999;	
 		}
+		.btnDownload {
+			display: inline-block;
+			width: 40%;
+			height: 30px;
+			line-height: 30px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			font-size: 14px;
+			color: #fff;
+			letter-spacing: 1px;
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
-	<img src="download.jpg" alt="" >
-	<a href="/download/app-release.apk" download="真要贷" onclick="document.getElementById('mcover').style.display='block';"></a>
+	<script>
+		var check_download = function(e) {
+			var ua = window.navigator.userAgent.toLowerCase();
+			if(ua.match(/MicroMessenger/i) == 'micromessenger') {
+				document.getElementById('mcover').style.display='block';
+			}else {
+				e.target.href = '/download/app-release.apk';
+			}
+		}
+	</script>
+	<img src="download.jpg" alt="" />
+	<div style="text-align: center;">
+		<a class="btnDownload" onclick="check_download(event);">立即下载</a>
+	</div>
 	<div id="mcover">
 	     <img src="weixin_tip.png">
 	</div>
