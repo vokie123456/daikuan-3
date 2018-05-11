@@ -56,21 +56,13 @@
 				e.target.href = '/download/android_app_v1.apk';
 			}
 		}
-		var check_download_ios = function(e) {
-			var ua = window.navigator.userAgent.toLowerCase();
-			if(ua.match(/MicroMessenger/i) == 'micromessenger') {
-				document.getElementById('mcover').style.display='block';
-			}else {
-				e.target.href = 'itms-services://?action=download-manifest&url=http://wangtougongshe.com/download/kuaihang.plist';
-			}
-		}
 	</script>
 	<img src="download.jpg" alt="" />
 	<div style="text-align: center;">
 		<a class="btnDownload" onclick="check_download_android(event);">Android下载</a>
 	</div>
 	<div style="text-align: center;">
-		<a class="btnDownload" onclick="check_download_ios(event);">IOS下载</a>
+		<a class="btnDownload" href="itms-services://?action=download-manifest&url=https://www.wangtougongshe.com/download/kuaihang.plist">IOS下载</a>
 	</div>
 	<div id="mcover">
 	     <img src="weixin_tip.png">
