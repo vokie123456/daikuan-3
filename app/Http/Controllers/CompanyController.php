@@ -34,7 +34,12 @@ class CompanyController extends Controller
         }else {
             $result = $this->company->addACompany($request->get('name'));
             if($result) {
-                $this->set_success('添加成功')->set_data('company', $result);
+                $company = $result->toArray();
+                $share_url = config('my.site.register_path');
+                $key = config('my.site.recomm');
+                $code = create_url_encode_by_id('companies', $company['id']);
+                $company['share_url'] = $share_url . "?{$key}=" . $code;
+                $this->set_success('添加成功')->set_data('company', $company);
             }else {
                 $this->set_error('添加失败');
             }

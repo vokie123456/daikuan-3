@@ -237,9 +237,9 @@ class AppCompany extends React.Component {
                 });
             },
         }, {
-            title: '添加时间',
-            dataIndex: 'created_at',
-            sorter: true,
+            title: '推广地址',
+            dataIndex: 'share_url',
+            // sorter: true,
         }, {
             title: '操作',
             render: (text, record) => {
