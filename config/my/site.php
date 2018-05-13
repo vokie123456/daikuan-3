@@ -8,7 +8,7 @@ return [
     'storage' => 'storage/',
 
     // 这里模块文字需与 'moudle_type' 一致
-    'banner_position' => ['首页', '贷款'],
+    'banner_position' => ['首页', '秒放款'],
 
     // 用户性别
     'sexs' => ['未知', '男', '女'],
@@ -23,7 +23,7 @@ return [
     'recomm' => 'recomm',
 
     // register url
-    'register_path' => 'http://wangtougongshe.com/register/index.html',
+    'register_path' => 'https://wangtougongshe.com/register/index.html',
     
     // 同一ip每日限制的条数
     'same_ip_day_number' => 3,

@@ -49,11 +49,21 @@ class BannerRepository
         $formatquery = new Formatquery($config);
         $query = $formatquery->setParams($request)->getParams();
         // error_log(print_r($query, true));
-        return $this->banner->orderBy($query['sort'], $query['order'])
-                ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1)
+        $ret = [
+            'total' => 0,
+            'rows' => [],
+        ];
+        $where = $query['whereStr'] ? $query['whereStr'] : 1;
+        $ret['total'] = $this->banner->whereRaw($where)->count();
+        if($ret['total']) {
+            $ret['rows'] = $this->banner
+                ->orderBy($query['sort'], $query['order'])
+                ->whereRaw($where)
                 ->skip($query['offset'])
                 ->take($query['limit'])
                 ->get();
+        }
+        return $ret;
     }
 
     public function getById($id)

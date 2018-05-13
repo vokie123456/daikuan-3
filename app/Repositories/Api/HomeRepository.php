@@ -31,7 +31,7 @@ class HomeRepository
             ],
         ];
         $data = $this->banner->getList($query);
-        return BannerResource::collection($data);
+        return BannerResource::collection($data['rows']);
     }
 
     public function getDatas()

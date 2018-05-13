@@ -12,6 +12,7 @@ class Banners extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            total: 0,
             datas: [],
             loading: false,
         };
@@ -37,9 +38,10 @@ class Banners extends React.Component {
         }, (result) => {
             // console.log(result);
             this.setState({
-                datas: result,
+                total: result.total,
+                datas: result.rows,
                 loading: false,
-            })
+            });
         });
     };
     //广告列表
@@ -92,7 +94,7 @@ class Banners extends React.Component {
     }
 
     render() {
-        const { datas, } = this.state;
+        const { datas, loading, total, } = this.state;
         const columns = [{
             title: '广告图片',
             dataIndex: 'image',
@@ -168,13 +170,13 @@ class Banners extends React.Component {
                     bordered
                     //size="middle"
                     dataSource={datas}
-                    loading={this.state.loading}
+                    loading={loading}
                     rowKey={record => record.id}
                     columns={columns}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
-                        total: datas.length,
+                        total: total,
                         showTotal: total => `共 ${total} 条记录`,
                     }}
                     onChange={(pagination, filter, sort) => {

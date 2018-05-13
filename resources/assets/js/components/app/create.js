@@ -188,17 +188,17 @@ class AppCreate extends React.Component {
     }
 
     componentDidMount() {
-        Utils.axios({
-            key: 'companies',
-            url: Api.getAppCompanies,
-            isAlert: false,
-            method: 'get',
-            params: {'all': 1}
-        }, (result) => {
-            if(result.length && this.normal) {
-                this.setState({companies: result});
-            }
-        });
+        // Utils.axios({
+        //     key: 'companies',
+        //     url: Api.getAppCompanies,
+        //     isAlert: false,
+        //     method: 'get',
+        //     params: {'all': 1}
+        // }, (result) => {
+        //     if(result.length && this.normal) {
+        //         this.setState({companies: result});
+        //     }
+        // });
     }
 
     componentWillUnmount() {
@@ -367,7 +367,7 @@ class AppCreate extends React.Component {
                             required: true,
                             message: '请填写APP的名称!',
                         }],
-                    })(
+                    }) (
                         <Input maxLength={45} />
                     )}
                 </FormItem>
@@ -403,7 +403,7 @@ class AppCreate extends React.Component {
                         </Upload>
                     )}
                 </FormItem>
-                <FormItem
+                {/* <FormItem
                     {...formItemLayout}
                     label="归属公司"
                 >
@@ -419,7 +419,7 @@ class AppCreate extends React.Component {
                             ))}
                         </Select>
                     )}
-                </FormItem>
+                </FormItem> */}
                 <FormItem
                     {...formItemLayout}
                     label={(
@@ -440,6 +440,14 @@ class AppCreate extends React.Component {
                             message: '推广地址不正确!'
                         }],
                     })(
+                        <Input maxLength={255} />
+                    )}
+                </FormItem>
+                <FormItem
+                    {...formItemLayout}
+                    label="备注"
+                >
+                    {getFieldDecorator('note') (
                         <Input maxLength={255} />
                     )}
                 </FormItem>

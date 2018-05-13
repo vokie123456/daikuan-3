@@ -18,7 +18,8 @@ class UserController extends Controller
     //
     public function index(Request $request)
     {
-        $datas = UserListResource::collection($this->userRepository->getList($request->all()));
+        $datas = $this->userRepository->getList($request->all());
+        $datas['rows'] = UserListResource::collection($datas['rows']);
         $this->set_success('获取成功')->set_data('users', $datas);
         return response()->json($this->get_result());
     }

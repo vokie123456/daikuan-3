@@ -17,10 +17,12 @@ const routers = [
         child: [{
             title: '添加APP',
             link : '/apps/create',
-        }, {
-            title: '公司列表',
-            link : '/apps/company',
-        }, {
+        }, 
+        // {
+        //     title: '公司列表',
+        //     link : '/apps/company',
+        // }, 
+        {
             title: 'APP列表',
             link : '/apps',
         }],

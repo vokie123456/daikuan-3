@@ -37,7 +37,8 @@ class StoreAppPost extends FormRequest
             'name' => 'required|string|max:45',
             'weburl' => 'required|url|max:255',
             'appicon' => $image_rule,
-            'company_id' => 'required|integer|min:1',
+            'note' => 'nullable|string|max:255',
+            // 'company_id' => 'required|integer|min:1',
             'rates' => [
                 'required',
                 'json',

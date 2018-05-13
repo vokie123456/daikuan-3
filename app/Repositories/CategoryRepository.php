@@ -46,11 +46,21 @@ class CategoryRepository
         $formatquery = new Formatquery($config);
         $query = $formatquery->setParams($request)->getParams();
         // error_log(print_r($query, true));
-        return $this->category->orderBy($query['sort'], $query['order'])
-                ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1)
+        $ret = [
+            'total' => 0,
+            'rows' => [],
+        ];
+        $where = $query['whereStr'] ? $query['whereStr'] : 1;
+        $ret['total'] = $this->category->whereRaw($where)->count();
+        if($ret['total']) {
+            $ret['rows'] = $this->category
+                ->orderBy($query['sort'], $query['order'])
+                ->whereRaw($where)
                 ->skip($query['offset'])
                 ->take($query['limit'])
                 ->get();
+        }
+        return $ret;
     }
 
     public function format_data($datas)

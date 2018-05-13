@@ -23,7 +23,8 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $datas = CategoryResource::collection($this->category->getList($request->all()));
+        $datas = $this->category->getList($request->all());
+        $datas['rows'] = CategoryResource::collection($datas['rows']);
         $this->set_success('获取成功')->set_data('category', $datas);
         return response()->json($this->get_result());
     }

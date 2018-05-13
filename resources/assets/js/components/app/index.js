@@ -12,6 +12,7 @@ class Apps extends React.Component {
         super(props);
         this.state = {
             datas: [],
+            total: 0,
             loading: false,
             filterDropdownVisible: false,
         };
@@ -20,6 +21,7 @@ class Apps extends React.Component {
         this.filter = {};
         this.sort = {};
         this.search = '';
+        this.total = 0;
     }
 
     componentDidMount() {
@@ -37,10 +39,11 @@ class Apps extends React.Component {
         }, (result) => {
             // console.log(result);
             this.setState({
-                datas: result,
+                total: result.total,
+                datas: result.rows,
                 loading: false,
                 filterDropdownVisible: false,
-            })
+            });
         });
     };
     //app列表
@@ -93,7 +96,7 @@ class Apps extends React.Component {
     }
 
     render() {
-        const { datas, } = this.state;
+        const { datas, total, loading } = this.state;
         const columns = [{
             title: 'ID',
             dataIndex: 'id',
@@ -111,11 +114,13 @@ class Apps extends React.Component {
             title: 'APP名称',
             dataIndex: 'name',
             sorter: true,
-        }, {
-            title: '公司名称',
-            dataIndex: 'company_name',
-            sorter: true,
-        }, {
+        }, 
+        // {
+        //     title: '公司名称',
+        //     dataIndex: 'company_name',
+        //     sorter: true,
+        // }, 
+        {
             title: '添加时间',
             dataIndex: 'created_at',
             sorter: true,
@@ -158,13 +163,13 @@ class Apps extends React.Component {
                     bordered
                     //size="middle"
                     dataSource={datas}
-                    loading={this.state.loading}
+                    loading={loading}
                     rowKey={record => record.id}
                     columns={columns}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
-                        total: datas.length,
+                        total: total,
                         showTotal: total => `共 ${total} 条记录`,
                     }}
                     onChange={(pagination, filter, sort) => {

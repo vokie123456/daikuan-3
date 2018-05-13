@@ -23,8 +23,9 @@ class AppResource extends JsonResource
             'name' => $this->name,
             'weburl' => $this->weburl,
             'appicon' => $icon,
-            'company_id' => $this->company_id,
-            'company_name' => $this->company ? $this->company->name : '',
+            'note' => $this->note,
+            // 'company_id' => $this->company_id,
+            // 'company_name' => $this->company ? $this->company->name : '',
             'synopsis' => $this->synopsis,
             'details' => $this->details,
             'rates' => [

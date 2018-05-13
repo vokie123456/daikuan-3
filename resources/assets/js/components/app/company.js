@@ -158,6 +158,7 @@ class AppCompany extends React.Component {
             data: {name: value,},
             key: 'company',
         }, (result) => {
+            result['share_url'] =
             this.setState({
                 companyName: '',
                 datas: [...datas, result],

@@ -24,7 +24,8 @@ class AppController extends Controller
      */
     public function index(Request $request)
     {
-        $datas = AppResource::collection($this->appRepository->getList($request->all()));
+        $datas = $this->appRepository->getList($request->all());
+        $datas['rows'] = AppResource::collection($datas['rows']);
         $this->set_success('获取成功')->set_data('apps', $datas);
         return response()->json($this->get_result());
     }

@@ -53,10 +53,11 @@ class Users extends React.Component {
         }, (result) => {
             // console.log(result);
             this.setState({
-                datas: result,
+                total: result.total,
+                datas: result.rows,
                 loading: false,
                 status: null,
-            })
+            });
         });
     };
     //用户列表
@@ -106,7 +107,7 @@ class Users extends React.Component {
     }
 
     render() {
-        const { datas } = this.state;
+        const { datas, total, loading, } = this.state;
         const columns = [{
             title: '姓名',
             dataIndex: 'name',
@@ -185,13 +186,13 @@ class Users extends React.Component {
                     bordered
                     //size="middle"
                     dataSource={datas}
-                    loading={this.state.loading}
+                    loading={loading}
                     rowKey={record => record.id}
                     columns={columns}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
-                        total: datas.length,
+                        total: total,
                         showTotal: total => `共 ${total} 条记录`,
                     }}
                     onChange={(pagination, filter, sort) => {

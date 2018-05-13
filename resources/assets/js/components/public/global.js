@@ -38,7 +38,7 @@ const Moudles = [
 
 const BannerPositions = [
     Moudles[0],
-    Moudles[2],
+    Moudles[3],
 ];
 
 const BannerTypes = [

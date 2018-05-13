@@ -24,7 +24,12 @@ class AppRepository
         $config = array(
             'defSort'   => 'created_at',
             'defOrder'  => 'desc',
-            'sortArr'   => array('created_at', 'name', 'status',  'company_name' => 'company_id'),
+            'sortArr'   => array(
+                'created_at', 
+                'name', 
+                'status',  
+                // 'company_name' => 'company_id',
+            ),
             'searchArr' => array(
                 'name'  => ['rule' => '%alias% like \'%%s%\'',],
             ),
@@ -32,11 +37,18 @@ class AppRepository
         $formatquery = new Formatquery($config);
         $query = $formatquery->setParams($request)->getParams();
         // error_log(print_r($query, true));
-        return $this->appRepository::with('company')->orderBy($query['sort'], $query['order'])
-                ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1)
+        $where = $query['whereStr'] ? $query['whereStr'] : 1;
+        $ret['total'] = $this->appRepository->whereRaw($where)->count();
+        if($ret['total']) {
+            $ret['rows'] = $this->appRepository
+                //->with('company')
+                ->orderBy($query['sort'], $query['order'])
+                ->whereRaw($where)
                 ->skip($query['offset'])
                 ->take($query['limit'])
                 ->get();
+        }
+        return $ret;
     }
 
     public function format_data($datas)
@@ -48,7 +60,8 @@ class AppRepository
             'name' => $datas['name'],
             'weburl' => $datas['weburl'],
             'icon' => $datas['appicon'],
-            'company_id' => (int)$datas['company_id'],
+            'note' => $datas['note'],
+            // 'company_id' => (int)$datas['company_id'],
             'synopsis' => $datas['synopsis'] ? $datas['synopsis'] : '',
             'details' => $datas['details'] ? $datas['details'] : '',
             'rate' => (float)$datas['rates']['value'],
@@ -71,7 +84,7 @@ class AppRepository
     {
         $_data = $this->format_data($datas);
         $_data['created_at'] = date('Y-m-d H:i:s');
-        return $this->appRepository::create($_data);
+        return $this->appRepository->create($_data);
     }
 
     public function update($datas)

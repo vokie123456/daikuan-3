@@ -23,7 +23,8 @@ class BannerController extends Controller
      */
     public function index(Request $request)
     {
-        $datas = BannerResource::collection($this->banner->getList($request->all()));
+        $datas = $this->banner->getList($request->all());
+        $datas['rows'] = BannerResource::collection($datas['rows']);
         $this->set_success('获取成功')->set_data('banners', $datas);
         return response()->json($this->get_result());
     }

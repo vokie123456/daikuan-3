@@ -46,7 +46,7 @@ class AppListResource extends JsonResource
             if($sort) sort($data);
             $str = $data[0];
             if(count($data) > 1) {
-                $str .= ('-' . $data[count([$data]) - 1]);
+                $str .= ('-' . $data[count($data) - 1]);
             }
         }
         return $str;

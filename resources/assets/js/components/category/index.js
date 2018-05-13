@@ -11,6 +11,7 @@ class Categories extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            total: 0,
             datas: [],
             loading: false,
             filterDropdownVisible: false,
@@ -48,10 +49,11 @@ class Categories extends React.Component {
             method: 'get',
         }, (result) => {
             this.setState({
-                datas: result,
+                total: result.total,
+                datas: result.rows,
                 loading: false,
                 filterDropdownVisible: false,
-            })
+            });
         });
     };
     //类别列表
@@ -104,7 +106,7 @@ class Categories extends React.Component {
     }
 
     render() {
-        const { datas, showSearch, companyName, } = this.state;
+        const { datas, total, showSearch, companyName, loading, } = this.state;
         let columns = [{
             title: '类别名称',
             dataIndex: 'name',
@@ -184,13 +186,13 @@ class Categories extends React.Component {
                     bordered
                     //size="middle"
                     dataSource={datas}
-                    loading={this.state.loading}
+                    loading={loading}
                     rowKey={record => record.id}
                     columns={columns}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
-                        total: datas.length,
+                        total: total,
                         showTotal: total => `共 ${total} 条记录`,
                     }}
                     onChange={(pagination, filter, sort) => {
