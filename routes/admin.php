@@ -62,6 +62,9 @@ Route::group([
     Route::post('userstatus/update', 'UserController@updateStatus');
     Route::put('user/resetpassword', 'UserController@resetPassword');
     Route::get('getuser/{id}', 'UserController@getInfoById')->where('id', '[0-9]+');
+    Route::get('getallagent', 'AgentController@getAll');
+    Route::post('agent/create', 'AgentController@store');
+    Route::get('getagents', 'AgentController@index');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

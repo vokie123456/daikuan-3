@@ -52,10 +52,11 @@ const routers = [
             link : '/banners',
         }],
     }, {
-        title: '推广统计',
+        title: '推广管理',
         icon : 'pie-chart',
         child: [{
-            title: '流量统计',
+            title: 'CPA代理商',
+            link : '/agents',
         }, {
             title: '用户列表',
             link : '/users',

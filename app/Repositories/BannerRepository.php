@@ -55,14 +55,12 @@ class BannerRepository
         ];
         $where = $query['whereStr'] ? $query['whereStr'] : 1;
         $ret['total'] = $this->banner->whereRaw($where)->count();
-        if($ret['total']) {
-            $ret['rows'] = $this->banner
-                ->orderBy($query['sort'], $query['order'])
-                ->whereRaw($where)
-                ->skip($query['offset'])
-                ->take($query['limit'])
-                ->get();
-        }
+        $ret['rows'] = $this->banner
+            ->orderBy($query['sort'], $query['order'])
+            ->whereRaw($where)
+            ->skip($query['offset'])
+            ->take($query['limit'])
+            ->get();
         return $ret;
     }
 

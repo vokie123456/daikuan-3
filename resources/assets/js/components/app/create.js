@@ -647,7 +647,8 @@ export default class App extends React.Component {
     render() {
         const { params = {} } = this.props.match;
         let datas = this.state.datas;
-        if(params.id && !datas) {
+        let id = parseInt(params.id) || 0;
+        if(id && !datas) {
             return null;
         }
         return <AppCreateInit {...Object.assign({}, this.props, {inits: datas})} />

@@ -52,14 +52,12 @@ class CategoryRepository
         ];
         $where = $query['whereStr'] ? $query['whereStr'] : 1;
         $ret['total'] = $this->category->whereRaw($where)->count();
-        if($ret['total']) {
-            $ret['rows'] = $this->category
-                ->orderBy($query['sort'], $query['order'])
-                ->whereRaw($where)
-                ->skip($query['offset'])
-                ->take($query['limit'])
-                ->get();
-        }
+        $ret['rows'] = $this->category
+            ->orderBy($query['sort'], $query['order'])
+            ->whereRaw($where)
+            ->skip($query['offset'])
+            ->take($query['limit'])
+            ->get();
         return $ret;
     }
 

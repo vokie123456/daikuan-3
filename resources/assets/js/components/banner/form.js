@@ -387,7 +387,8 @@ export default class BannerForm extends React.Component {
     render() {
         const { params = {} } = this.props.match;
         let datas = this.state.datas;
-        if(params.id && !datas) return null;
+        let id = parseInt(params.id) || 0;
+        if(id && !datas) return null;
         return <FormInit {...Object.assign({}, this.props, {inits: datas})} />
     }
 };

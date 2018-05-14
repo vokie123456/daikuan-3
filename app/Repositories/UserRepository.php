@@ -20,19 +20,13 @@ class UserRepository
         $user = $this->user->with(['devices' => function($query) {
             $query->orderBy('updated_at', 'desc')->take(1);
         }])->where('id', $id)->first();
-        if($user && $user->recomm_id && in_array($user->recomm_type, [1, 2])) {
-            if($user->recomm_type == 1) {
-                $ret = DB::table('users')->select('id', 'telephone')->where('id', $user->recomm_id)->first();
-                if($ret) {
-                    $user = $user->toArray();
-                    $user['recommer'] = $ret;
-                }
-            }else {
-                $ret = DB::table('companies')->select('id', 'name')->where('id', $user->recomm_id)->first();
-                if($ret) {
-                    $user = $user->toArray();
-                    $user['recommer'] = $ret;
-                }
+        $types = config('my.site.recomm_types');
+        if($user && $user->recomm_id && isset($types[$user->recomm_type])) {
+            $name = $user->recomm_type == array_search('users', $types) ? 'telephone' : 'name';
+            $ret = DB::table($types[$user->recomm_type])->select('id', $name)->where('id', $user->recomm_id)->first();
+            if($ret) {
+                $user = $user->toArray();
+                $user['recommer'] = $ret;
             }
         }
         return $user;
@@ -62,14 +56,12 @@ class UserRepository
         ];
         $where = $query['whereStr'] ? $query['whereStr'] : 1;
         $ret['total'] = $this->user->whereRaw($where)->count();
-        if($ret['total']) {
-            $ret['rows'] = $this->user
-                ->orderBy($query['sort'], $query['order'])
-                ->whereRaw($where)
-                ->skip($query['offset'])
-                ->take($query['limit'])
-                ->get();
-        }
+        $ret['rows'] = $this->user
+            ->orderBy($query['sort'], $query['order'])
+            ->whereRaw($where)
+            ->skip($query['offset'])
+            ->take($query['limit'])
+            ->get();
         return $ret;
     }
 

@@ -75,6 +75,12 @@ var urls = {
     updateUserStatus: host + 'userstatus/update',
     //重置用户密码
     resetUserPasswrod: host + 'user/resetpassword',
+    //获取所有代理商
+    getAllAgent: host + 'getallagent',
+    //获取代理商列表
+    getAgents: host + 'getagents',
+    //添加代理商
+    addAgent: host + 'agent/create',
 };
 
 export default urls;

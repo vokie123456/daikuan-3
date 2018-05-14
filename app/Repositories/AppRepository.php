@@ -39,15 +39,13 @@ class AppRepository
         // error_log(print_r($query, true));
         $where = $query['whereStr'] ? $query['whereStr'] : 1;
         $ret['total'] = $this->appRepository->whereRaw($where)->count();
-        if($ret['total']) {
-            $ret['rows'] = $this->appRepository
-                //->with('company')
-                ->orderBy($query['sort'], $query['order'])
-                ->whereRaw($where)
-                ->skip($query['offset'])
-                ->take($query['limit'])
-                ->get();
-        }
+        $ret['rows'] = $this->appRepository
+            //->with('company')
+            ->orderBy($query['sort'], $query['order'])
+            ->whereRaw($where)
+            ->skip($query['offset'])
+            ->take($query['limit'])
+            ->get();
         return $ret;
     }
 
