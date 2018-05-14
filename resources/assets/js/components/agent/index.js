@@ -73,9 +73,10 @@ export default class Agents extends React.Component {
             dataIndex: 'name',
             sorter: true,
             render: (text, record) => {
+                let username = record.username || '';
                 return (
                     <Tooltip title={record.note}>
-                        <span style={{textDecoration: 'underline'}}>{text}</span>
+                        <span>{text + `(${username})`}</span>
                     </Tooltip>
                 );
             }
@@ -83,7 +84,14 @@ export default class Agents extends React.Component {
             title: '推广链接',
             dataIndex: 'share_url',
             render: (text, record) => {
-                return <Input type="text" value={text} />;
+                return <Input type="text" defaultValue={text} />;
+            }
+        }, {
+            title: '上级',
+            dataIndex: 'parent',
+            render: (text, record) => {
+                if(text && text.name) return text.name;
+                else return '-';
             }
         }, {
             title: '添加时间',
@@ -99,9 +107,9 @@ export default class Agents extends React.Component {
             title: '操作',
             render: (text, record) => {
                 return (
-                    <Button>
+                    <a href="/agents">
                         <Icon type="disconnect" />
-                    </Button>
+                    </a>
                 );
             },
         }];

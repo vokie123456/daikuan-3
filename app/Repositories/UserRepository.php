@@ -80,7 +80,7 @@ class UserRepository
             if(isset($request[$key])) {
                 $ret = get_id_by_url_encode($request[$key]);
                 $types = config('my.site.recomm_types');
-                if($ret && in_array($ret['key'], $types) && $ret['val'] > 0) {
+                if($ret && array_search($ret['key'], $types) !== null && $ret['val'] > 0) {
                     $find = DB::table($ret['key'])->where('id', $ret['val'])->first();
                     if($find) {
                         $user['recomm_type'] = array_search($ret['key'], $types);

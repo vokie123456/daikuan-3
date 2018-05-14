@@ -185,7 +185,7 @@
 	    		    var fd = new FormData(form);
 	    	        $.ajax({  
 	    				"crossDomain": true,
-	    				"url": "http://www.wangtougongshe.com/api/register/getcode",
+	    				"url": "/api/register/getcode",
 	    				"method": "POST",
 	    				"headers": {},
 	    				"dataType":"json",
@@ -215,7 +215,7 @@
 			$(".register").click(function() {
 				if(!$(".telephone").val().match(/^(13[0-9]|14[4-8]|15([0-3]|[5-9])|166|17(3|[5-8])|18([0-9])|19([8]|[9]))\d{8}$/)){
 	 		 		$("p").eq(0).show().delay(2000).fadeOut(1000);
-	 		  	}else if($(".code").val() != code){
+	 		  	}else if(!$(".code").val()){
 	 		 		$("p").eq(1).show().delay(2000).fadeOut(1000);
 	 		  	}else if(!$(".password").val().match(/^\w{6,18}$/)){
 					$("p").eq(2).show().delay(2000).fadeOut(1000);
@@ -225,7 +225,7 @@
 	    		    var recomm = getUrlParam("recomm") || ''; 
 	    	        $.ajax({  
 	    				"crossDomain": true,
-	    				"url": "http://www.wangtougongshe.com/api/register?recomm="+recomm,
+	    				"url": "/api/register?recomm="+recomm,
 	    				"method": "POST",
 	    				"headers": {},
 	    				"processData": false,

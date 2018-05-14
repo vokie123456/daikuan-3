@@ -16,6 +16,7 @@ class CreateAgentsTable extends Migration
         Schema::create('agents', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->default('')->comment('名称');
+            $table->string('username')->unique()->comment('用户名');
             $table->string('password')->comment('密码');
             $table->integer('parent_id')->nullable()->unsigned()->comment('上级id');
             $table->string('note', 255)->default('')->comment('备注');

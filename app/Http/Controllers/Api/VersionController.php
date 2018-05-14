@@ -12,9 +12,15 @@ class VersionController extends Controller
         $result = array(
             'error' => '',
             'errno' => 0,
-            'datas' => array(
+            'ios' => array(
                 'version' => 1,
-                'url' => '#',
+                'url' => 'itms-services://?action=download-manifest&url=https://www.wangtougongshe.com/download/kuaihang.plist',
+                'type' => 0, // 0 普通更新, 1 强制更新
+                'text' => '发现新版本, 请更新.',
+            ),
+            'android' => array(
+                'version' => 1,
+                'url' => 'https://www.wangtougongshe.com/download/android_app_last.apk',
                 'type' => 0, // 0 普通更新, 1 强制更新
                 'text' => '发现新版本, 请更新.',
             ),

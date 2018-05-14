@@ -133,6 +133,26 @@ class FormComponent extends React.Component {
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
+                    label={(
+                        <span>
+                            登录名&nbsp;
+                            <Tooltip title="建议使用手机号或邮箱(不能与他人重复)">
+                                <Icon type="question-circle-o" />
+                            </Tooltip>
+                        </span>
+                    )}
+                >
+                    {getFieldDecorator('username', {
+                        rules: [{
+                            required: true,
+                            message: '请填写登录名!',
+                        }],
+                    })(
+                        <Input maxLength={45} placeholder="手机/邮箱" />
+                    )}
+                </FormItem>
+                <FormItem
+                    {...formItemLayout}
                     label="密码"
                 >
                     {getFieldDecorator('password', {

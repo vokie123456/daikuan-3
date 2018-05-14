@@ -28,6 +28,7 @@ class StoreAgentPost extends FormRequest
         return [
             //
             'name' => 'required|string|max:191',
+            'username' => 'required|string|max:191',
             'password' => 'required|string|max:20|confirmed',
         ];
     }

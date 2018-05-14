@@ -17,6 +17,7 @@ yarn-error.log
 /public/api
 /public/test.php
 /public/download
+!/public/download/kuaihang.plist
 
 gitbook/_book
 

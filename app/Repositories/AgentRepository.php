@@ -39,8 +39,8 @@ class AgentRepository
             'rows' => [],
         ];
         if($ret['total']) {
-            $ret['rows'] = $mysql
-                ->select('id', 'name', 'created_at', 'parent_id', 'note')
+            $ret['rows'] = $mysql->with('parent:id,name')
+                ->select('id', 'name', 'username', 'created_at', 'parent_id', 'note')
                 ->orderBy($query['sort'], $query['order'])
                 ->skip($query['offset'])
                 ->take($query['limit'])
@@ -70,7 +70,7 @@ class AgentRepository
             foreach($ret['rows'] as $key => $val) {
                 $ret['rows'][$key]['register'] = isset($agent_count[$val['id']]) ? $agent_count[$val['id']]['register'] : 0;
                 $ret['rows'][$key]['activate'] = isset($agent_count[$val['id']]) ? $agent_count[$val['id']]['activate'] : 0;
-                $code = create_url_encode_by_id('companies', $val['id']);
+                $code = create_url_encode_by_id('agents', $val['id']);
                 $ret['rows'][$key]['share_url'] = $share_url . "?{$recom_key}=" . $code;
             }
         }
@@ -86,11 +86,15 @@ class AgentRepository
     {
         $agent = [
             'name' => $datas['name'],
+            'username' => $datas['username'],
             'password' => bcrypt($datas['password']),
             'note' => isset($datas['note']) ? $datas['note'] : '',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
+        if($this->agent->where('username', $datas['username'])->first()) {
+            return $this->set_error('该登录名已被注册!');
+        }
         if(!empty($datas['parent_id'])) {
             $parent = $this->agent->find($datas['parent_id']);
             if(!$parent) {
