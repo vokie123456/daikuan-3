@@ -33,7 +33,7 @@ class LoginController extends Controller
                 return view('agent/login')->withErrors([
                     'username' => '该用户不存在!',
                 ]);
-            }else if(Hash::check($data['password'], $agent->password)) {
+            }else if(!Hash::check($data['password'], $agent->password)) {
                 return view('agent/login')->withErrors([
                     'password' => '密码错误!',
                 ]);
