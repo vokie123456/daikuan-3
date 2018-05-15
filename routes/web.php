@@ -25,9 +25,12 @@ Route::get('/pusher', function () {
 });
 
 
-Route::view('/agents', 'agent/login')->name('agentLoginForm');
+Route::get('/agents', 'Agent\LoginController@index');
 Route::post('/agents/login', 'Agent\LoginController@form')->name('agentLogin');
-Route::get('/agents/home', 'Agent\AgentController@index');
+Route::get('/agentlogout', 'Agent\LoginController@logout');
+Route::get('/agents/myurl', 'Agent\AgentController@myurl');
+Route::get('/agents/promotes', 'Agent\AgentController@promotes');
+Route::post('/agents/promotedata', 'Agent\AgentController@getPromoteDatas');
 
 
 Auth::routes();

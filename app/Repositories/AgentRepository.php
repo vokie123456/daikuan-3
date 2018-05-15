@@ -109,4 +109,14 @@ class AgentRepository
             return $this->set_error('添加失败!');
         }
     }
+
+    public function getAgentByName($name)
+    {
+        return $this->agent->where('username', $name)->first();
+    }
+
+    public function getUserByAgent($id, $request = [])
+    {
+        
+    }
 }

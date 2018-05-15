@@ -107,7 +107,7 @@ export default class Agents extends React.Component {
             title: '操作',
             render: (text, record) => {
                 return (
-                    <a href="/agents">
+                    <a href="/agents" target="_blank">
                         <Icon type="disconnect" />
                     </a>
                 );

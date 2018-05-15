@@ -1,0 +1,34 @@
+html, body {
+    height: 100%;
+}
+
+#bodyContainer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+#siderContainer {
+    width: 220px;
+    border-right: 1px solid rgba(220, 220, 220, 0.4);
+}
+
+#contentContainer {
+    flex: 1;
+    padding: 40px 20px 20px;
+    background-color: #f9f9f9;
+}
+
+.menuBox {
+    margin-top: 60px;
+    padding-left: 0;
+}
+
+li.menuItem {
+    list-style: none;
+    height: 46px;
+    line-height: 46px;
+    border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+    text-indent: 20px;
+    cursor: pointer;
+}

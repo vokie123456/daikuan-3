@@ -16,8 +16,8 @@ yarn-error.log
 /public/js/admin.js
 /public/api
 /public/test.php
-/public/download
-!/public/download/kuaihang.plist
+/public/download/*.ipa
+/public/download/*.apk
 
 gitbook/_book
 

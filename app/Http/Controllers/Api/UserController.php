@@ -31,7 +31,14 @@ class UserController extends Controller
             $user = new UserResource($this->user);
             $key = config('my.site.recomm');
             $share_url = config('my.site.register_path') . "?{$key}=" . create_url_encode_by_id('users', $user->id);
-            $this->set_success('获取成功!')->set_data('user', $user)->set_data('share_url', $share_url);
+            $contact_us = [
+                '微信号: shiding-6666',
+                '微信号: shiding-123456',
+            ];
+            $this->set_success('获取成功!')
+                ->set_data('user', $user)
+                ->set_data('share_url', $share_url)
+                ->set_data('contact_us', $contact_us);
         }else {
             $this->set_error('该帐号已被禁止!');
         }
