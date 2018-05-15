@@ -20,6 +20,8 @@ class Formatquery {
     protected $searchArr;
     protected $query;
     protected $modified = false;
+    protected $dbprefix;
+    protected $byKeyToArray;
     
     //构造函数
     function __construct($config = array()) {
@@ -41,6 +43,7 @@ class Formatquery {
      *  -- except_func [function] 处理特殊字段的函数, 最优处理
      *  -- myfunction  [function] 自定义添加的处理函数
      * modified  [bool]     是否在字段两侧添加`符号
+     * dbprefix  [string]   当modified等于true时, 添加前缀
      */
     protected function init($config) {
         $max_limit = 50;
@@ -67,10 +70,12 @@ class Formatquery {
             'whereAfter' => '',
         );
         if(isset($config['modified'])) $this->modified = (bool)$config['modified'];
+        $this->dbprefix = isset($config['dbprefix']) ? $config['dbprefix'] : null;
+        $this->byKeyToArray = isset($config['byKeyToArray']) ? $config['byKeyToArray'] : null;
     }
     
     //设置参数
-    public function setParams($params = []) {
+    public function setParams($params = [], $_key_ = 'search') {
         if(!empty($params['sort']) && !empty($this->sortArr)) {
             if(in_array($params['sort'], $this->sortArr)) {
                 $this->query['sort'] = $params['sort'];
@@ -78,15 +83,21 @@ class Formatquery {
                 $this->query['sort'] = $this->formartkey($this->sortArr[$params['sort']]);
             }
         }
-        $this->query['order'] = (!empty($params['order']) && in_array(strtoupper($params['order']), $this->orderArr)) ? $params['order'] : $this->defalutOrder;
+        $this->query['order'] = (
+            !empty($params['order']) && 
+            in_array(strtoupper($params['order']
+        ), $this->orderArr)) ? $params['order'] : $this->defalutOrder;
         $_sort = $this->formartkey($this->query['sort']);
         $this->query['sorts'] = array("{$_sort} {$this->query['order']}");
         $this->query['offset'] = !empty($params['offset']) ? $params['offset'] : 0;
         $this->query['limit'] = (!empty($params['limit']) && $params['limit'] > 0) ? 
             ($params['limit'] > $this->maxLimit ? $this->maxLimit : $params['limit']) : $this->defalutLimit;
 
-        $searchs = !empty($params['search']) ? (is_array($params['search']) ? $params['search'] : json_decode($params['search'], true)) : [];
-        $searchs = (!empty($searchs) && is_array($searchs)) ? $searchs : array();
+        $searchs = !empty($params[$_key_]) ? (is_array($params[$_key_]) ? $params[$_key_] : (
+            json_decode($params[$_key_], true) ? json_decode($params[$_key_], true) : 
+            ($this->byKeyToArray ? [$this->byKeyToArray => $params[$_key_]] : [])
+        )) : [];
+        $searchs = (!empty($searchs) && is_array($searchs)) ? $searchs : [];
         $default_searchs = array();
         foreach($this->searchArr as $key => $val) {
             //取出默认值
@@ -145,6 +156,9 @@ class Formatquery {
     public function formartkey($keyname) {
         if(!empty($keyname) && is_string($keyname) && $this->modified) {
             $arr = array_map(function($item) {return "`{$item}`";}, explode('.', $keyname));
+            if(count($arr) > 1 && $this->dbprefix) {
+                $arr[0] = $this->dbprefix . $arr[0];
+            }
             $keyname = implode('.', $arr);
         }
         return $keyname;

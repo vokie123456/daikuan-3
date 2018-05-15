@@ -8,7 +8,7 @@ import { BannerPositions } from '../public/global';
 
 const Search = Input.Search;
 
-export default class Agents extends React.Component {
+export default class Promotes extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

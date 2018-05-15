@@ -2,9 +2,11 @@
 
 @section('content')
 
+<p style="margin-bottom: 30px;">{{ $myname }}</p>
+
 <div id="qrcode"></div>
 
-<div style="margin-top: 40px;">
+<div style="margin-top: 30px;">
     <input type="text" class="form-control" value="{{ $myurl }}" />
 </div>
 

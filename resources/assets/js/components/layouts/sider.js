@@ -58,6 +58,9 @@ const routers = [
             title: 'CPA代理商',
             link : '/agents',
         }, {
+            title: '推广列表',
+            link : '/promotes',
+        }, {
             title: '用户列表',
             link : '/users',
         }],

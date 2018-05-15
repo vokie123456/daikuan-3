@@ -13,6 +13,7 @@ import Banners from '../banner/index';
 import BannerForm from '../banner/form';
 import Users from '../user';
 import UserDetail from '../user/detail';
+import Promotes from '../agent/promote';
 import Agents from '../agent';
 import AgentsForm from '../agent/form';
 
@@ -35,6 +36,7 @@ export default class ContentComponent extends React.Component {
                 <Route path="/banner/update/:id" component={BannerForm} />
                 <Route path="/users" exact component={Users} />
                 <Route path="/users/:id" component={UserDetail} />
+                <Route path="/promotes" exact component={Promotes} />
                 <Route path="/agents" exact component={Agents} />
                 <Route path="/agents/:id" component={AgentsForm} />
             </Content>

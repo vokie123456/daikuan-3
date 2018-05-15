@@ -5,6 +5,7 @@ use App\Models\Agent;
 use App\Models\User;
 use App\Http\Controllers\ApiResponse;
 use App\Services\Formatquery;
+use Illuminate\Support\Facades\DB;
 
 class AgentRepository
 {
@@ -17,7 +18,7 @@ class AgentRepository
         $this->agent = $agent;
     }
 
-    public function getList($request = [])
+    public function getList($request = [], $parentid = null)
     {
         $config = array(
             'defSort'   => 'created_at',
@@ -29,11 +30,15 @@ class AgentRepository
             'searchArr' => array(
                 'name'  => ['rule' => '%alias% like \'%%s%\'',],
             ),
+            'byKeyToArray' => 'name',
         );
         $formatquery = new Formatquery($config);
         $query = $formatquery->setParams($request)->getParams();
         // error_log(print_r($query, true));
         $mysql = $this->agent->whereRaw($query['whereStr'] ? $query['whereStr'] : 1);
+        if($parentid) {
+            $mysql = $mysql->whereIn('id', $this->getChilds($parentid));
+        }
         $ret = [
             'total' => $mysql->count(),
             'rows' => [],
@@ -115,8 +120,62 @@ class AgentRepository
         return $this->agent->where('username', $name)->first();
     }
 
+    public function getAgentByParentId($id)
+    {
+        return $this->agent->select('id', 'name')->where('id', $id)->orWhere('parent_id', $id)->get();
+    }
+
+    public function getChilds($id)
+    {
+        $ids = $this->agent->where('parent_id', $id)->pluck('id')->toArray();
+        $ids[] = $id;
+        return $ids;
+    }
+
     public function getUserByAgent($id, $request = [])
     {
-        
+        $ids = $this->getChilds($id);
+        $config = array(
+            'modified'  => true,
+            'defSort'   => 'users.created_at',
+            'defOrder'  => 'desc',
+            'searchArr' => array(
+                'startTime' => array(
+                    'alias' => 'dk_users.created_at',
+                    'rule' => '%alias% > \'%s\'',
+                ),
+                'endTime' => array(
+                    'alias' => 'dk_users.created_at',
+                    'rule' => '%alias% < \'%s\'',
+                ),
+            ),
+        );
+        $parent_id = intval($request['parent']);
+        $formatquery = new Formatquery($config);
+        $query = $formatquery->setParams($request)->getParams();
+        $types = config('my.site.recomm_types');
+        $mysql = DB::table('users')->where('recomm_type', array_search('agents', $types))
+            ->whereRaw(($parent_id && in_array($parent_id, $ids)) ? "`dk_users`.`recomm_id` = {$parent_id}" : 1)
+            ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1);
+        $ret = [
+            'total' => $mysql->count(),
+            'rows' => [],
+        ];
+        if($ret['total']) {
+            $ret['rows'] = $mysql
+                ->leftJoin('agents', 'agents.id', '=', 'users.recomm_id')
+                ->select(
+                    'users.id', 
+                    'users.telephone',
+                    'agents.name AS agentname', 
+                    'users.activated_at', 
+                    'users.created_at'
+                )
+                ->orderBy($query['sort'], $query['order'])
+                ->skip($query['offset'])
+                ->take($query['limit'])
+                ->get();
+        }
+        return $ret;
     }
 }

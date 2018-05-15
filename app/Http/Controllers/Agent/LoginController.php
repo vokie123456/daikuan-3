@@ -55,6 +55,6 @@ class LoginController extends Controller
     public function logout()
     {
         session()->forget('agent');
-        return redirect('agents');
+        return redirect('agents/login');
     }
 }

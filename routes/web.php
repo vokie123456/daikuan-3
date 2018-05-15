@@ -25,10 +25,14 @@ Route::get('/pusher', function () {
 });
 
 
-Route::get('/agents', 'Agent\LoginController@index');
+Route::get('/agents/login/{id?}', 'Agent\LoginController@index')->name('showAgentLogin');
 Route::post('/agents/login', 'Agent\LoginController@form')->name('agentLogin');
 Route::get('/agentlogout', 'Agent\LoginController@logout');
 Route::get('/agents/myurl', 'Agent\AgentController@myurl');
+Route::get('/agents/teams', 'Agent\AgentController@teams');
+Route::post('/agents/teamdata', 'Agent\AgentController@teamdata');
+Route::get('/agents/create', 'Agent\AgentController@create');
+Route::post('/agents/create', 'Agent\AgentController@createForm')->name('createAgentForm');
 Route::get('/agents/promotes', 'Agent\AgentController@promotes');
 Route::post('/agents/promotedata', 'Agent\AgentController@getPromoteDatas');
 
