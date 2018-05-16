@@ -155,7 +155,9 @@ class Formatquery {
     //格式化sql查询字段: a.id => `a`.`id` 
     public function formartkey($keyname) {
         if(!empty($keyname) && is_string($keyname) && $this->modified) {
-            $arr = array_map(function($item) {return "`{$item}`";}, explode('.', $keyname));
+            $arr = array_map(function($item) {
+                return strpos($item, '`') === 0 ? $item : "`{$item}`";
+            }, explode('.', $keyname));
             if(count($arr) > 1 && $this->dbprefix) {
                 $arr[0] = $this->dbprefix . $arr[0];
             }

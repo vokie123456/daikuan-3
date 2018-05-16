@@ -136,7 +136,6 @@ class AgentRepository
     {
         $ids = $this->getChilds($id);
         $config = array(
-            'modified'  => true,
             'defSort'   => 'users.created_at',
             'defOrder'  => 'desc',
             'searchArr' => array(

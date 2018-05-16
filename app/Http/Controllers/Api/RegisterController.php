@@ -22,7 +22,7 @@ class RegisterController extends Controller
         $error = $this->smscode->send_sms_code($request->get('telephone'), 0, false, [
             'templateId' => 4300,
             'add_expiry_time' => true,
-        ]);
+        ], function($errno) {$this->set_errno($errno);});
         if($error) {
             $this->set_error($error);
         }else {

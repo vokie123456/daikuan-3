@@ -65,6 +65,7 @@ Route::group([
     Route::get('getallagent', 'AgentController@getAll');
     Route::post('agent/create', 'AgentController@store');
     Route::get('getagents', 'AgentController@index');
+    Route::get('getpromotes', 'PromoteController@index');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

@@ -81,6 +81,8 @@ var urls = {
     getAgents: host + 'getagents',
     //添加代理商
     addAgent: host + 'agent/create',
+    //获取推广列表
+    getPromote: host + 'getpromotes',
 };
 
 export default urls;

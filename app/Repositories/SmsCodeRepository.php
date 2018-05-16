@@ -36,13 +36,14 @@ class SmsCodeRepository
         return $err;
     }
 
-    public function send_sms_code($phone, $type, $exist = null, $config = [])
+    public function send_sms_code($phone, $type, $exist = null, $config = [], $func_set_errno = null)
     {
         $error = $this->sendPrevCheck($phone, $type);
         if(!$error) {
             if($exist !== null) {
                 $userRepository = new UserRepository();
                 if($exist != (bool)$userRepository->getUserByPhone($phone)) {
+                    if($func_set_errno && !$exist) $func_set_errno(5);
                     return $exist ? '该手机号码不存在!' : '该手机号码已被注册!';
                 }
             }
