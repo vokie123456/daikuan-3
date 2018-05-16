@@ -36,8 +36,8 @@ class SomeInput extends React.Component {
     }
 
     componentDidMount() {
-        const { getFieldDecorator, initialValue, name } = this.props;
-        getFieldDecorator(name + '_key', {initialValue: initialValue});
+        // const { getFieldDecorator, initialValue, name } = this.props;
+        // getFieldDecorator(name + '_key', {initialValue: initialValue});
     }
 
     // 删除一行
@@ -87,7 +87,7 @@ class SomeInput extends React.Component {
             //onChange = null,
         } = this.props;
         
-        // getFieldDecorator(name + '_key', {initialValue: initialValue});
+        getFieldDecorator(name + '_key', {initialValue: initialValue});
         const keys = getFieldValue(name + '_key');
         if(!keys) return null;
         const formItemLayout = {

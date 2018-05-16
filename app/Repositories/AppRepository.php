@@ -58,7 +58,7 @@ class AppRepository
             'name' => $datas['name'],
             'weburl' => $datas['weburl'],
             'icon' => $datas['appicon'],
-            'note' => $datas['note'],
+            'note' => isset($datas['note']) ? $datas['note'] : '',
             // 'company_id' => (int)$datas['company_id'],
             'synopsis' => $datas['synopsis'] ? $datas['synopsis'] : '',
             'details' => $datas['details'] ? $datas['details'] : '',
