@@ -104,7 +104,8 @@ class FormComponent extends React.Component {
             message.warning('图片类型不合法!');
             return;
         }else {
-            const sizeOk = file.size / 1024 < 200;
+            const sizeOk = file.size / 1024 < 300;
+            console.log(file);
             if (!sizeOk) {
                 message.warning('图片大小需小于300KB!');
                 return;

@@ -22,7 +22,7 @@ class SecLoanRepository
             'sort' => 'sort',
             'order' => 'asc',
             'search' => [
-                'position' => array_search(config('my.site.moudle_type')[2], config('my.site.banner_position')),
+                'position' => array_search(config('my.site.moudle_type')[3], config('my.site.banner_position')),
                 'show_time' => date('Y-m-d H:i:s'),
                 'status' => 1,
             ],

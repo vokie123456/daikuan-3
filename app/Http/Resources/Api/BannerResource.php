@@ -22,7 +22,7 @@ class BannerResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'image' => $image,
-            'app_id' => $this->app_id,
+            'app_id' => $this->app_id ? $this->app_id : 0,
             'url' => $this->url,
         ];
     }
