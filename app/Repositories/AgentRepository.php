@@ -59,9 +59,14 @@ class AgentRepository
             $types = config('my.site.recomm_types');
             $users = User::select('id', 'status', 'recomm_id', 'activated_at', 'created_at')
                 ->where('recomm_type', array_search('agents', $types))
-                ->whereIn('recomm_id', $ids)
-                ->get()
-                ->toArray();
+                ->whereIn('recomm_id', $ids);
+            if(isset($request['stime']) && strtotime($request['stime'])) {
+                $users = $users->whereRaw('(activated_at >= ? OR created_at >= ?)', [$request['stime'], $request['stime']]);
+            }
+            if(isset($request['etime']) && strtotime($request['etime'])) {
+                $users = $users->whereRaw('(activated_at <= ? OR created_at <= ?)', [$request['etime'], $request['etime']]);
+            }
+            $users = $users->get()->toArray();
             $agent_count = [];
             foreach($users as $key => $val) {
                 if(!isset($agent_count[$val['recomm_id']])) $agent_count[$val['recomm_id']] = [];
@@ -118,6 +123,11 @@ class AgentRepository
     public function getAgentByName($name)
     {
         return $this->agent->where('username', $name)->first();
+    }
+
+    public function getAgentById($id)
+    {
+        return $this->agent->where('id', $id)->first();
     }
 
     public function getAgentByParentId($id)

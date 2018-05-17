@@ -30,7 +30,7 @@ class Users extends React.Component {
         this.filter = {};
         this.sort = {};
         this.search = '';
-        this.type = 'name';
+        this.type = 'telephone';
     }
 
     componentDidMount() {
@@ -171,8 +171,8 @@ class Users extends React.Component {
                         }}
                         onChange={value => this.type = value}
                     >
-                        <Option value="name">姓名</Option>
                         <Option value="telephone">手机</Option>
+                        <Option value="name">姓名</Option>
                     </Select>
                     <div className="searchBox">
                         <Search

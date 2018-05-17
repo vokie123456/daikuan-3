@@ -62,6 +62,7 @@ class UserRecRepository
     {
         $members = $this->user_record->whereRaw('user_id IS NOT NULL')->where('created_at', '>', date('Y-m-d'))->count();
         $tourists = $this->user_record->where('user_id', null)->where('created_at', '>', date('Y-m-d'))->count();
+        return $members + $tourists;
         return $members . '+' . $tourists;
     }
 

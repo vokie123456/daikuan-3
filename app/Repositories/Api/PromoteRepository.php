@@ -25,7 +25,8 @@ class PromoteRepository
             ),
             'searchArr' => array(
                 'name'  => [
-                    'alias' => 'dk_users.telephone',
+                    'alias' => 'dk_apps.name',
+                    'rule' => '%alias% like \'%%s%\'',
                 ],
                 'stime' => [
                     'alias' => 'dk_promotes.created_at',
@@ -41,14 +42,14 @@ class PromoteRepository
         $query = $formatquery->setParams($request)->getParams();
         // error_log(print_r($query, true));
         $mysql = $this->promote->whereRaw($query['whereStr'] ? $query['whereStr'] : 1)
-            ->leftJoin('users', 'users.id', '=', 'promotes.user_id');
+            ->leftJoin('users', 'users.id', '=', 'promotes.user_id')
+            ->leftJoin('apps', 'apps.id', '=', 'promotes.app_id');
         $ret = [
             'total' => $mysql->count(),
             'rows' => [],
         ];
         if($ret['total']) {
             $ret['rows'] = $mysql
-                ->leftJoin('apps', 'apps.id', '=', 'promotes.app_id')
                 ->select(
                     'promotes.*',
                     'users.telephone',

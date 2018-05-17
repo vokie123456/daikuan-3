@@ -7,11 +7,26 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\AgentRepository;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    protected $agentRepository;
+    
+    public function __construct(AgentRepository $agentRepository)
+    {
+        $this->agentRepository = $agentRepository;
+    }
+
     public function index(Request $request)
     {
+        $user = Auth::guard('admin')->user();
+        if($user && $request['id']) {
+            $agent = $this->agentRepository->getAgentById($request['id']);
+            if($agent) {
+                $request->session()->put('agent', $agent);
+            }
+        }
         if($request->session()->has('agent')) {
             return redirect('agents/myurl');
         }else {
@@ -20,7 +35,7 @@ class LoginController extends Controller
     }
 
     //
-    public function form(Request $request, AgentRepository $agentRepository)
+    public function form(Request $request)
     {
         $data = $request->all();
         $validator = $this->validator($data);
@@ -28,7 +43,7 @@ class LoginController extends Controller
         if($validator->fails()) {
             return view('agent/login', ['errors' => $validator->errors()]);
         }else {
-            $agent = $agentRepository->getAgentByName($data['username']);
+            $agent = $this->agentRepository->getAgentByName($data['username']);
             if(!$agent) {
                 return view('agent/login')->withErrors([
                     'username' => '该用户不存在!',

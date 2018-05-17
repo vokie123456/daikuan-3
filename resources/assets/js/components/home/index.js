@@ -12,7 +12,7 @@ import Utils from '../public/utils';
 
 const block = [{
     'key': 'app_visit',
-    'txt': '今日APP浏览量 (会员 + 游客)',
+    'txt': '今日APP浏览量',
     'color': '#8e1ce6',
 }, {
     'key': 'promote',

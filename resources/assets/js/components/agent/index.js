@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Table, Input, Button, Icon, Tooltip, } from 'antd';
+import { Table, Input, Button, Icon, Tooltip, DatePicker, } from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
 import { BannerPositions } from '../public/global';
 
+const { RangePicker } = DatePicker;
 const Search = Input.Search;
 
 export default class Agents extends React.Component {
@@ -21,6 +22,8 @@ export default class Agents extends React.Component {
         this.filter = {};
         this.sort = {};
         this.search = '';
+        this.starttime = null;
+        this.endtime = null;
     }
 
     componentDidMount() {
@@ -62,6 +65,8 @@ export default class Agents extends React.Component {
                 name: search,
             },
         };
+        if(this.starttime) params.stime = this.starttime;
+        if(this.endtime) params.etime = this.endtime;
         // console.log(params);
         this.fetch(params);
     };
@@ -121,11 +126,30 @@ export default class Agents extends React.Component {
                             <Link to={`/agents/0`}>添加</Link>
                         </Button>
                     </div>
+                    <RangePicker
+                        size="large"
+                        showTime={{ format: 'HH:mm' }}
+                        format="YYYY-MM-DD HH:mm"
+                        placeholder={['Start Time', 'End Time']}
+                        onChange={(value) => {
+                            if(value && value[0]) {
+                                this.starttime = value[0].format('YYYY-MM-DD HH:mm');
+                            }else {
+                                this.starttime = null;
+                            }
+                            if(value && value[1]) {
+                                this.endtime = value[1].format('YYYY-MM-DD HH:mm');
+                            }else {
+                                this.endtime = null;
+                            }
+                        }}
+                    />
                     <div className="searchBox">
                         <Search
                             onSearch={this.getAgentList}
                             enterButton="Search"
                             size="large"
+                            placeholder="输入代理商名称搜索"
                         />
                     </div>
                 </div>

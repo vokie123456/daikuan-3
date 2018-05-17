@@ -18,7 +18,7 @@ class CategoryAppRepository
 
     public function getDatas($category_id)
     {
-        $apps = $this->app::with('company')->orderBy('created_at', 'desc')->get();
+        $apps = $this->app->orderBy('created_at', 'desc')->get();
         $selected_app_id = $this->categoryapp->where('category_id', (int)$category_id)->pluck('app_id');
         $selected_app_id = $selected_app_id ? $selected_app_id->toArray() : [];
         $source = [];
@@ -28,7 +28,6 @@ class CategoryAppRepository
                 $source[] = array(
                     'key' => $app['id'],
                     'app_name' => $app['name'],
-                    'company_name' => $app['company']['name'],
                 );
                 if(!empty($selected_app_id) && in_array($app['id'], $selected_app_id)) {
                     $target[] = $app['id'];

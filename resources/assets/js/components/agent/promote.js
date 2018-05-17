@@ -113,7 +113,7 @@ export default class Promotes extends React.Component {
                             onSearch={this.getPromoteList}
                             enterButton="Search"
                             size="large"
-                            placeholder="输入手机号搜索"
+                            placeholder="输入APP名称搜索"
                         />
                     </div>
                 </div>

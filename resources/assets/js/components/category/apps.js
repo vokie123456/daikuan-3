@@ -104,7 +104,7 @@ export default class Apps extends React.Component {
                     filterOption={this.filterOption}
                     targetKeys={targetKeys}
                     onChange={this.handleChange}
-                    render={item => (item.company_name + ' - ' + item.app_name)}
+                    render={item => item.app_name}
                     listStyle={{
                         width: '44%',
                         height: 520,

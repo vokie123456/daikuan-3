@@ -60,7 +60,7 @@ class AppRepository
             'icon' => $datas['appicon'],
             'note' => isset($datas['note']) ? $datas['note'] : '',
             // 'company_id' => (int)$datas['company_id'],
-            'synopsis' => $datas['synopsis'] ? $datas['synopsis'] : '',
+            'synopsis' => isset($datas['synopsis']) ? $datas['synopsis'] : '',
             'details' => $datas['details'] ? $datas['details'] : '',
             'rate' => (float)$datas['rates']['value'],
             'rate_type' => (int)$datas['rates']['type'],

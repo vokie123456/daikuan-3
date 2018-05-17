@@ -510,7 +510,7 @@ class AppCreate extends React.Component {
                     {..._props}
                     initialValue={getFieldValue('marks') || ['']}
                 />
-                <FormItem
+                {/* <FormItem
                     {...formItemLayout}
                     label="简介"
                 >
@@ -519,7 +519,7 @@ class AppCreate extends React.Component {
                     })(
                         <Input maxLength="120" />
                     )}
-                </FormItem>
+                </FormItem> */}
                 <FormItem
                     {...formItemLayout}
                     label="详细介绍"
