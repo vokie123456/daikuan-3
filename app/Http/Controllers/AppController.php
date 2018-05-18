@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreAppPost;
 use App\Repositories\AppRepository;
 use App\Http\Resources\AppResource;
+use Illuminate\Support\Facades\Cache;
 
 class AppController extends Controller
 {
@@ -44,12 +45,19 @@ class AppController extends Controller
             $datas = $request->all();
             $datas['appicon'] = $path;
             $ret = $this->appRepository->create($datas);
-            if($ret) $this->set_success('添加成功')->set_data('ret', $ret);
-            else $this->set_error('添加失败');
+            if($ret) {
+                $this->pusherCache();
+                $this->set_success('添加成功')->set_data('ret', $ret);
+            }else $this->set_error('添加失败');
         }else {
             $this->set_error('图片存储失败');
         }
         return response()->json($this->get_result());
+    }
+
+    public function pusherCache($key = 'pushers')
+    {
+        if(Cache::has($key)) Cache::put($key);
     }
 
     /**
@@ -87,8 +95,9 @@ class AppController extends Controller
         }
         if($datas['appicon']) {
             $ret = $this->appRepository->update($datas);
-            if($ret) $this->set_success('更新成功')->set_data('ret', $ret);
-            else $this->set_error('更新失败');
+            if($ret) {
+                $this->set_success('更新成功')->set_data('ret', $ret);
+            }else $this->set_error('更新失败');
         }else {
             $this->set_error('无图片数据');
         }

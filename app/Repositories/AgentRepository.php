@@ -164,7 +164,11 @@ class AgentRepository
         $query = $formatquery->setParams($request)->getParams();
         $types = config('my.site.recomm_types');
         $mysql = DB::table('users')->where('recomm_type', array_search('agents', $types))
-            ->whereRaw(($parent_id && in_array($parent_id, $ids)) ? "`dk_users`.`recomm_id` = {$parent_id}" : 1)
+            ->whereRaw(
+                ($parent_id && in_array($parent_id, $ids)) ? 
+                "`dk_users`.`recomm_id` = {$parent_id}" :
+                "`dk_users`.`recomm_id` in(" . implode(',', $ids) . ")"
+            )
             ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1);
         $ret = [
             'total' => $mysql->count(),
