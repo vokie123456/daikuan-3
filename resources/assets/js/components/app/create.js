@@ -447,7 +447,9 @@ class AppCreate extends React.Component {
                     {...formItemLayout}
                     label="备注"
                 >
-                    {getFieldDecorator('note') (
+                    {getFieldDecorator('note', {
+                        initialValue: '',
+                    }) (
                         <Input maxLength={255} />
                     )}
                 </FormItem>

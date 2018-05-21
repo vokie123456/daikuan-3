@@ -57,7 +57,7 @@ class AppController extends Controller
 
     public function pusherCache($key = 'pushers')
     {
-        if(Cache::has($key)) Cache::put($key);
+        if(Cache::has($key)) Cache::put($key, null);
     }
 
     /**
