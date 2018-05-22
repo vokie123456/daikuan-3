@@ -14,7 +14,7 @@ class VersionController extends Controller
             'errno' => 0,
             'ios' => array(
                 'version' => 5,
-                'url' => 'itms-services://?action=download-manifest&url=http://app.wangtougongshe.com/apps/kuaihang.plist',
+                'url' => 'itms-services://?action=download-manifest&url=https://app.wangtougongshe.com/apps/kuaihang.plist',
                 'type' => 1, // 0 普通更新, 1 强制更新
                 'text' => '发现新版本, 请更新.',
             ),
