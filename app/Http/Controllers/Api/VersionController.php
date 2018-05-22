@@ -13,14 +13,14 @@ class VersionController extends Controller
             'error' => '',
             'errno' => 0,
             'ios' => array(
-                'version' => 4,
-                'url' => 'itms-services://?action=download-manifest&url=https://www.wangtougongshe.com/download/kuaihang.plist',
+                'version' => 5,
+                'url' => 'itms-services://?action=download-manifest&url=http://app.wangtougongshe.com/apps/kuaihang.plist',
                 'type' => 1, // 0 普通更新, 1 强制更新
                 'text' => '发现新版本, 请更新.',
             ),
             'android' => array(
-                'version' => 3,
-                'url' => 'https://www.wangtougongshe.com/download/android_app_last.apk',
+                'version' => 4,
+                'url' => 'http://app.wangtougongshe.com/apps/android_app_v4.apk',
                 'type' => 1, // 0 普通更新, 1 强制更新
                 'text' => '发现新版本, 请更新.',
             ),

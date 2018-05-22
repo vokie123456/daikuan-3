@@ -39,7 +39,7 @@ class SecLoanRepository
         ];
         $categories = $this->category->getCategoryByType(3, false);
         if(isset($categories[0])) {
-            $datas['category'] = $this->category->getCategoryAppById($categories[0]['id'], true);
+            $datas['category'] = $this->category->getCategoryAppById($categories[0]['id'], false);
         }
         return $datas;
     }

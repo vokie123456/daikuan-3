@@ -204,7 +204,7 @@
 								$("#btnSendCode").css("background-color","#888");
 								InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次  	  
 							}else if(data && data.errno == 5) {
-								window.open('./download.html', '_self');
+								window.open('./download.html?t=' + new Date().getTime(), '_self');
 							}else if(data && data.error) {
 								console.log(data.error);
 								$(".error span").text(data.error).parent().show().delay(2000).fadeOut(1000);
@@ -239,9 +239,9 @@
 	    				success: function(data, status) {
 							console.log(data);
 							if(data && data.errno == 0) {
-								window.open('./download.html', '_self');
+								window.open('./download.html?t=' + new Date().getTime(), '_self');
 							}else if(data && data.errno == 5) {
-								window.open('./download.html', '_self');
+								window.open('./download.html?t=' + new Date().getTime(), '_self');
 							}else if(data && data.error) {
 								$(".error span").text(data.error).parent().show().delay(2000).fadeOut(1000);
 							}

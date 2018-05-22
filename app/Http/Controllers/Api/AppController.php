@@ -23,7 +23,7 @@ class AppController extends Controller
     //
     public function getDatas($id, CategoryRepository $category)
     {
-        $datas = $category->getCategoryAppById($id);
+        $datas = $category->getCategoryAppById($id, !request('paginate'));
         $this->set_success('获取成功')->set_data('datas', $datas);
         return response()->json($this->get_result());
     }

@@ -13,7 +13,6 @@
 		img{
 			width: 100%;
 			display: block;
-			margin-top: -116px;
 		}
 		#mcover {
 		    position: fixed;
@@ -54,7 +53,7 @@
 			if(ua.match(/MicroMessenger/i) == 'micromessenger') {
 				document.getElementById('mcover').style.display='block';
 			}else {
-				e.target.href = '/download/android_app_last.apk';
+				e.target.href = 'http://app.wangtougongshe.com/apps/android_app_v4.apk';
 			}
 		}
 	</script>
@@ -63,7 +62,7 @@
 		<a class="btnDownload" onclick="check_download_android(event);">Android下载</a>
 	</div>
 	<div style="text-align: center;">
-		<a class="btnDownload" href="itms-services://?action=download-manifest&url=https://www.wangtougongshe.com/download/kuaihang.plist">IOS下载</a>
+		<a class="btnDownload" href="itms-services://?action=download-manifest&url=http://app.wangtougongshe.com/apps/kuaihang.plist">IOS下载</a>
 	</div>
 	<div id="mcover">
 	     <img src="weixin_tip.png">
