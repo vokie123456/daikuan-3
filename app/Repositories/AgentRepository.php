@@ -38,10 +38,18 @@ class AgentRepository
         $mysql = $this->agent->whereRaw($query['whereStr'] ? $query['whereStr'] : 1);
         if($parentid) {
             $mysql = $mysql->whereIn('id', $this->getChilds($parentid));
+        }else if(isset($request['junior']) && $request['junior'] && isset($query['searchs']['name'])) {
+            //搜索添加下级
+            $finds = $mysql->pluck('id')->toArray();
+            if(!empty($finds)) {
+                $mysql = $this->agent->whereIn('id', $this->getChilds($finds));
+            }
         }
         $ret = [
             'total' => $mysql->count(),
             'rows' => [],
+            'total_register' => 0,
+            'total_activate' => 0,
         ];
         if($ret['total']) {
             $ret['rows'] = $mysql->with('parent:id,name')
@@ -83,6 +91,10 @@ class AgentRepository
                 $code = create_url_encode_by_id('agents', $val['id']);
                 $ret['rows'][$key]['share_url'] = $share_url . "?{$recom_key}=" . $code;
             }
+        }
+        foreach($ret['rows'] as $row) {
+            $ret['total_register'] += $row['register'];
+            $ret['total_activate'] += $row['activate'];
         }
         return $ret;
     }
@@ -137,7 +149,12 @@ class AgentRepository
 
     public function getChilds($id)
     {
-        $ids = $this->agent->where('parent_id', $id)->pluck('id')->toArray();
+        $ids = [];
+        if(is_array($id)) {
+            $ids = $this->agent->whereIn('parent_id', $id)->pluck('id')->toArray();
+        }else {
+            $ids = $this->agent->where('parent_id', $id)->pluck('id')->toArray();
+        }
         $ids[] = $id;
         return $ids;
     }

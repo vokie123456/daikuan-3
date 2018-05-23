@@ -21,6 +21,7 @@ class UserListResource extends JsonResource
             'recomm_type' => $this->recomm_type,
             'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
+            'is_activate' => isset($this->activated_at) ? true : false,
         ];
     }
 }

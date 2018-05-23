@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Table, Input, Button, Icon, Tooltip, DatePicker, } from 'antd';
+import { Table, Input, Button, Icon, Tooltip, DatePicker, Checkbox, } from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
@@ -16,6 +16,8 @@ export default class Agents extends React.Component {
             total: 0,
             datas: [],
             loading: false,
+            total_register: 0,
+            total_activate: 0,
         };
         
         this.pagination = {};
@@ -24,6 +26,7 @@ export default class Agents extends React.Component {
         this.search = '';
         this.starttime = null;
         this.endtime = null;
+        this.showJunior = 1;
     }
 
     componentDidMount() {
@@ -45,6 +48,8 @@ export default class Agents extends React.Component {
                     total: result.total,
                     datas: result.rows,
                     loading: false,
+                    total_register: result.total_register,
+                    total_activate: result.total_activate,
                 });
             }
         });
@@ -64,6 +69,7 @@ export default class Agents extends React.Component {
             'search': {
                 name: search,
             },
+            'junior': this.showJunior,
         };
         if(this.starttime) params.stime = this.starttime;
         if(this.endtime) params.etime = this.endtime;
@@ -72,7 +78,7 @@ export default class Agents extends React.Component {
     };
 
     render() {
-        const { datas, loading, total, } = this.state;
+        const { datas, loading, total, total_register, total_activate, } = this.state;
         const columns = [{
             title: '代理商名称',
             dataIndex: 'name',
@@ -151,6 +157,14 @@ export default class Agents extends React.Component {
                             size="large"
                             placeholder="输入代理商名称搜索"
                         />
+                        <div>
+                            <Checkbox 
+                                defaultChecked={true} 
+                                onChange={e => {
+                                    this.showJunior = e.target.checked ? 1 : 0;
+                                }}
+                            >关联下家</Checkbox>
+                        </div>
                     </div>
                 </div>
                 <Table 
@@ -172,21 +186,24 @@ export default class Agents extends React.Component {
                         this.sort = sort;
                         this.getAgentList();
                     }}
+                    title={() => {
+                        return (
+                            <div style={styles.titleStyle}>
+                                <span>注册总计: {total_register}, </span>
+                                <span>激活总计: {total_activate}。 </span>
+                            </div>
+                        );
+                    }}
                 />
             </div>
         );
     }
 }
 
-const styles = {};
-styles.icon = {
-    maxHeight: '60px',
-    margin: '-8px 0',
-    borderRadius: '3px',
-};
-styles.emptyIcon = {
-    maxHeight: '60px',
-    backgroundColor: '#eee',
-    margin: '-8px 0',
-    borderRadius: '3px',
+var styles = {
+    titleStyle: {
+        fontSize: 14,
+        fontWeight: 600,
+        letterSpacing: 1,
+    },
 };

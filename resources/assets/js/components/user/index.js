@@ -109,10 +109,6 @@ class Users extends React.Component {
     render() {
         const { datas, total, loading, } = this.state;
         const columns = [{
-            title: '姓名',
-            dataIndex: 'name',
-            sorter: true,
-        }, {
             title: '手机',
             dataIndex: 'telephone',
         }, {
@@ -122,6 +118,10 @@ class Users extends React.Component {
             render: (value, record) => {
                 return RegisterTypes[value] ? RegisterTypes[value] : '';
             },
+        }, {
+            title: '是否激活',
+            dataIndex: 'is_activate',
+            render: (value, record) => value ? '已激活' : '未激活',
         }, {
             title: '当前状态',
             dataIndex: 'status',
@@ -161,24 +161,12 @@ class Users extends React.Component {
         return (
             <div className="webkit-flex">
                 <div className="toolbar">
-                    <Select 
-                        size="large"
-                        defaultValue={this.type} 
-                        style={{
-                            width: 120,
-                            height: 40,
-                            marginRight: 10,
-                        }}
-                        onChange={value => this.type = value}
-                    >
-                        <Option value="telephone">手机</Option>
-                        <Option value="name">姓名</Option>
-                    </Select>
                     <div className="searchBox">
                         <Search
                             onSearch={this.getUserList}
                             enterButton="Search"
                             size="large"
+                            placeholder="输入手机号进行搜索"
                         />
                     </div>
                 </div>
