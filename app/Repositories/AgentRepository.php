@@ -154,7 +154,8 @@ class AgentRepository
         $ids = [];
         if(is_array($id)) {
             $ids = $this->agent->whereIn('parent_id', $id)->pluck('id')->toArray();
-        }else {
+	    return array_merge($id, $ids);
+	}else {
             $ids = $this->agent->where('parent_id', $id)->pluck('id')->toArray();
         }
         $ids[] = $id;
