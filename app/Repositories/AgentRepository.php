@@ -45,7 +45,9 @@ class AgentRepository
                 $mysql = $this->agent->whereIn('id', $this->getChilds($finds));
             }
         }
-        $search_users = $this->getUserByAgentIds($mysql->pluck('id'))->get()->toArray();
+        $starttime = isset($request['stime']) ? $request['stime'] : null;
+        $endtime = isset($request['etime']) ? $request['etime'] : null;
+        $search_users = $this->getUserByAgentIds($mysql->pluck('id')->toArray(), $starttime, $endtime);
         $ret = [
             'total' => $mysql->count(),
             'rows' => [],
@@ -66,14 +68,7 @@ class AgentRepository
             $ids = array_map(function($item) {
                 return $item['id'];
             }, $ret['rows']);
-            $users = $this->getUserByAgentIds($ids);
-            if(isset($request['stime']) && strtotime($request['stime'])) {
-                $users = $users->whereRaw('(activated_at >= ? OR created_at >= ?)', [$request['stime'], $request['stime']]);
-            }
-            if(isset($request['etime']) && strtotime($request['etime'])) {
-                $users = $users->whereRaw('(activated_at <= ? OR created_at <= ?)', [$request['etime'], $request['etime']]);
-            }
-            $users = $users->get()->toArray();
+            $users = $this->getUserByAgentIds($ids, $starttime, $endtime);
             $agent_count = [];
             foreach($users as $key => $val) {
                 if(!isset($agent_count[$val['recomm_id']])) $agent_count[$val['recomm_id']] = [];
@@ -94,11 +89,18 @@ class AgentRepository
         return $ret;
     }
 
-    public function getUserByAgentIds($ids) {
+    public function getUserByAgentIds($ids, $stime = null, $etime = null) {
         $types = config('my.site.recomm_types');
-        return User::select('id', 'status', 'recomm_id', 'activated_at', 'created_at')
+        $mysql = User::select('id', 'status', 'recomm_id', 'activated_at', 'created_at')
         ->where('recomm_type', array_search('agents', $types))
         ->whereIn('recomm_id', $ids);
+        if($stime && strtotime($stime)) {
+            $mysql = $mysql->whereRaw('(activated_at >= ? OR created_at >= ?)', [$stime, $stime]);
+        }
+        if($etime && strtotime($etime)) {
+            $mysql = $mysql->whereRaw('(activated_at <= ? OR created_at <= ?)', [$etime, $etime]);
+        }
+        return $mysql->get()->toArray();
     }
 
     public function getAll()
@@ -154,8 +156,8 @@ class AgentRepository
         $ids = [];
         if(is_array($id)) {
             $ids = $this->agent->whereIn('parent_id', $id)->pluck('id')->toArray();
-	    return array_merge($id, $ids);
-	}else {
+            return array_merge($id, $ids);
+        }else {
             $ids = $this->agent->where('parent_id', $id)->pluck('id')->toArray();
         }
         $ids[] = $id;
