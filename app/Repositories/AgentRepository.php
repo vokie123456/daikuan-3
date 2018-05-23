@@ -45,11 +45,14 @@ class AgentRepository
                 $mysql = $this->agent->whereIn('id', $this->getChilds($finds));
             }
         }
+        $search_users = $this->getUserByAgentIds($mysql->pluck('id'))->get()->toArray();
         $ret = [
             'total' => $mysql->count(),
             'rows' => [],
-            'total_register' => 0,
-            'total_activate' => 0,
+            'total_register' => count($search_users),
+            'total_activate' => count(array_filter($search_users, function($val) {
+                return isset($val['activated_at']);
+            })),
         ];
         if($ret['total']) {
             $ret['rows'] = $mysql->with('parent:id,name')
@@ -63,11 +66,7 @@ class AgentRepository
             $ids = array_map(function($item) {
                 return $item['id'];
             }, $ret['rows']);
-
-            $types = config('my.site.recomm_types');
-            $users = User::select('id', 'status', 'recomm_id', 'activated_at', 'created_at')
-                ->where('recomm_type', array_search('agents', $types))
-                ->whereIn('recomm_id', $ids);
+            $users = $this->getUserByAgentIds($ids);
             if(isset($request['stime']) && strtotime($request['stime'])) {
                 $users = $users->whereRaw('(activated_at >= ? OR created_at >= ?)', [$request['stime'], $request['stime']]);
             }
@@ -92,11 +91,14 @@ class AgentRepository
                 $ret['rows'][$key]['share_url'] = $share_url . "?{$recom_key}=" . $code;
             }
         }
-        foreach($ret['rows'] as $row) {
-            $ret['total_register'] += $row['register'];
-            $ret['total_activate'] += $row['activate'];
-        }
         return $ret;
+    }
+
+    public function getUserByAgentIds($ids) {
+        $types = config('my.site.recomm_types');
+        return User::select('id', 'status', 'recomm_id', 'activated_at', 'created_at')
+        ->where('recomm_type', array_search('agents', $types))
+        ->whereIn('recomm_id', $ids);
     }
 
     public function getAll()
