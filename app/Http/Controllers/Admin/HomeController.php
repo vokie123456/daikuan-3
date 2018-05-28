@@ -44,7 +44,7 @@ class HomeController extends Controller
         ];
 
         $legend = ['APP浏览量', '推广量', '注册量', '激活量'];
-        $start_date = $echarts->getBeforeDate();
+        $start_date = $echarts->setDayCount(15)->getBeforeDate();
         $result = $echarts->setData($userRecRepository->getCountByDate($start_date))
                         ->setData($promoteRepository->getCountByDate($start_date))
                         ->setData($userRepository->getCountByDate($start_date))

@@ -13,19 +13,19 @@ import Utils from '../public/utils';
 const block = [{
     'key': 'app_visit',
     'txt': '今日APP浏览量',
-    'color': '#8e1ce6',
+    'color': '#8fc9fb',
 }, {
     'key': 'promote',
     'txt': '今日推广量',
-    'color': '#e48276',
+    'color': '#f69898',
 }, {
     'key': 'register',
     'txt': '今日注册量 (推荐 + 无推荐)',
-    'color': '#f9c312',
+    'color': '#d897eb',
 }, {
     'key': 'activate',
     'txt': '今日激活量',
-    'color': '#2DCE5D',
+    'color': '#63ea91',
 },];
 
 class Home extends React.Component {
@@ -37,7 +37,7 @@ class Home extends React.Component {
         this.normal = true;
         this.option = {
             title: {
-                text: '近七天流量',
+                text: '近%s天流量',
             },
             tooltip: {
                 trigger: 'axis',
@@ -185,6 +185,7 @@ class Home extends React.Component {
                 if(result.datas && this.refs.echarts) {
                     this.option.legend.data = result.datas.legend || [];
                     this.option.xAxis.data = result.datas.xaxis || [];
+                    this.option.title.text = this.option.title.text.replace(/\%s/, this.option.xAxis.data.length);
                     let series = result.datas.series || [];
                     this.option.series = this.option.series.map((item, index) => {
                         if(series[index]) {
