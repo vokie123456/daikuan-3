@@ -212,7 +212,7 @@ class FormComponent extends React.Component {
                         )}
                     </FormItem> : null
                 }
-                <FormItem
+                {/* <FormItem
                     {...formItemLayout}
                     label="类别内的APP排序"
                 >
@@ -227,7 +227,7 @@ class FormComponent extends React.Component {
                             })}
                         </Select>
                     )}
-                </FormItem>
+                </FormItem> */}
                 <FormItem
                     {...formItemLayout}
                     label={(

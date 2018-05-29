@@ -29,9 +29,9 @@ class CategoryAppController extends Controller
     public function migrate(Request $request)
     {
         $category_id = (int)$request->get('category_id');
-        $selected = $request->get('selected');
-        if($category_id && isset($selected)) {
-            $this->category_app->setDatas($category_id, $selected);
+        $data = $request->get('data');
+        if($category_id && isset($data)) {
+            $this->category_app->setDatas($category_id, $data);
             $this->set_success('设置成功');
         }else {
             $this->set_error('缺少参数');

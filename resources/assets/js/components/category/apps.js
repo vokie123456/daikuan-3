@@ -1,21 +1,200 @@
 import React from 'react';
-import { Transfer, Select } from 'antd';
+import { 
+    Transfer, 
+    Select,
+    Table, 
+    Input, 
+    Icon,
+    Button,
+    InputNumber
+} from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
+
+const Search = Input.Search;
+
+class AppTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            datas: [],
+            loading: false,
+            sortedInfo: null,
+        };
+        
+        this.pagination = {};
+        this.filter = {};
+        this.sort = {};
+        this.search = '';
+        this.cate_id = 0;
+        this.data = {};
+    }
+
+    componentDidMount() {
+        this.cate_id = this.props.cate_id;
+        this.fetch();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.cate_id = nextProps.cate_id;
+        this.fetch();
+    }
+
+    //获取列表数据
+    fetch = (params = {}) => {
+        if(this.cate_id <= 0) return;
+        this.setState({ 
+            loading: true,
+            datas: [],
+        });
+        Utils.axios({
+            key: 'datas',
+            url: Api.getCategoryApps + this.cate_id,
+            isAlert: false,
+            method: 'get',
+        }, (result) => {
+            // console.log(result);
+            this.setState({
+                datas: result || [],
+                loading: false,
+            });
+        });
+    };
+
+    handleChange = (pagination, filters, sorter) => {
+        this.setState({ 
+            sortedInfo: sorter,
+        });
+    }
+
+    handleClick = () => {
+        let data = [];
+        for(let item of this.state.datas) {
+            if(item.is_checked) {
+                data.push({
+                    app_id: item.id,
+                    sort: item.sort,
+                });
+            }
+        }
+        Utils.axios({
+            url: Api.setCategoryApps,
+            data: {
+                category_id: this.cate_id,
+                data,
+            },
+            isAlert: true,
+        })
+    };
+
+    render() {
+        if((parseInt(this.cate_id) || 0) <= 0) return null;
+        const { datas, sortedInfo, loading } = this.state;
+        let sorter_info = sortedInfo || {};
+        const columns = [{
+            title: '排序序号',
+            dataIndex: 'sort',
+            render: (value, record) => {
+                return (
+                    <InputNumber 
+                        min={0}
+                        defaultValue={value}
+                        onChange={(val) => {
+                            this.setState({
+                                datas: datas.map((item, index) => {
+                                    return {
+                                        ...item,
+                                        sort: item.id == record.id ? val : item.sort,
+                                    }
+                                }),
+                            });
+                        }}
+                    />
+                );
+            },
+            sorter: (a, b) =>  a.sort - b.sort,
+            sortOrder: sorter_info.columnKey === 'sort' && sorter_info.order,
+        }, {
+            title: 'APP图标',
+            dataIndex: 'appicon',
+            render: (value, record) => {
+                return (
+                    value ? 
+                        <img src={value} style={styles.icon} /> : 
+                        <div style={styles.emptyIcon}></div>
+                );
+            }
+        }, {
+            title: 'APP名称',
+            dataIndex: 'name',
+            sorter: (a, b) => a.name.localeCompare(b.name, "zh"),
+            sortOrder: sorter_info.columnKey === 'name' && sorter_info.order,
+        }, {
+            title: '添加时间',
+            dataIndex: 'created_at',
+            sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
+            sortOrder: sorter_info.columnKey === 'created_at' && sorter_info.order,
+        }];
+        const rowSelection = {
+            onChange: (selectedRowKeys, selectedRows) => {
+                this.setState({
+                    datas: datas.map((item, index) => {
+                        return {
+                            ...item,
+                            is_checked: selectedRowKeys.find(val => val == item.id) ? true : false,
+                        }
+                    }),
+                });
+            },
+            getCheckboxProps: record => ({
+                value: record.id,
+                checked: record.is_checked,
+            }),
+            onSelectAll: (selected, selectedRows, changeRows) => {
+                this.setState({
+                    datas: datas.map((item, index) => {
+                        return {
+                            ...item,
+                            is_checked: selected,
+                        }
+                    }),
+                });
+            },
+        };
+        return (
+            <div>
+                <div className="toolbar">
+                    <Button type="primary" onClick={this.handleClick}>保存</Button>
+                </div>
+                <p>按序号倒序排列</p>
+                <Table 
+                    bordered
+                    //size="middle"
+                    dataSource={datas}
+                    loading={loading}
+                    rowKey={record => record.id}
+                    columns={columns}
+                    rowSelection={rowSelection}
+                    pagination={false}
+                    onChange={this.handleChange}
+                />
+            </div>
+        );
+    }
+}
 
 export default class Apps extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            targetKeys: [],
-            dataSource: [],
             categories: [],
             category_id: '',
         };
     }
+
     componentDidMount() {
-        this.getCategories()
+        this.getCategories();
     }
 
     getCategories = () => {
@@ -33,53 +212,16 @@ export default class Apps extends React.Component {
             }
         });
     };
-    
-    getDatas = (id) => {
-        if(id && id > 0) {
-            Utils.axios({
-                url: Api.getCategoryApps + id,
-                method: 'get',
-                key: 'datas',
-                isAlert: false,
-            }, (result) => {
-                const targetKeys = result.target || [];
-                const dataSource = result.source || [];
-                this.setState({ 
-                    targetKeys,
-                    dataSource,
-                    category_id: id,
-                });
-            });
-        }
-    }
-
-    filterOption = (search, option) => {
-        return (option.company_name.indexOf(search) > -1 || option.app_name.indexOf(search) > -1);
-    }
-
-    handleChange = (targetKeys) => {
-        Utils.axios({
-            url: Api.setCategoryApps,
-            method: 'post',
-            data: {
-                selected: targetKeys,
-                category_id: this.state.category_id,
-            },
-            key: 'ret',
-        }, (result) => {
-            this.setState({ targetKeys });
-        });
-    }
 
     render() {
-        const { targetKeys, dataSource, categories, category_id } = this.state;
-        // if(!category_id) return null;
+        const { categories, category_id } = this.state;
         return (
-            <div style={{ width: '80%', margin: '10px auto'}}>
+            <div style={{ width: '90%', margin: '10px auto'}}>
                 <Select 
                     defaultValue={0} 
-                    onChange={this.getDatas}
+                    onChange={category_id => this.setState({ category_id })}
                     style={{ marginBottom: 30, width: 300, }}
+                    size="large"
                 >
                     <Select.Option key={0} value={0}>
                         请选择类别
@@ -98,19 +240,23 @@ export default class Apps extends React.Component {
                         );
                     })}
                 </Select>
-                <Transfer
-                    showSearch
-                    dataSource={dataSource}
-                    filterOption={this.filterOption}
-                    targetKeys={targetKeys}
-                    onChange={this.handleChange}
-                    render={item => item.app_name}
-                    listStyle={{
-                        width: '44%',
-                        height: 520,
-                    }}
-                />
+                {category_id ? <AppTable cate_id={category_id} /> : null}
             </div>
         );
     }
 }
+
+var styles = {};
+styles.icon = {
+    width: '60px',
+    maxHeight: '60px',
+    margin: '-8px 0',
+    borderRadius: '3px',
+};
+styles.emptyIcon = {
+    width: '60px',
+    height: '60px',
+    backgroundColor: '#eee',
+    margin: '-8px 0',
+    borderRadius: '3px',
+};

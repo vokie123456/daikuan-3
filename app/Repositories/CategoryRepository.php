@@ -68,7 +68,7 @@ class CategoryRepository
             'type' => (int)$datas['type'],
             'image' => isset($datas['image']) ? $datas['image'] : '',
             'sort' => (int)$datas['sort'],
-            'sort_app' => (int)$datas['sort_app'],
+            'sort_app' => isset($datas['sort_app']) ? (int)$datas['sort_app'] : 0,
             'status' => (isset($datas['status']) && $datas['status']) ? 1 : 0,
         );
         return $_data;

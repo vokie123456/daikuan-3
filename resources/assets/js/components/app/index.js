@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Table, Input, Icon, Button, Switch, Popconfirm, message } from 'antd';
+import { Table, Input, Icon, Button, Switch, Popconfirm, } from 'antd';
 
 import Api from '../public/api';
 import Utils from '../public/utils';
@@ -156,6 +156,7 @@ class Apps extends React.Component {
                             onSearch={this.getAppList}
                             enterButton="Search"
                             size="large"
+                            placeholder="输入APP名称搜索"
                         />
                     </div>
                 </div>

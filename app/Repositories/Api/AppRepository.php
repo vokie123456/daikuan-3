@@ -97,6 +97,10 @@ class AppRepository
                     'isNew'
                 )
                 ->orderByRaw($_sort);
+        return $this->getDatasByQuery($query, $isPaginate);
+    }
+
+    public function getDatasByQuery($query, $isPaginate) {
         $origin_apps = $isPaginate ? $query->simplePaginate(15) : $query->get();
         $_origin_apps = $origin_apps->toArray();
         $target_apps = [];
@@ -112,7 +116,7 @@ class AppRepository
             $target_apps['per_page'] = $_origin_apps['per_page'];
         }
 
-        return $target_apps;
+        return $target_apps; 
     }
 
     public function get_rand_string(Array $data, $sort = false)
