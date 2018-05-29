@@ -10,6 +10,11 @@
                 <option value="{{ $val->id }}">{{ $val->name }}</option>
             @endforeach
         </select>
+        <select id="sel-activate" class="form-control">
+            <option value="0">是否激活</option>
+            <option value="1">已激活</option>
+            <option value="2">未激活</option>
+        </select>
         <input type="text" class="form-control" id="inputStartDate" placeholder="开始时间" />
         <input type="text" class="form-control" id="inputEndDate" placeholder="结束时间" />
         <button type="button" class="btn btn-primary marginLeft10" id="btnSearch">
@@ -26,8 +31,8 @@
                 <th data-field="telephone">手机</th>
                 <th data-field="agentname">推荐人</th>
                 <th data-field="activated_at" data-formatter="formatActivate">是否激活</th>
-                <th data-field="activated_at">激活时间</th>
-                <th data-field="created_at">添加时间</th>
+                <th data-field="activated_at" data-sortable="true">激活时间</th>
+                <th data-field="created_at" data-sortable="true">添加时间</th>
             </tr>
         </thead>
     </table>

@@ -170,6 +170,10 @@ class AgentRepository
         $config = array(
             'defSort'   => 'users.created_at',
             'defOrder'  => 'desc',
+            'sortArr'   => array(
+                'created_at' => 'users.created_at',
+                'activated_at' => 'users.activated_at',
+            ),
             'searchArr' => array(
                 'startTime' => array(
                     'alias' => 'dk_users.created_at',
@@ -178,6 +182,18 @@ class AgentRepository
                 'endTime' => array(
                     'alias' => 'dk_users.created_at',
                     'rule' => '%alias% < \'%s\'',
+                ),
+                'isActive' => array(
+                    'alias' => 'dk_users.activated_at',
+                    'allow' => [1, 2],
+                    'myfunction' => function($val) {
+                        if($val == 1) {
+                            return '%alias% IS NOT NULL';
+                        }else if($val == 2) {
+                            return '%alias% IS NULL';
+                        }
+                        return null;
+                    },
                 ),
             ),
         );

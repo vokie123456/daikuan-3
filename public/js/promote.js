@@ -19,9 +19,11 @@
             queryParams: function(params) {
                 var stime = $("#inputStartDate").val();
                 var etime = $("#inputEndDate").val();
+                var isActive = parseInt($("#sel-activate").val()) || 0;
                 var search = {};
                 if(stime) search['startTime'] = stime;
                 if(etime) search['endTime']   = etime;
+                if(isActive) search['isActive'] = isActive;
                 return {
                     limit : params.limit,
                     offset: params.offset,
@@ -43,6 +45,7 @@
 		//点击重置按钮
 		$('#btnReset').click(function() {
 			$("#sel-parent option").removeAttr("selected");
+			$("#sel-activate option").removeAttr("selected");
 			$('#inputStartDate').val('');
 			$('#inputEndDate').val('');
 		});

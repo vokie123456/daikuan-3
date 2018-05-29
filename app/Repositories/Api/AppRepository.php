@@ -6,22 +6,15 @@ use App\Http\Resources\Api\AppListResource;
 use Illuminate\Support\Facades\Log;
 
 class AppRepository
-{
-    protected $app;
-    
-    public function __construct(AppModel $app)
-    {
-        $this->app = $app;
-    }
-    
+{    
     public function addApplyNumber($id)
     {
-        $this->app->increment('apply_number');
+        AppModel::increment('apply_number');
     }
 
     public function getAppsForRand()
     {
-        return $this->app->select('name', 'moneys')
+        return AppModel::select('name', 'moneys')
                 ->where('status', 1)
                 ->orderBy('created_at', 'desc')
                 ->take(100)
@@ -31,12 +24,12 @@ class AppRepository
 
     public function getSimpleAppById($id)
     {
-        return $this->app->select('id', 'weburl', 'status')->where('id', $id)->first();
+        return AppModel::select('id', 'weburl', 'status')->where('id', $id)->first();
     }
 
     public function getAppById($id)
     {
-        $app = $this->app->select(
+        $app = AppModel::select(
             'id', 
             'name', 
             'icon',
@@ -89,7 +82,7 @@ class AppRepository
             '`sort` asc, `created_at` desc',
         ];
         $_sort = ($sort && isset($sorts[$sort])) ? $sorts[$sort] : $sorts[0];
-        $query = $this->app->where('status', 1)->whereIn('id', $ids)
+        $query = AppModel::where('status', 1)->whereIn('id', $ids)
                 ->select(
                     'id', 
                     'name', 
