@@ -46,7 +46,6 @@ class AppController extends Controller
                 $app['share_url'] .= "?{$key}=" . create_url_encode_by_id('users', $user->id);
                 $app['isCollection'] = (bool)$userCollRepository->checkUserIsCollection($app['id'], $user->id);
             }
-            $this->appRepository->addApplyNumber($app['id']);
             $userRecRepository->addRecord($app['id'], $user_id);
             $this->set_success('获取成功')->set_data('app', $app);
         }
@@ -63,6 +62,7 @@ class AppController extends Controller
             }else if(!$app['status']) {
                 $this->set_error('该APP已下架');
             }else {
+                $this->appRepository->addApplyNumber($app['id']);
                 $promoteRepository->click_promote($app->id, $user->id);
                 $this->set_success('获取成功')->set_data('weburl', $app['weburl']);
             }

@@ -37,8 +37,8 @@ class CategoryRepository
         $categories = $query->get()->toArray();
         
         foreach($categories as $key => $val) {
+            if(!empty($val['image'])) $categories[$key]['image'] = url(config('my.site.storage') . $val['image']);
             // [原代码]
-            // if(!empty($val['image'])) $categories[$key]['image'] = url(config('my.site.storage') . $val['image']);
             // if(!empty($val['apps'])) {
             //     $apps_id = array_map(function($item) {return $item['app_id'];}, $val['apps']);
             //     $categories[$key]['apps'] = $this->appRepository->getAppByInId($apps_id, $val['sort_app'], false);
