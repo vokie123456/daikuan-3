@@ -266,7 +266,7 @@ class AppCreate extends React.Component {
                         for(let j in result.errors) {
                             if(result.errors[j]) {
                                 errors[j] = {
-                                    // value: values[j],
+                                    value: values[j],
                                 };
                                 if(typeof(result.errors[j]) == 'string') {
                                     if(!_error) _error = result.errors[j];

@@ -26,7 +26,7 @@ class StoreBannerPost extends FormRequest
      */
     public function rules()
     {
-        $image_rule = 'image|max:300';
+        $image_rule = 'image|max:300|dimensions:ratio=2/1';
         if(!empty(request('image')) && is_string(request('image'))) {
             $img = rm_path_prev_storage(request('image'));
             if(Storage::disk('public')->exists($img)) {
@@ -75,6 +75,7 @@ class StoreBannerPost extends FormRequest
     {
         return [
             'url.required_if' => '广告跳至web页面,请填写url地址.',
+            'image.dimensions' => ':attribute 的尺寸必须为 2 : 1',
         ];
     }
 

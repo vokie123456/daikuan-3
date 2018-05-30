@@ -113,6 +113,7 @@ class StoreAppPost extends FormRequest
         return [
             'company_id.integer' => ':attribute 无效',
             'company_id.min' => ':attribute 无效',
+            'image.dimensions' => ':attribute 的尺寸必须为 1 : 1',
         ];
     }
 
