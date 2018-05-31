@@ -48,13 +48,21 @@ class AgentRepository
         $starttime = isset($request['stime']) ? $request['stime'] : null;
         $endtime = isset($request['etime']) ? $request['etime'] : null;
         $search_users = $this->getUserByAgentIds($mysql->pluck('id')->toArray(), $starttime, $endtime);
+        $total_register = 0;
+        $total_activate = 0;
+        foreach($search_users as $user) {
+            if($this->checkDateBetween($user['created_at'], $starttime, $endtime)) {
+                $total_register++;
+            }
+            if(isset($user['activated_at']) && $this->checkDateBetween($user['activated_at'], $starttime, $endtime)) {
+                $total_activate++;
+            }
+        }
         $ret = [
             'total' => $mysql->count(),
             'rows' => [],
-            'total_register' => count($search_users),
-            'total_activate' => count(array_filter($search_users, function($val) {
-                return isset($val['activated_at']);
-            })),
+            'total_register' => $total_register,
+            'total_activate' => $total_activate,
         ];
         if($ret['total']) {
             $ret['rows'] = $mysql->with('parent:id,name')

@@ -45,6 +45,10 @@ class UserRepository
                     'alias' => 'recomm_id',
                     'rule' => '%alias% = %s AND `recomm_type` = 1',
                 ],
+                'recomm_type' => array(
+                    'alias' => 'recomm_type',
+                    'allow' => [0, 1, 2],
+                ),
                 'isActive' => array(
                     'alias' => 'activated_at',
                     'allow' => [1, 2],

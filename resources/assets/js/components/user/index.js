@@ -37,6 +37,7 @@ class Users extends React.Component {
         this.search = '';
         this.type = 'telephone';
         this.isActivate = 0;
+        this.recomm_type = -1;
         this.starttime = null;
         this.endtime = null;
     }
@@ -50,6 +51,7 @@ class Users extends React.Component {
         const recommer = this.props.recommer || null;
         params.search = params.search || {};
         params.search.isActive = this.isActivate;
+        params.search.recomm_type = this.recomm_type;
         if(recommer) {
             params.search['user_recomm'] = recommer;
         }
@@ -195,6 +197,20 @@ class Users extends React.Component {
                             }
                         }}
                     />
+                    <Select
+                        size="large"
+                        style={{
+                            width: 160,
+                            marginLeft: 10,
+                        }}
+                        defaultValue={-1}
+                        onChange={(value) => this.recomm_type = value}
+                    >
+                        <Option key={0} value={-1}>请选择注册方式</Option>
+                        <Option key={1} value={0}>自行注册</Option>
+                        <Option key={2} value={1}>好友推荐</Option>
+                        <Option key={3} value={2}>公司推广</Option>
+                    </Select>
                     <Select
                         size="large"
                         style={{
