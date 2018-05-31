@@ -74,8 +74,12 @@ class AgentRepository
                 if(!isset($agent_count[$val['recomm_id']])) $agent_count[$val['recomm_id']] = [];
                 if(!isset($agent_count[$val['recomm_id']]['register'])) $agent_count[$val['recomm_id']]['register'] = 0;
                 if(!isset($agent_count[$val['recomm_id']]['activate'])) $agent_count[$val['recomm_id']]['activate'] = 0;
-                $agent_count[$val['recomm_id']]['register']++;
-                if(isset($val['activated_at'])) $agent_count[$val['recomm_id']]['activate']++;
+                if($this->checkDateBetween($val['created_at'], $starttime, $endtime)) {
+                    $agent_count[$val['recomm_id']]['register']++;
+                }
+                if(isset($val['activated_at']) && $this->checkDateBetween($val['activated_at'], $starttime, $endtime)) {
+                    $agent_count[$val['recomm_id']]['activate']++;
+                }
             }
             $share_url = config('my.site.register_path');
             $recom_key = config('my.site.recomm');
@@ -87,6 +91,17 @@ class AgentRepository
             }
         }
         return $ret;
+    }
+
+    //验证日期是否在指定日期内
+    public function checkDateBetween($date, $sdate, $edate) {
+        if(
+            (!$sdate || ($sdate && $sdate <= $date)) &&
+            (!$edate || ($edate && $edate >= $date))
+        ) {
+            return true;
+        }
+        return false;
     }
 
     public function getUserByAgentIds($ids, $stime = null, $etime = null) {
@@ -177,11 +192,11 @@ class AgentRepository
             'searchArr' => array(
                 'startTime' => array(
                     'alias' => 'dk_users.created_at',
-                    'rule' => '%alias% > \'%s\'',
+                    'rule' => '(%alias% >= \'%s\' OR dk_users.activated_at >= \'%s\')',
                 ),
                 'endTime' => array(
                     'alias' => 'dk_users.created_at',
-                    'rule' => '%alias% < \'%s\'',
+                    'rule' => '(%alias% <= \'%s\' OR dk_users.activated_at <= \'%s\')',
                 ),
                 'isActive' => array(
                     'alias' => 'dk_users.activated_at',
@@ -201,16 +216,47 @@ class AgentRepository
         $formatquery = new Formatquery($config);
         $query = $formatquery->setParams($request)->getParams();
         $types = config('my.site.recomm_types');
-        $mysql = DB::table('users')->where('recomm_type', array_search('agents', $types))
+        $mysql = DB::table('users')
+            ->where('users.recomm_type', array_search('agents', $types))
             ->whereRaw(
                 ($parent_id && in_array($parent_id, $ids)) ? 
                 "`dk_users`.`recomm_id` = {$parent_id}" :
                 "`dk_users`.`recomm_id` in(" . implode(',', $ids) . ")"
             )
             ->whereRaw($query['whereStr'] ? $query['whereStr'] : 1);
+        $count_where = implode(' AND ', array_filter($query['wheres'], function($val) {
+            return !strpos($val, 'dk_users.activated_at');
+        }));
+        $register_mysql = DB::table('users')
+        ->where('users.recomm_type', array_search('agents', $types))
+        ->whereRaw(
+            ($parent_id && in_array($parent_id, $ids)) ? 
+            "`dk_users`.`recomm_id` = {$parent_id}" :
+            "`dk_users`.`recomm_id` in(" . implode(',', $ids) . ")"
+        )->whereRaw($count_where ? $count_where : 1);
+        $activate_mysql = DB::table('users')
+        ->where('users.recomm_type', array_search('agents', $types))
+        ->whereRaw(
+            ($parent_id && in_array($parent_id, $ids)) ? 
+            "`dk_users`.`recomm_id` = {$parent_id}" :
+            "`dk_users`.`recomm_id` in(" . implode(',', $ids) . ")"
+        )->whereRaw($count_where ? $count_where : 1)
+        ->whereRaw('dk_users.activated_at IS NOT NULL');
+        $stime = isset($query['searchs']['startTime']) ? $query['searchs']['startTime'] : null;
+        $etime = isset($query['searchs']['endTime']) ? $query['searchs']['endTime'] : null;
+        if($stime && strtotime($stime)) {
+            $register_mysql = $register_mysql->where('users.created_at', '>=', $stime);
+            $activate_mysql = $activate_mysql->where('users.activated_at', '>=', $stime);
+        }
+        if($etime && strtotime($etime)) {
+            $register_mysql = $register_mysql->where('users.created_at', '<=', $etime);
+            $activate_mysql = $activate_mysql->where('users.activated_at', '<=', $etime);
+        }
         $ret = [
             'total' => $mysql->count(),
             'rows' => [],
+            'register_total' => $register_mysql->count(),
+            'activate_total' => $activate_mysql->count(),
         ];
         if($ret['total']) {
             $ret['rows'] = $mysql

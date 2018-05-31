@@ -24,6 +24,11 @@
             <i class="fa fa-refresh"></i> 重置
         </button>
     </div>
+    <div>
+        <h4 id="register_total"></h4>
+        <h4 id="activate_total"></h4>
+        <p id="mark_text" class="help-block"></p>
+    </div>
     <!-- data-toggle="table" -->
     <table id="mytab" class="table table-hover" data-url="{{ url('agents/promotedata') }}">
         <thead>

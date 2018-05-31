@@ -9,12 +9,17 @@ import {
     Popconfirm, 
     message,
     Select,
+    DatePicker,
 } from 'antd';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 import Api from '../public/api';
 import Utils from '../public/utils';
 import { RegisterTypes } from '../public/global';
 
+const { RangePicker } = DatePicker;
 const Search = Input.Search;
 const Option = Select.Option;
 
@@ -31,6 +36,9 @@ class Users extends React.Component {
         this.sort = {};
         this.search = '';
         this.type = 'telephone';
+        this.isActivate = 0;
+        this.starttime = null;
+        this.endtime = null;
     }
 
     componentDidMount() {
@@ -40,10 +48,13 @@ class Users extends React.Component {
     fetch = (params = {}) => {
         this.setState({ loading: true });
         const recommer = this.props.recommer || null;
+        params.search = params.search || {};
+        params.search.isActive = this.isActivate;
         if(recommer) {
-            params.search = params.search || {};
             params.search['user_recomm'] = recommer;
         }
+        if(this.starttime) params.search.startTime = this.starttime;
+        if(this.endtime) params.search.endtime = this.endtime;
         Utils.axios({
             key: 'users',
             url: Api.getUsers,
@@ -161,6 +172,42 @@ class Users extends React.Component {
         return (
             <div className="webkit-flex">
                 <div className="toolbar">
+                    <RangePicker
+                        size="large"
+                        showTime={{
+                            defaultValue: [
+                                moment('00:00:00', 'HH:mm:ss'), 
+                                moment('00:00:00', 'HH:mm:ss'),
+                            ]
+                        }}
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder={['注册: 开始时间', '结束时间']}
+                        onChange={(value) => {
+                            if(value && value[0]) {
+                                this.starttime = value[0].format('YYYY-MM-DD HH:mm:ss');
+                            }else {
+                                this.starttime = null;
+                            }
+                            if(value && value[1]) {
+                                this.endtime = value[1].format('YYYY-MM-DD HH:mm:ss');
+                            }else {
+                                this.endtime = null;
+                            }
+                        }}
+                    />
+                    <Select
+                        size="large"
+                        style={{
+                            width: 120,
+                            marginLeft: 10,
+                        }}
+                        defaultValue={0}
+                        onChange={(value) => this.isActivate = value}
+                    >
+                        <Option key={0} value={0}>是否激活</Option>
+                        <Option key={1} value={1}>已激活</Option>
+                        <Option key={2} value={2}>未激活</Option>
+                    </Select>
                     <div className="searchBox">
                         <Search
                             onSearch={this.getUserList}

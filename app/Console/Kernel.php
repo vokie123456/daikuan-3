@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('clear:app-number')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/crontab.log'));
     }
 
     /**

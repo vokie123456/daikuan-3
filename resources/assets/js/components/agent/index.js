@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Table, Input, Button, Icon, Tooltip, DatePicker, Checkbox, } from 'antd';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 import Api from '../public/api';
 import Utils from '../public/utils';
@@ -134,17 +137,22 @@ export default class Agents extends React.Component {
                     </div>
                     <RangePicker
                         size="large"
-                        showTime={{ format: 'HH:mm' }}
-                        format="YYYY-MM-DD HH:mm"
+                        showTime={{
+                            defaultValue: [
+                                moment('00:00:00', 'HH:mm:ss'), 
+                                moment('00:00:00', 'HH:mm:ss'),
+                            ]
+                        }}
+                        format="YYYY-MM-DD HH:mm:ss"
                         placeholder={['Start Time', 'End Time']}
                         onChange={(value) => {
                             if(value && value[0]) {
-                                this.starttime = value[0].format('YYYY-MM-DD HH:mm');
+                                this.starttime = value[0].format('YYYY-MM-DD HH:mm:ss');
                             }else {
                                 this.starttime = null;
                             }
                             if(value && value[1]) {
-                                this.endtime = value[1].format('YYYY-MM-DD HH:mm');
+                                this.endtime = value[1].format('YYYY-MM-DD HH:mm:ss');
                             }else {
                                 this.endtime = null;
                             }

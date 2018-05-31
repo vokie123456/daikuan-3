@@ -33,6 +33,13 @@
                     parent: parseInt($("#sel-parent").val()) || 0,
                 };
             },
+            onLoadSuccess: function(data) {
+                var register_total = data.register_total || 0;
+                var activate_total = data.activate_total || 0;
+                $('#register_total').html('注册人数: ' + register_total + '人。');
+                $('#activate_total').html('激活人数: ' + activate_total + '人。');
+                $('#mark_text').html('请勿以搜索结果为人数统计。 至于为什么, 以你的智商就不用我多说了吧。');
+            },
         });
 
         //点击搜索按钮搜索

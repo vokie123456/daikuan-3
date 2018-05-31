@@ -105,4 +105,15 @@ class AppRepository
         if($ret) $ret = $this->appRepository->where('id', $id)->delete();
         return $ret;
     }
+
+    public function resetAllApplyNumber($min, $max)
+    {
+        $ret = 0;
+        $apps = $this->appRepository->get();
+        foreach($apps as $app) {
+            $app->apply_number = rand($min, $max);
+            if($app->save()) $ret++;
+        }
+        return $ret;
+    }
 }

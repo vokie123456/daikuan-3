@@ -45,6 +45,26 @@ class UserRepository
                     'alias' => 'recomm_id',
                     'rule' => '%alias% = %s AND `recomm_type` = 1',
                 ],
+                'isActive' => array(
+                    'alias' => 'activated_at',
+                    'allow' => [1, 2],
+                    'myfunction' => function($val) {
+                        if($val == 1) {
+                            return '%alias% IS NOT NULL';
+                        }else if($val == 2) {
+                            return '%alias% IS NULL';
+                        }
+                        return null;
+                    },
+                ),
+                'startTime' => array(
+                    'alias' => 'created_at',
+                    'rule' => '%alias% >= \'%s\'',
+                ),
+                'endTime' => array(
+                    'alias' => 'created_at',
+                    'rule' => '%alias% <= \'%s\'',
+                ),
             ),
         );
         $formatquery = new Formatquery($config);
