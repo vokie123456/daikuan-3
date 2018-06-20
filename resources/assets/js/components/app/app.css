@@ -114,16 +114,15 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    margin-bottom: 20px;
 }
 
 .addBox {
-    margin-bottom: 20px;
     flex: 1;
 }
 
 .searchBox {
     width: 400px;
-    margin-bottom: 20px;
     margin-left: 10px;
 }
 

@@ -71,6 +71,7 @@ class CategoryRepository
             )
             ->leftJoin('apps AS a', 'a.id', '=', 'ca.app_id')
             ->where('ca.category_id', $cateid)
+            ->where('a.status', 1)
             ->orderBy('ca.sort', 'desc')
             ->orderBy('a.created_at', 'desc');
         return $this->appRepository->getDatasByQuery($query, $isPaginate);

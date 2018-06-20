@@ -18,6 +18,7 @@ class CategoryAppRepository
     public function getDatas($category_id)
     {
         $apps = AppModel::select('id', 'name', 'icon', 'created_at', 'status')
+            ->where('status', 1)
             ->orderBy('created_at', 'desc')
             ->get()
             ->toArray();

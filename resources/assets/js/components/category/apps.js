@@ -6,7 +6,8 @@ import {
     Input, 
     Icon,
     Button,
-    InputNumber
+    InputNumber,
+    Checkbox,
 } from 'antd';
 
 import Api from '../public/api';
@@ -29,6 +30,7 @@ class AppTable extends React.Component {
         this.search = '';
         this.cate_id = 0;
         this.data = {};
+        this.origin_datas = [];
     }
 
     componentDidMount() {
@@ -136,7 +138,14 @@ class AppTable extends React.Component {
             sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
             sortOrder: sorter_info.columnKey === 'created_at' && sorter_info.order,
         }];
+        let defaultSelectedRowKeys = [];
+        for(let i in datas) {
+            if(datas[i].is_checked) {
+                defaultSelectedRowKeys.push(datas[i].id);
+            }
+        }
         const rowSelection = {
+            selectedRowKeys:  defaultSelectedRowKeys,
             onChange: (selectedRowKeys, selectedRows) => {
                 this.setState({
                     datas: datas.map((item, index) => {
@@ -149,6 +158,7 @@ class AppTable extends React.Component {
             },
             getCheckboxProps: record => ({
                 value: record.id,
+                // defaultChecked:  record.is_checked,
                 checked: record.is_checked,
             }),
             onSelectAll: (selected, selectedRows, changeRows) => {
@@ -164,10 +174,34 @@ class AppTable extends React.Component {
         };
         return (
             <div>
-                <div className="toolbar">
+                <div className="toolbar" style={{ justifyContent: 'space-between', }}>
+                    <Checkbox onChange={(e) => {
+                        let checked = e.target.checked;
+                        let checked_datas = [];
+                        if(checked) {
+                            this.origin_datas = datas;
+                            for(let i in datas) {
+                                if(datas[i].is_checked) {
+                                    checked_datas.push(datas[i]);
+                                }
+                            }
+                        }else {
+                            checked_datas = this.origin_datas.map((item, index) => {
+                                if(datas && datas.length) {
+                                    for(let i in datas) {
+                                        if(datas[i].id === item.id) {
+                                            return datas[i];
+                                        }
+                                    }
+                                }
+                                return item;
+                            });
+                        }
+                        this.setState({ datas: checked_datas, });  
+                    }}>只显示选中的行</Checkbox>
                     <Button type="primary" onClick={this.handleClick}>保存</Button>
                 </div>
-                <p>按序号倒序排列</p>
+                <p>优先按序号倒序排列, 序号相同的按添加时间倒序排列。</p>
                 <Table 
                     bordered
                     //size="middle"
@@ -217,29 +251,31 @@ export default class Apps extends React.Component {
         const { categories, category_id } = this.state;
         return (
             <div style={{ width: '90%', margin: '10px auto'}}>
-                <Select 
-                    defaultValue={0} 
-                    onChange={category_id => this.setState({ category_id })}
-                    style={{ marginBottom: 30, width: 300, }}
-                    size="large"
-                >
-                    <Select.Option key={0} value={0}>
-                        请选择类别
-                    </Select.Option>
-                    {categories.map((item, index) => {
-                        return (
-                            <Select.OptGroup key={index + 1} label={item.name}>
-                                {item.child.map((t, i) => {
-                                    return (
-                                        <Select.Option key={index + '-' + i} value={t.id}>
-                                            {t.name}
-                                        </Select.Option>
-                                    );
-                                })}
-                            </Select.OptGroup>
-                        );
-                    })}
-                </Select>
+                <div style={{ marginBottom: 20, }}>
+                    <Select 
+                        defaultValue={0} 
+                        onChange={category_id => this.setState({ category_id })}
+                        style={{ width: 300, }}
+                        size="large"
+                    >
+                        <Select.Option key={0} value={0}>
+                            请选择类别
+                        </Select.Option>
+                        {categories.map((item, index) => {
+                            return (
+                                <Select.OptGroup key={index + 1} label={item.name}>
+                                    {item.child.map((t, i) => {
+                                        return (
+                                            <Select.Option key={index + '-' + i} value={t.id}>
+                                                {t.name}
+                                            </Select.Option>
+                                        );
+                                    })}
+                                </Select.OptGroup>
+                            );
+                        })}
+                    </Select>
+                </div>
                 {category_id ? <AppTable cate_id={category_id} /> : null}
             </div>
         );
