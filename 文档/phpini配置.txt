@@ -1,0 +1,11 @@
+# 设置记录
+
+1. 去除禁用函数
+    proc_open
+    proc_get_status
+    passthru
+    symlink
+
+2. 开启错误日志
+    error_log = /home/wwwlogs/php_error.log
+    赋于读写权限： chmod 777 /home/wwwlogs/php_error.log

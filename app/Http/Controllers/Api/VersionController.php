@@ -13,10 +13,10 @@ class VersionController extends Controller
             'error' => '',
             'errno' => 0,
             'ios' => array(
-                'version' => 5,
+                'version' => 7,
                 'url' => 'itms-services://?action=download-manifest&url=https://app.wangtougongshe.com/apps/kuaihang.plist',
                 'type' => 1, // 0 普通更新, 1 强制更新
-                'text' => '发现新版本, 请更新.',
+                'text' => '亲爱的用户,您最贴心的金融管家又回来了.',
             ),
             'android' => array(
                 'version' => 4,

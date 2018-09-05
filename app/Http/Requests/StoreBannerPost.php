@@ -37,7 +37,7 @@ class StoreBannerPost extends FormRequest
             'name' => 'required|string|max:45',
             'position' => 'required|in:0,1',
             'type' => 'required|in:0,1',
-            'app_id' => 'nullable|integer|min:0',
+            // 'app_id' => 'nullable|integer|min:0',
             'url' => 'required_if:type,1|nullable|url|max:255',
             'image' => $image_rule,
             'start_time' => 'required|date',
