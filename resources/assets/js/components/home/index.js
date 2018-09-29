@@ -20,7 +20,7 @@ const block = [{
     'color': '#f69898',
 }, {
     'key': 'register',
-    'txt': '今日注册量 (推荐 + 无推荐)',
+    'txt': '今日注册量', //(推荐 + 无推荐)
     'color': '#d897eb',
 }, {
     'key': 'activate',

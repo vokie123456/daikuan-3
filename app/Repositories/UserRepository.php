@@ -161,7 +161,7 @@ class UserRepository
         $no_recomms = $this->user->where('recomm_id', null)->where('created_at', '>', date('Y-m-d'))->count();
         return [
             'activate' => $activates,
-            'register' => $recomms . '+' . $no_recomms,
+            'register' => $recomms + $no_recomms,
         ];
     }
 
