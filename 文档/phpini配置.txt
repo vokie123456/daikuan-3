@@ -1,5 +1,8 @@
 # 设置记录
 
+
+路径: /usr/local/php/etc/php.ini
+
 1. 去除禁用函数
     proc_open
     proc_get_status

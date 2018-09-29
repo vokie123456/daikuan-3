@@ -17,20 +17,27 @@
         | ssl_certificate   证书
         | ssl_certificate_key  密钥
         -----------------
-5. 配置.env
-    若文件不存在可复制.env.example(运行： php artisan key:generate)
-6. 新建数据库(新建或导入数据表)
-7. 安装 composer包
+5. 安装 composer包
     composer install
     若出现下载失败405错误, 可尝试删除根目录下的composer.lock文件后再安装
-8. react前端文件
-    1). npm install安装, npm run dev编译生成
-    2). 上传已编译好的js文件(public/js目录下的admin.js和app.js的2文件)
+6. 数据库
+    1). 新建数据库
+    2). 数据表: 迁移(导入老数据) 或 全新(php artisan migrate)
+    3). [全新]添加管理员帐号: php artisan db:seed --class=AdminsTableSeeder
+7. 配置.env
+    若文件不存在可复制.env.example(运行： php artisan key:generate)
+8. 读写权限
+    $ cd /home/wwwroot/daikuan
+    $ chmod 777 -R storage/ bootstrap/cache/
 9. 新建快捷链接
     php artisan storage:link
 10. 生成安全访问令牌（token）
     php artisan passport:install
-11. 设置定时器
+11. react前端文件
+    1). npm install安装, npm run dev编译生成
+    2). 上传已编译好的js文件(public/js目录下的admin.js和app.js的2文件)
+
+12. 设置定时器
     crontab -e
     59 23 * * * php /home/wwwroot/daikuan/artisan clear:app-number >> '/home/wwwroot/daikuan/storage/logs/crontab.log' 2>&1
 

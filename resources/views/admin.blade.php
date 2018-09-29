@@ -7,7 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>真要贷后台</title>
+    <title>{{ config('app.name') }}</title>
 
     <style type="text/css">
         #example {
