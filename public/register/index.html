@@ -1,275 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<script src="../js/jquery-2.1.4.min.js"></script>
-	<script>  
-	(function (doc, win) {
-	        var docEl = doc.documentElement,
-	            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
-	            recalc = function () {
-	                var clientWidth = docEl.clientWidth;
-	                if (!clientWidth) return;
-	                if(clientWidth>=1080){
-	                    docEl.style.fontSize = '100px';
-	                }else{
-	                    docEl.style.fontSize = 100 * (clientWidth / 1080) + 'px';
-	                }
-	            };
+<html lang="zh-cn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title></title>
 
-	        if (!doc.addEventListener) return;
-	        win.addEventListener(resizeEvt, recalc, false);
-	        doc.addEventListener('DOMContentLoaded', recalc, false);
-	    })(document, window);
-	</script> 
-	<title>注册</title>
-	<style>
-		*{
-			padding: 0;
-			margin: 0;
-		}
- 		body{
-			background: #f68b0d;   
-		} 
-		img{
-			display: block;
-			vertical-align: bottom; 
-		}
-		input{
-			display: inline-block;
-			outline: none;
-			border: none;
-			height: 1rem;
-			line-height: 1rem;
-			width: 6rem;
-			font-size: 0.4rem;
-		}
-		input[type="text"]{
-			color: #404040;
-		}
-		label{
-			display: inline-block;
-			width: 2.15rem;
-			padding-left: 0.41rem;
-		}
-		input::-webkit-input-placeholder { 
-			color: #b0b0b0;
-			font-size: 0.4rem;
-		}
-		input:-moz-placeholder {  /* Mozilla Firefox 4 to 18*/ 
-		　　color: #b0b0b0;
-			font-size: 0.4rem;
-		}
-		input::-moz-placeholder {  /* Mozilla Firefox 19+*/ 
-		　　color: #b0b0b0;
-			font-size: 0.4rem;
-		}
-		input:-ms-input-placeholder { /* Internet Explorer 10+*/ 
-			color: #b0b0b0;
-			font-size: 0.4rem;
-		}
-		.con{
-			font-size: 0.36rem;
-			color: #404040;
-			height: 16.56rem;
-			background: url(Easy_Operation.jpg) 0rem 8.5rem no-repeat;   
-			background-size: 100%;
-		}
-		.con .item{
-			width: 9.35rem;
-			height: 1.58rem;
-			line-height: 1.58rem;
-			margin: 0 auto;
-			margin-bottom: 0.47rem;
-			border: 1px #ad9935 solid;
-		  	border-radius: 0.12rem;
-		  	font-size: 0.4rem;
-		  	background: #fff;
-		}
-		.con .yzm{
-			width: 9.35rem;
-			height: 1.58rem;
-			line-height: 1.58rem;
-			margin: 0 auto;
-			margin-bottom: 0.47rem;
-		}
-		.con .yzm .item{
-			display: inline-block;
-			width: 6rem;
-			margin-left: -1px;
-		}
-		.con .yzm input[type="text"]{
-			width: 3rem;
-		}
-		.con .yzm input[type="button"]{
-			float: right;
-			width: 3rem;
-			height: 1.58rem;
-			line-height: 1.58rem;
-			border-radius: 0.12rem;
-			color: #fff;
-			background-color: #e92517;  
-			-webkit-appearance:none;
-		}
-		.con a{
-			display: block;
-			width: 9.29rem;
-			height: 1.6rem;
-			border-radius: 0.8rem;
-			line-height: 1.6rem;
-			text-align: center;
-			margin: 0 auto;
-			margin-top: 0.65rem;
-			font-size: 0.45rem;
-			color: #fff;
-			background-color: #e92517;  
-			text-decoration: none;
-		}
+        <style type="text/css">
+            html, body {
+                margin: 0 0;
+                padding: 0 0;
+                height: 100%;
+            }
+            .container {
+                display: flex;
+                height: 100%;
+                flex-direction: column;
+            }
+            .mainContent {
+                flex: 1;
+                background: #fff;
+                padding: 20px 10% 30px;
+            }
+            .row {
+                margin: 0 10px 20px;
+                overflow: hidden;
+                position: relative;
+            }
+            .form-input {
+                width: 100%;
+                display: inline-block;
+                border: none;
+                border-bottom: 1px solid #000;
+                padding: 8px;
+                font-size: 15px;
+            }
+            input.form-input.code {
+                width: 50%;
+            }
+            #btnSendCode {
+                display: inline-block;
+                margin-left: 20%;
+                background-color: #317eff;
+                color: #fff;
+                border: none;
+                padding: 8px 0;
+                width: 40%;
+                position: absolute;
+                right: 0;
+                top: 0;
+                font-size: 14px;
+            }
+            .register {
+                display: block;
+                background-color: #2075ff;
+                margin-top: 40px;
+                width: 100%;
+                height: 56px;
+                color: #fff;
+                font-size: 20px;
+                border-radius: 28px;
+                border: none;
+            }
 
-		/*提示框*/
-		p {
-			display: none;
-			position: absolute;
-			left: 2rem; 
-			top: 40%;
-			width: 6.8rem;
-		    border-radius: 0.3rem;
-			color: #f0f0f0;
-			background-color: rgba(0,0,0,0.7);
-			font-size: 0.46rem;
-			text-align: center;
-		}
-		span {
-			display: inline-block;
-			text-align: left;
-			padding: 0.6rem 0.25rem;
-		}
-	</style>
-</head>
+            .new_alert_row {
+                padding: 15px 5%;
+                background: rgba(0, 0, 0, 0.88);
+                line-height: 30px;
+                width: 50%;
+                word-wrap: break-word;
+                color: #fff;
+                border-radius: 6px;
+                position: absolute;
+                left: 20%;
+                top: 40%;
+            }
+
+            .new_alert_row .closealertdiv  {
+                position: absolute;
+                right: 2px;
+                top: 2px;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                cursor: pointer;
+            }
+        </style>
+
+        <script src="../js/jquery-2.1.4.min.js"></script>
+    </head>
 <body>
-	
-	<img src="Easy_loan.jpg" alt="" width="100%">
-	<div class="con">
-		<form name="form" id="form">
-		    <div class="item">  
-		    	<label for="">手机</label>   
-		        <input type="text" name="telephone" placeholder="请输入手机号码" class="telephone" autofocus>
-		    </div>
-		    <div class="yzm">	
-		    	<div class="item">     
-		    		<label for="">验证码</label>     
-		    	    <input type="text" name="code" placeholder="请输入验证码" class="code">   
-		    	</div>  
-		    	<input type="button" value="获取验证码" class="sjyzm" id="btnSendCode"> 
-	    	</div>
-		    <div class="item">     
-		    	<label for="">密码</label>   
-		        <input type="password" name="password" placeholder="请输入6-18位密码" class="password">
-		    </div>  
-	    	<a href="javascript:;" class="register">立即注册</a>
-	    </form>
-	</div>  
-
-	<p><span>请输入正确的手机号码</span></p>
-	<p><span>请输入正确的验证码</span></p>
-	<p><span>请输入6-18位密码</span></p>
-	<p class="error"><span></span></p>
-
-	<script>
-			var code;
-			$("#btnSendCode").click(function() {
-				if(!$(".telephone").val().match(/^(13[0-9]|14[4-8]|15([0-3]|[5-9])|166|17(3|[5-8])|18([0-9])|19([8]|[9]))\d{8}$/)){
-	 		 		$("p").eq(0).show().delay(2000).fadeOut(1000);
-	 		  	}else{
-	    		    var form = document.getElementById("form");
-	    		    var fd = new FormData(form);
-	    	        $.ajax({  
-	    				"crossDomain": true,
-	    				"url": "/api/register/getcode",
-	    				"method": "POST",
-	    				"headers": {},
-	    				"dataType":"json",
-	    				"processData": false,
-	    				"contentType": false,
-	    				"mimeType": "multipart/form-data",
-	    				"data": fd,
-	    				error: function (jxhr, textStatus, errorThrown) {},  
-	    				success: function (data, status){ 
-							if(data && data.errno == 0) {
-								code = data.code;
-								count = 60;  
-								$("#btnSendCode").attr("disabled", "true");  
-								$("#btnSendCode").val(+ count + "秒后重新发送");  
-								$("#btnSendCode").css("background-color","#888");
-								InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次  	  
-							}else if(data && data.errno == 5) {
-								window.open('./download.html?t=' + new Date().getTime(), '_self');
-							}else if(data && data.error) {
-								console.log(data.error);
-								$(".error span").text(data.error).parent().show().delay(2000).fadeOut(1000);
-							}
-	    				}  
-	    	        }); 
-			    } 
-			});	
-
-			$(".register").click(function() {
-				if(!$(".telephone").val().match(/^(13[0-9]|14[4-8]|15([0-3]|[5-9])|166|17(3|[5-8])|18([0-9])|19([8]|[9]))\d{8}$/)){
-	 		 		$("p").eq(0).show().delay(2000).fadeOut(1000);
-	 		  	}else if(!$(".code").val()){
-	 		 		$("p").eq(1).show().delay(2000).fadeOut(1000);
-	 		  	}else if(!$(".password").val().match(/^\w{6,18}$/)){
-					$("p").eq(2).show().delay(2000).fadeOut(1000);
-				}else{  
-	    		    var form = document.getElementById("form");
-	    		    var fd = new FormData(form);
-	    		    var recomm = getUrlParam("recomm") || ''; 
-	    	        $.ajax({  
-	    				"crossDomain": true,
-	    				"url": "/api/register?recomm="+recomm,
-	    				"method": "POST",
-	    				"headers": {},
-	    				"processData": false,
-	    				"contentType": false,
-	    				"mimeType": "multipart/form-data",
-						"data": fd,
-						"dataType":"json",
-	    				error: function(XMLHttpRequest, textStatus, errorThrown) { },  
-	    				success: function(data, status) {
-							console.log(data);
-							if(data && data.errno == 0) {
-								window.open('./download.html?t=' + new Date().getTime(), '_self');
-							}else if(data && data.errno == 5) {
-								window.open('./download.html?t=' + new Date().getTime(), '_self');
-							}else if(data && data.error) {
-								$(".error span").text(data.error).parent().show().delay(2000).fadeOut(1000);
-							}
-	    				}  
-	    	        });  
-			    } 
-			});	
-	 
-			function SetRemainTime() {  
-			    if (count == 0) {                  
-			        window.clearInterval(InterValObj); //停止计时器  
-			        $("#btnSendCode").removeAttr("disabled"); //启用按钮  
-			        $("#btnSendCode").val("获取验证码"); 
-			        $("#btnSendCode").css("background-color","#e92517"); 
-			    }  
-			    else {  
-			        count--;  
-			        $("#btnSendCode").val(+ count + "秒后重新发送");  
-			    }  
-			}  
-
-			function getUrlParam(name) {
-				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-				var r = window.location.search.substr(1).match(reg); //匹配目标参数
-				if (r != null) return unescape(r[2]); return null; //返回参数值
-			}			
-	</script>
+    <div class="container">
+        <img src="/register/topimg.jpg" alt="" width="100%" />
+        <div class="mainContent">
+            <div class="row">  
+                <input type="text" placeholder="请输入手机号码" class="form-input telephone" autofocus />
+            </div>
+            <div class="row">
+                <input type="text" placeholder="请输入验证码" class="form-input code" />   
+                <button id="btnSendCode">获取验证码</button>
+            </div>
+            <div class="row">
+                <input type="password" placeholder="请输入6-18位密码" class="form-input password" />
+            </div>
+            
+            <div>
+                <button class="register">立即注册</button>
+            </div>
+        </div>
+    </div>
 </body>
-</html>
 
-                             
+<script type="text/javascript">
+    $.autoalert = function(txt, timer = 2000) {
+        var container = 'body';
+        var classname = 'new_alert_row';
+        var html = "<div class='" + classname +"'>" + txt
+                + "<div class='closealertdiv'>×</div></div>";
+        $(container).find("." + classname).remove();
+        $(container).append(html);
+        var div = $(container).find("." + classname);
+        $(div).find('.closealertdiv').click(function() {
+            $(div).remove();
+        });
+        if (timer > 0) {
+            setTimeout(function() {
+                $(div).remove();
+            }, timer);
+        }
+    }
+
+    var code;
+    var count = 60;
+    $("#btnSendCode").click(function() {
+        var tel = $('.telephone').val();
+        if(!/^[1][3,4,5,7,8][0-9]{9}$/.test(tel)){
+            $.autoalert('请输入正确的手机号码');
+        }else{
+            var form = document.getElementById("form");
+            var fd = new FormData(form);
+            $.ajax({  
+                "url": "/api/register/getcode",
+                "type": "POST",
+                "dataType":"json",
+                "data": {
+                    telephone: tel,
+                },
+                error: function (jxhr, textStatus, errorThrown) {},  
+                success: function (data, status){ 
+                    if(data && data.errno == 0) {
+                        code = data.code;
+                        $("#btnSendCode").attr("disabled", "true");  
+                        $("#btnSendCode").html(count + "秒后重新发送");  
+                        $("#btnSendCode").css("background-color","#888");
+                        InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次  	  
+                    }else if(data && data.errno == 5) {
+                        window.open('/register/download.html?t=' + new Date().getTime(), '_self');
+                    }else if(data && data.error) {
+                        $.autoalert(data.error);
+                    }
+                }  
+            }); 
+        } 
+    });	
+
+    $(".register").click(function() {
+        var tel = $('.telephone').val();
+        var code = $('.code').val();
+        var psword = $('.password').val();
+        if(!/^[1][3,4,5,7,8][0-9]{9}$/.test(tel)){
+            $.autoalert('请输入正确的手机号码');
+        }else if(!code){
+            $.autoalert('请输入正确的验证码');
+        }else if(!/^\w{6,18}$/.test(psword)){
+            $.autoalert('请输入6-18位密码');
+        }else{
+            var recomm = getUrlParam("recomm") || ''; 
+            $.ajax({
+                "url": "/api/register?recomm="+recomm,
+                "type": "POST",
+                "dataType":"json",
+                "data": {
+                    telephone: tel,
+                    code: code,
+                    password: psword,
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { },  
+                success: function(data, status) {
+                    console.log(data);
+                    if(data && data.errno == 0) {
+                        window.open('/register/download.html?t=' + new Date().getTime(), '_self');
+                    }else if(data && data.errno == 5) {
+                        window.open('/register/download.html?t=' + new Date().getTime(), '_self');
+                    }else if(data && data.error) {
+                        $.autoalert(data.error);
+                    }
+                }  
+            });  
+        } 
+    });	
+
+    function SetRemainTime() {  
+        if (count == 0) {                  
+            window.clearInterval(InterValObj); //停止计时器  
+            $("#btnSendCode").removeAttr("disabled"); //启用按钮  
+            $("#btnSendCode").html("获取验证码"); 
+            $("#btnSendCode").css("background-color","#e92517"); 
+        }  
+        else {  
+            count--;
+            $("#btnSendCode").html(count + "秒后重新发送");  
+        }  
+    }  
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg); //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+</script>
+
+</html>

@@ -6,7 +6,7 @@
 	<title>APP下载</title>
 	<style>
 		body{
-			background-color: #e8423c;
+			background-color: #fd8529;
 			margin: 0;
 			padding: 0;
 		}
@@ -44,6 +44,13 @@
 			letter-spacing: 1px;
 			cursor: pointer;
 		}
+		.btnBox {
+			position: absolute;
+			bottom: 50px;
+			left: 0;
+			right: 0;
+			padding-bottom: 30px;
+		}
 	</style>
 </head>
 <body>
@@ -57,13 +64,18 @@
 			}
 		}
 	</script>
-	<img src="download.jpg" alt="" />
-	<div style="text-align: center;">
-		<a class="btnDownload" onclick="check_download_android(event);">Android下载</a>
+	<div style="position: relative;">
+		<img src="down_bg.jpg" alt="" />
+		<div class="btnBox">
+			<div style="text-align: center;">
+				<a class="btnDownload" onclick="check_download_android(event);">Android下载</a>
+			</div>
+			<div style="text-align: center;">
+				<a class="btnDownload" href="itms-services://?action=download-manifest&url=https://wtgs.scdp2p.com/apps/kuaihang.plist">IOS下载</a>
+			</div>
+		</div>
 	</div>
-	<div style="text-align: center;">
-		<a class="btnDownload" href="itms-services://?action=download-manifest&url=https://wtgs.scdp2p.com/apps/kuaihang.plist">IOS下载</a>
-	</div>
+	
 	<div id="mcover">
 	     <img src="weixin_tip.png">
 	</div>
