@@ -12,10 +12,14 @@
 */
 
 Route::get('/', function () {
+    
+    return redirect()->route('admin');
+
     // event(new \App\Events\PusherEvent([
     //     'name' => 'test',
     //     'message' => 'now time: ' . date('Y-m-d H:i:s'),
     // ]));
+
     return view('welcome');
 });
 

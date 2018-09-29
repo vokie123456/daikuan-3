@@ -43,3 +43,13 @@ if(!function_exists('check_mobile')) {
         return (bool)preg_match("/^1[34578]{1}\d{9}$/", $tel);
     }
 }
+
+if(!function_exists('create_full_url')) {
+    function create_full_url($url = '', $default = '') {
+        if(strpos($url, 'http') !== 0) {
+            $http = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+            $url = $http . $_SERVER['HTTP_HOST'] . (strpos($url, '/') === 0 ? $url : ('/' . $url));
+        }
+        return $url ? $url : $default;
+    }
+}

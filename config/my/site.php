@@ -23,7 +23,7 @@ return [
     'recomm' => 'recomm',
 
     // register url
-    'register_path' => 'https://wangtougongshe.com/register/index.html',
+    'register_path' => create_full_url('register/index.html'),
     
     // 同一ip每日限制的条数
     'same_ip_day_number' => 3,

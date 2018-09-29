@@ -51,5 +51,6 @@ var styles = {
         borderRadius: '4px',
         padding: '20px',
         display: '-webkit-box',
+        overflow: 'auto',
     },
 };
