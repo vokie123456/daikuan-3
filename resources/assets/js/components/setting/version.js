@@ -36,9 +36,13 @@ export default class Version extends React.Component {
             method: 'get',
         }, (result) => {
             // console.log(result);
+            let ios = result.ios || {};
+            let android = result.android || {};
+            if(!ios.details) ios.details = '发现新版本, 请更新!';
+            if(!android.details) android.details = '发现新版本, 请更新!';
             this.setState({datas: {
-                ios: result.ios,
-                android: result.android,
+                ios,
+                android,
             }});
         });
     }
@@ -165,7 +169,7 @@ export default class Version extends React.Component {
                 >
                     <TextArea 
                         rows="8" 
-                        value={_data.details || '发现新版本, 请更新!'} 
+                        value={_data.details} 
                         onChange={(e) => this.setDataVaule('details', e.target.value)} 
                     />
                 </FormItem>
