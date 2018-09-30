@@ -28,6 +28,8 @@ class SmsCode {
     }
 
     public function send_code($phone, $code) {
+        return $this->__send_sms_code($phone, $code);
+
         $datas = [
             'accesskey' => $this->_config['accesskey'],
             'secret' => $this->_config['secret'],
@@ -83,6 +85,47 @@ class SmsCode {
             }
         }else{
             error_log("短信接口返回内容为空或不是json格式！", 0);
+            return false;
+        }
+    }
+
+    //发送验证码短信
+    public function __send_sms_code($phones, $code='') {
+        $moudle = [
+            4300 => ' 你的注册验证码: %s, %s分钟内有效, 打死不要告诉别人哦!',
+            4334 => ' 你正在找回密码, 验证码: %s。',
+            4335 => ' 你正在更换手机, 验证码: %s。',
+        ];
+        if(!isset($moudle[$this->_config['templateId']])) return false;
+        $_CFG['yimei'] = array(
+            'cdkey'=>'EUCP-EMY-SMS1-3XOBZ',
+            'password'=>'C32EF2',
+            'sign'=>'【江湖救急】'
+        );
+        $content = $_CFG['yimei']['sign'] . call_user_func_array('sprintf', array_merge(
+            [$moudle[$this->_config['templateId']]],
+            explode('##', $code)
+        ));
+        $cdkey = $_CFG['yimei']['cdkey'];
+        $password = $_CFG['yimei']['password'];
+        if(is_array($phones)){
+            $phone = implode(',',$phones);
+        }else{
+            $phone = $phones;
+        }
+        if(!empty($content)){
+            $fileType = mb_detect_encoding($content,array('UTF-8','GBK','LATIN1','BIG5'));
+            if($fileType != 'UTF-8'){
+                $content = mb_convert_encoding($content ,"UTF-8" , $fileType);
+            }
+        }
+        $content = urlencode(htmlspecialchars($content));
+        $url = "http://hprpt2.eucp.b2m.cn:8080/sdkproxy/sendsms.action?cdkey={$cdkey}&password={$password}&phone={$phone}&message={$content}";
+        //die($url);
+        $str = file_get_contents($url);
+        if(strpos($str,"<error>0</error>")){
+            return true;
+        }else{
             return false;
         }
     }
