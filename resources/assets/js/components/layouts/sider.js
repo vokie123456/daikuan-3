@@ -64,11 +64,17 @@ const routers = [
             title: '用户列表',
             link : '/users',
         }],
-    }, 
-    // {
-    //     title: '设置',
-    //     icon : 'setting',
-    // }
+    }, {
+        title: '设置',
+        icon : 'setting',
+        child: [{
+            title: 'APP版本',
+            link : '/version',
+        }, {
+            title: '联系我们',
+            link : '/concatus',
+        }],
+    }
 ];
 
 export default class SiderComponent extends React.Component {

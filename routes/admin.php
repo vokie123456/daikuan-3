@@ -66,6 +66,8 @@ Route::group([
     Route::post('agent/create', 'AgentController@store');
     Route::get('getagents', 'AgentController@index');
     Route::get('getpromotes', 'PromoteController@index');
+    Route::get('getversion', 'VersionController@getNowVersion');
+    Route::post('addversion', 'VersionController@save');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

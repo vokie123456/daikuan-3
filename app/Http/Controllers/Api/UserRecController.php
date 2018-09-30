@@ -13,8 +13,7 @@ class UserRecController extends Controller
     protected $user;
     protected $userRecRepository;
     
-    public function __construct(UserRecRepository $userRecRepository)
-    {
+    public function __construct(UserRecRepository $userRecRepository) {
         $this->user = Auth::guard('api')->user();
         $this->userRecRepository = $userRecRepository;
     }

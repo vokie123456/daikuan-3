@@ -83,6 +83,9 @@ var urls = {
     addAgent: host + 'agent/create',
     //获取推广列表
     getPromote: host + 'getpromotes',
+
+    getVersion: host + 'getversion',
+    addVersion: host + 'addversion',
 };
 
 export default urls;
