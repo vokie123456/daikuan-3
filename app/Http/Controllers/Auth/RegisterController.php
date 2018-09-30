@@ -37,7 +37,6 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        exit('<h3>禁止注册!</h3>');
         $this->middleware('guest');
     }
 
@@ -69,5 +68,16 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    public function showRegistrationForm() {
+        /***
+         * 
+         * 
+         *    注意: 优先级高于 trait RegistersUsers 的showRegistrationForm方法
+         * 
+         */
+        // 推广链接与原来的注册地址重复
+        return redirect('/register' . config('app.register_theme'));
     }
 }

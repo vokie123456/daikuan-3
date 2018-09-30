@@ -15,6 +15,10 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    // 短信模块
+    'sms_type' => env('SMS_TYPE', 0),
+    // 注册样式
+    'register_theme' => env('REGISTER_THEME', ''),
     /*
     |--------------------------------------------------------------------------
     | Application Environment

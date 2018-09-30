@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>注册</title>
+
+        <style type="text/css">
+            html, body {
+                margin: 0 0;
+                padding: 0 0;
+                height: 100%;
+            }
+            .container {
+                display: flex;
+                height: 100%;
+                flex-direction: column;
+            }
+            .mainContent {
+                flex: 1;
+                background: #fff;
+                padding: 20px 10% 30px;
+            }
+            .row {
+                margin: 0 10px 20px;
+                overflow: hidden;
+                position: relative;
+            }
+            .form-input {
+                width: 100%;
+                display: inline-block;
+                border: none;
+                border-bottom: 1px solid #000;
+                padding: 8px;
+                font-size: 15px;
+            }
+            input.form-input.code {
+                width: 50%;
+            }
+            #btnSendCode {
+                display: inline-block;
+                margin-left: 20%;
+                background-color: #317eff;
+                color: #fff;
+                border: none;
+                padding: 8px 0;
+                width: 40%;
+                position: absolute;
+                right: 0;
+                top: 0;
+                font-size: 14px;
+            }
+            .register {
+                display: block;
+                background-color: #2075ff;
+                margin-top: 40px;
+                width: 100%;
+                height: 56px;
+                color: #fff;
+                font-size: 20px;
+                border-radius: 28px;
+                border: none;
+            }
+
+            .new_alert_row {
+                padding: 15px 5%;
+                background: rgba(0, 0, 0, 0.88);
+                line-height: 30px;
+                width: 50%;
+                word-wrap: break-word;
+                color: #fff;
+                border-radius: 6px;
+                position: absolute;
+                left: 20%;
+                top: 40%;
+            }
+
+            .new_alert_row .closealertdiv  {
+                position: absolute;
+                right: 2px;
+                top: 2px;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                cursor: pointer;
+            }
+        </style>
+
+        <script src="../js/jquery-2.1.4.min.js"></script>
+    </head>
+<body>
+    <div class="container">
+        <img src="topimg.jpg" alt="" width="100%" />
+        <div class="mainContent">
+            <div class="row">  
+                <input type="text" placeholder="请输入手机号码" class="form-input telephone" autofocus />
+            </div>
+            <div class="row">
+                <input type="text" placeholder="请输入验证码" class="form-input code" />   
+                <button id="btnSendCode">获取验证码</button>
+            </div>
+            <div class="row">
+                <input type="password" placeholder="请输入6-18位密码" class="form-input password" />
+            </div>
+            
+            <div>
+                <button class="register">立即注册</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    $.autoalert = function(txt, timer = 2000) {
+        var container = 'body';
+        var classname = 'new_alert_row';
+        var html = "<div class='" + classname +"'>" + txt
+                + "<div class='closealertdiv'>×</div></div>";
+        $(container).find("." + classname).remove();
+        $(container).append(html);
+        var div = $(container).find("." + classname);
+        $(div).find('.closealertdiv').click(function() {
+            $(div).remove();
+        });
+        if (timer > 0) {
+            setTimeout(function() {
+                $(div).remove();
+            }, timer);
+        }
+    }
+
+    var code;
+    var count = 60;
+    $("#btnSendCode").click(function() {
+        var tel = $('.telephone').val();
+        if(!/^[1][3,4,5,7,8][0-9]{9}$/.test(tel)){
+            $.autoalert('请输入正确的手机号码');
+        }else{
+            var form = document.getElementById("form");
+            var fd = new FormData(form);
+            $.ajax({  
+                "url": "/api/register/getcode",
+                "type": "POST",
+                "dataType":"json",
+                "data": {
+                    telephone: tel,
+                },
+                error: function (jxhr, textStatus, errorThrown) {},  
+                success: function (data, status){ 
+                    if(data && data.errno == 0) {
+                        code = data.code;
+                        $("#btnSendCode").attr("disabled", "true");  
+                        $("#btnSendCode").html(count + "秒后重新发送");  
+                        $("#btnSendCode").css("background-color","#888");
+                        InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次  	  
+                    }else if(data && data.errno == 5) {
+                        window.open('/register/download.php?t=' + new Date().getTime(), '_self');
+                    }else if(data && data.error) {
+                        $.autoalert(data.error);
+                    }
+                }  
+            }); 
+        } 
+    });	
+
+    $(".register").click(function() {
+        var tel = $('.telephone').val();
+        var code = $('.code').val();
+        var psword = $('.password').val();
+        if(!/^[1][3,4,5,7,8][0-9]{9}$/.test(tel)){
+            $.autoalert('请输入正确的手机号码');
+        }else if(!code){
+            $.autoalert('请输入正确的验证码');
+        }else if(!/^\w{6,18}$/.test(psword)){
+            $.autoalert('请输入6-18位密码');
+        }else{
+            var recomm = getUrlParam("recomm") || ''; 
+            $.ajax({
+                "url": "/api/register?recomm="+recomm,
+                "type": "POST",
+                "dataType":"json",
+                "data": {
+                    telephone: tel,
+                    code: code,
+                    password: psword,
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { },  
+                success: function(data, status) {
+                    console.log(data);
+                    if(data && data.errno == 0) {
+                        window.open('/register/download.php?t=' + new Date().getTime(), '_self');
+                    }else if(data && data.errno == 5) {
+                        window.open('/register/download.php?t=' + new Date().getTime(), '_self');
+                    }else if(data && data.error) {
+                        $.autoalert(data.error);
+                    }
+                }  
+            });  
+        } 
+    });	
+
+    function SetRemainTime() {  
+        if (count == 0) {                  
+            window.clearInterval(InterValObj); //停止计时器  
+            $("#btnSendCode").removeAttr("disabled"); //启用按钮  
+            $("#btnSendCode").html("获取验证码"); 
+            $("#btnSendCode").css("background-color","#e92517"); 
+        }  
+        else {  
+            count--;
+            $("#btnSendCode").html(count + "秒后重新发送");  
+        }  
+    }  
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg); //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+</script>
+
+</html>

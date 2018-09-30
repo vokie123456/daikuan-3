@@ -1,0 +1,18 @@
+# 多系统配置
+
+
+1. 不同的短信配置
+
+env: SMS_TYPE
+config/app.php: sms_type
+
+
+2. 不同的注册页面
+
+env: REGISTER_THEME
+config/app.php: register_theme
+
+
+3. 数据差异
+
+因为系统的版本和联系数据是存于文件之中的, 新系统请重新在后台设置一次

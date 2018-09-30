@@ -28,7 +28,10 @@ class SmsCode {
     }
 
     public function send_code($phone, $code) {
-        return $this->__send_sms_code($phone, $code);
+        $type = config('app.sms_type');
+        if($type == 1) {
+            return $this->__send_sms_code($phone, $code);
+        }
 
         $datas = [
             'accesskey' => $this->_config['accesskey'],

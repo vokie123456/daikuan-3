@@ -24,6 +24,12 @@ Route::get('/', function () {
 });
 
 
+// 重定位之前的链接
+Route::get('/register/index.html', function () {
+    return redirect('register');
+});
+
+
 Route::get('/pusher', function () {
     return view('pusher');
 });
