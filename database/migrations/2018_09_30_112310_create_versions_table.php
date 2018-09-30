@@ -20,7 +20,7 @@ class CreateVersionsTable extends Migration
             $table->string('url', 255)->comment('下载地址');
             $table->string('plist', 255)->default('')->comment('Plist文件下载地址(仅ios有效)');
             $table->text('details')->nullable()->comment('详细介绍');
-            $table->unsignedTinyInteger('status')->default(1)->comment('是否强制更新: 0 非强制, 1 强制');
+            $table->unsignedTinyInteger('isForce')->default(1)->comment('是否强制更新: 0 非强制, 1 强制');
             $table->timestamps();
         });
     }

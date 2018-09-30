@@ -17,6 +17,7 @@ import Promotes from '../agent/promote';
 import Agents from '../agent';
 import AgentsForm from '../agent/form';
 import Version from '../setting/version';
+import Us from '../setting/us';
 
 const { Content, } = Layout;
 
@@ -41,6 +42,7 @@ export default class ContentComponent extends React.Component {
                 <Route path="/agents" exact component={Agents} />
                 <Route path="/agents/:id" component={AgentsForm} />
                 <Route path="/version" exact component={Version} />
+                <Route path="/concatus" exact component={Us} />
             </Content>
         );
     }

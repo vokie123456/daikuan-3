@@ -86,6 +86,9 @@ var urls = {
 
     getVersion: host + 'getversion',
     addVersion: host + 'addversion',
+
+    getcontactus: host + 'getcontactus',
+    setcontactus: host + 'setcontactus',
 };
 
 export default urls;

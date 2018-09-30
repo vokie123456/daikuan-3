@@ -68,6 +68,8 @@ Route::group([
     Route::get('getpromotes', 'PromoteController@index');
     Route::get('getversion', 'VersionController@getNowVersion');
     Route::post('addversion', 'VersionController@save');
+    Route::get('getcontactus', 'ContactUsController@getInfo');
+    Route::post('setcontactus', 'ContactUsController@setInfo');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });
