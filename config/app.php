@@ -17,6 +17,8 @@ return [
 
     // 短信模块
     'sms_type' => env('SMS_TYPE', 0),
+    // 短信签名
+    'sms_sign' => env('SMS_SIGN', 0),
     // 注册样式
     'register_theme' => env('REGISTER_THEME', ''),
     /*

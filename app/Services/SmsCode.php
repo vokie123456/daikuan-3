@@ -15,13 +15,14 @@ class SmsCode {
         'url' => 'http://api.1cloudsp.com/api/v2/send',
         'accesskey' => 'FuM1v4Fw3Z4Gs0dV',
         'secret' => '4LqKyfcNnEF3fdKoQD3kubjkQ36KWYwM',
-        'sign' => '【真要贷】',
+        'sign' => '',
         'templateId' => 3318,
         'scheduleSendTime' => ''
     ];
 
     //构造函数
     public function __construct(Array $config = []) {
+        $this->_config['sign'] = config('app.sms_sign');
         if(!empty($config)) {
             $this->_config = array_merge($this->_config, $config);
         }
@@ -95,15 +96,15 @@ class SmsCode {
     //发送验证码短信
     public function __send_sms_code($phones, $code='') {
         $moudle = [
-            4300 => ' 你的注册验证码: %s, %s分钟内有效, 打死不要告诉别人哦!',
-            4334 => ' 你正在找回密码, 验证码: %s。',
-            4335 => ' 你正在更换手机, 验证码: %s。',
+            4300 => '你的注册验证码: %s, %s分钟内有效, 打死不要告诉别人哦!',
+            4334 => '你正在找回密码, 验证码: %s。',
+            4335 => '你正在更换手机, 验证码: %s。',
         ];
         if(!isset($moudle[$this->_config['templateId']])) return false;
         $_CFG['yimei'] = array(
             'cdkey'=>'EUCP-EMY-SMS1-3XOBZ',
             'password'=>'C32EF2',
-            'sign'=>'【江湖救急】'
+            'sign'=> $this->_config['sign'],
         );
         $content = $_CFG['yimei']['sign'] . call_user_func_array('sprintf', array_merge(
             [$moudle[$this->_config['templateId']]],
