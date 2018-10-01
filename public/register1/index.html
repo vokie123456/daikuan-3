@@ -155,7 +155,7 @@
                         $("#btnSendCode").css("background-color","#888");
                         InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次  	  
                     }else if(data && data.errno == 5) {
-                        window.open('/register/download.php?t=' + new Date().getTime(), '_self');
+                        window.open('download.php?t=' + new Date().getTime(), '_self');
                     }else if(data && data.error) {
                         $.autoalert(data.error);
                     }
@@ -189,9 +189,9 @@
                 success: function(data, status) {
                     console.log(data);
                     if(data && data.errno == 0) {
-                        window.open('/register/download.php?t=' + new Date().getTime(), '_self');
+                        window.open('download.php?t=' + new Date().getTime(), '_self');
                     }else if(data && data.errno == 5) {
-                        window.open('/register/download.php?t=' + new Date().getTime(), '_self');
+                        window.open('download.php?t=' + new Date().getTime(), '_self');
                     }else if(data && data.error) {
                         $.autoalert(data.error);
                     }
