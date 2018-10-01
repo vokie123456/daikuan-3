@@ -34,7 +34,6 @@ class StoreVersionPost extends FormRequest
             'type' => 'required|in:0,1',
             'version' => 'required|integer|min:1',
             'url' => 'required|string|max:255',
-            'plist' => 'required_if:type,1',
             'details' => 'required|string',
             'isForce' => 'required|in:0,1',
         ];

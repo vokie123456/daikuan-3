@@ -17,7 +17,6 @@ class VersionRepository
     }
 
     public function create($datas) {
-        if(empty($datas['plist'])) $datas['plist'] = '';
         $ret = $this->version->create($datas);
         if($ret) {
             $filename = $datas['type'] == 1 ? 'ios.txt' : 'android.txt';

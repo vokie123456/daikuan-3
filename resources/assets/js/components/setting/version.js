@@ -83,7 +83,6 @@ export default class Version extends React.Component {
                     type: this.state.systype,
                     version: _data.version,
                     url: _data.url,
-                    plist: _data.plist || '',
                     details: _data.details,
                     isForce: _data.isForce ? 1 : 0,
                 },
@@ -150,19 +149,10 @@ export default class Version extends React.Component {
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
-                    label='下载地址'
+                    label={'下载地址' + (systype == 1 ? '(plist)' : '')}
                 >
                     <Input maxLength={255} value={_data.url} onChange={(e) => this.setDataVaule('url', e.target.value)} />
                 </FormItem>
-                {systype == 1 ?
-                    <FormItem
-                        {...formItemLayout}
-                        label='plist文件地址'
-                    >
-                        <Input maxLength={255} value={_data.plist} onChange={(e) => this.setDataVaule('plist', e.target.value)} />
-                    </FormItem> :
-                    null
-                }
                 <FormItem
                     {...formItemLayout}
                     label="更新说明"

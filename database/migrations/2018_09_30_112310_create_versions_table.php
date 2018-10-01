@@ -18,7 +18,6 @@ class CreateVersionsTable extends Migration
             $table->integer('version')->unsigned()->comment('版本号');
             $table->unsignedTinyInteger('type')->comment('类型: 0 android, 1 ios');
             $table->string('url', 255)->comment('下载地址');
-            $table->string('plist', 255)->default('')->comment('Plist文件下载地址(仅ios有效)');
             $table->text('details')->nullable()->comment('详细介绍');
             $table->unsignedTinyInteger('isForce')->default(1)->comment('是否强制更新: 0 非强制, 1 强制');
             $table->timestamps();
