@@ -18,6 +18,7 @@ import Agents from '../agent';
 import AgentsForm from '../agent/form';
 import Version from '../setting/version';
 import Us from '../setting/us';
+import Share from '../setting/share';
 
 const { Content, } = Layout;
 
@@ -43,6 +44,7 @@ export default class ContentComponent extends React.Component {
                 <Route path="/agents/:id" component={AgentsForm} />
                 <Route path="/version" exact component={Version} />
                 <Route path="/concatus" exact component={Us} />
+                <Route path="/share" exact component={Share} />
             </Content>
         );
     }
@@ -51,7 +53,7 @@ export default class ContentComponent extends React.Component {
 var styles = {
     content: {
         backgroundColor: '#fff',
-        margin: '12px 12px 0',
+        margin: '12px',
         borderRadius: '4px',
         padding: '20px',
         display: '-webkit-box',

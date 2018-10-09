@@ -89,6 +89,9 @@ var urls = {
 
     getcontactus: host + 'getcontactus',
     setcontactus: host + 'setcontactus',
+
+    getShare: host + 'getshare',
+    setShare: host + 'setshare',
 };
 
 export default urls;

@@ -254,6 +254,7 @@ class FormComponent extends React.Component {
                     )}
                 >
                     {getFieldDecorator('app_id', {
+                        initialValue: '',
                     })(
                         <InputNumber
                             min={0}
@@ -356,7 +357,7 @@ const FormInit = Form.create({
                     ]
                 });
             }
-            inits[i] = Form.createFormField({value: inits[i]});
+            inits[i] = Form.createFormField({value: inits[i] === null ? '' : inits[i]});
         }
         return inits;
     },

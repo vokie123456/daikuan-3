@@ -71,7 +71,7 @@ class BannerRepository
 
     public function checkAppId($id)
     {
-        return (bool)AppModel::find($id);
+        return (bool)AppModel::find(intval($id));
     }
 
     public function format_data($datas)

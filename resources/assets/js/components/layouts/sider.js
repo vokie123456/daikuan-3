@@ -73,6 +73,9 @@ const routers = [
         }, {
             title: '联系我们',
             link : '/concatus',
+        }, {
+            title: '微信分享',
+            link : '/share',
         }],
     }
 ];

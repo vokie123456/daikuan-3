@@ -31,6 +31,7 @@ class AppTable extends React.Component {
         this.cate_id = 0;
         this.data = {};
         this.origin_datas = [];
+        this.checked_only_add = false;
     }
 
     componentDidMount() {
@@ -58,7 +59,7 @@ class AppTable extends React.Component {
         }, (result) => {
             // console.log(result);
             this.setState({
-                datas: result || [],
+                datas: this.getHandleData(this.checked_only_add, result || []),
                 loading: false,
             });
         });
@@ -88,6 +89,31 @@ class AppTable extends React.Component {
             },
             isAlert: true,
         })
+    };
+
+    getHandleData = (checked, datas) => {
+        let checked_datas = [];
+        if(checked) {
+            this.origin_datas = datas;
+            for(let i in datas) {
+                if(datas[i].is_checked) {
+                    checked_datas.push(datas[i]);
+                }
+            }
+        }else {
+            let _datas = this.origin_datas.length ? this.origin_datas : datas;
+            checked_datas = _datas.map((item, index) => {
+                if(datas && datas.length) {
+                    for(let i in datas) {
+                        if(datas[i].id === item.id) {
+                            return datas[i];
+                        }
+                    }
+                }
+                return item;
+            });
+        }
+        return checked_datas;
     };
 
     render() {
@@ -173,31 +199,12 @@ class AppTable extends React.Component {
             },
         };
         return (
-            <div>
+            <div style={styles.body}>
                 <div className="toolbar" style={{ justifyContent: 'space-between', }}>
                     <Checkbox onChange={(e) => {
                         let checked = e.target.checked;
-                        let checked_datas = [];
-                        if(checked) {
-                            this.origin_datas = datas;
-                            for(let i in datas) {
-                                if(datas[i].is_checked) {
-                                    checked_datas.push(datas[i]);
-                                }
-                            }
-                        }else {
-                            checked_datas = this.origin_datas.map((item, index) => {
-                                if(datas && datas.length) {
-                                    for(let i in datas) {
-                                        if(datas[i].id === item.id) {
-                                            return datas[i];
-                                        }
-                                    }
-                                }
-                                return item;
-                            });
-                        }
-                        this.setState({ datas: checked_datas, });  
+                        this.checked_only_add = checked;
+                        this.setState({ datas: this.getHandleData(checked, datas)});  
                     }}>只显示选中的行</Checkbox>
                     <Button type="primary" onClick={this.handleClick}>保存</Button>
                 </div>
@@ -283,6 +290,10 @@ export default class Apps extends React.Component {
 }
 
 var styles = {};
+styles.body = {
+    overflow: 'auto',
+    marginBottom: 20,
+};
 styles.icon = {
     width: '60px',
     maxHeight: '60px',

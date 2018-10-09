@@ -55,7 +55,7 @@ class BannerController extends Controller
     {
         if($datas['start_time'] > $datas['end_time']) {
             return '起始时间不能大于结束时间!';
-        }else if(isset($datas['app_id']) && !$this->banner->checkAppId($datas['app_id'])) {
+        }else if(!empty($datas['app_id']) && !$this->banner->checkAppId($datas['app_id'])) {
             return '无效的APP id!';
         }else  {
             if($file) {

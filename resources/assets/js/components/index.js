@@ -39,7 +39,7 @@ class App extends React.Component {
                     <Layout>
                         <HeaderComponent admin={this.state.admin} />
                         <ContentComponent />
-                        <FooterComponent />
+                        {/* <FooterComponent /> */}
                     </Layout>
                 </Layout>
             </Router>

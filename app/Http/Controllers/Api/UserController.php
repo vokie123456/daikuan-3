@@ -10,6 +10,7 @@ use App\Repositories\UserRepository;
 use App\Http\Resources\UserResource;
 use App\Repositories\SmsCodeRepository;
 use App\Repositories\UsRepository;
+use App\Repositories\SettingRepository;
 
 class UserController extends Controller
 {
@@ -26,17 +27,19 @@ class UserController extends Controller
         $this->user = Auth::guard('api')->user();
     }
 
-    public function getInfo(UsRepository $usRepository)
+    public function getInfo(UsRepository $usRepository, SettingRepository $settingRepository)
     {
         if($this->user->status) {
             $user = new UserResource($this->user);
             $key = config('my.site.recomm');
             $share_url = config('my.site.register_path') . "?{$key}=" . create_url_encode_by_id('users', $user->id);
             $contact_us = $usRepository->getData();
+            $share_info = $settingRepository->getSettings('share');
             $this->set_success('获取成功!')
                 ->set_data('user', $user)
                 ->set_data('share_url', $share_url)
-                ->set_data('contact_us', $contact_us);
+                ->set_data('contact_us', $contact_us)
+                ->set_data('share_info', $share_info);
         }else {
             $this->set_error('该帐号已被禁止!');
         }

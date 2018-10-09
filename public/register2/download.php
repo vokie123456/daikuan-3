@@ -56,25 +56,12 @@
 </head>
 
 <?php
-	$dir = dirname(dirname(__DIR__)) . '/storage/app/';
-	$android_file = $dir . 'android.txt';
-	$ios_file = $dir . 'ios.txt';
-	$android_url = '';
+	$data = require_once(dirname(__DIR__) . '/version_info.php');
 	$ios_url = '';
-	if(file_exists($android_file)) {
-		$content = json_decode(file_get_contents($android_file), true);
-		if($content && isset($content['url'])) {
-			$android_url = $content['url'];
-		}
-	}
-	if(file_exists($ios_file)) {
-		$content = json_decode(file_get_contents($ios_file), true);
-		if($content && isset($content['url'])) {
-			if(strpos($content['url'], 'itms-services://') !== 0) {
-				$content['url'] = 'itms-services://?action=download-manifest&url=' . $content['url'];
-			}
-			$ios_url = $content['url'];
-		}
+	$android_url = '';
+	if(is_array($data)) {
+		if(isset($data['ios'], $data['ios']['url'])) $ios_url = $data['ios']['url'];
+		if(isset($data['android'], $data['android']['url'])) $android_url = $data['android']['url'];
 	}
 ?>
 

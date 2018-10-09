@@ -2,7 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Version;
-use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Storage;
 
 class VersionRepository
 {
@@ -18,10 +18,10 @@ class VersionRepository
 
     public function create($datas) {
         $ret = $this->version->create($datas);
-        if($ret) {
-            $filename = $datas['type'] == 1 ? 'ios.txt' : 'android.txt';
-            Storage::disk('local')->put($filename, json_encode($datas));
-        }
+        // if($ret) {
+        //     $filename = $datas['type'] == 1 ? 'ios.txt' : 'android.txt';
+        //     Storage::disk('local')->put($filename, json_encode($datas));
+        // }
         return $ret;
     }
 }

@@ -70,6 +70,8 @@ Route::group([
     Route::post('addversion', 'VersionController@save');
     Route::get('getcontactus', 'ContactUsController@getInfo');
     Route::post('setcontactus', 'ContactUsController@setInfo');
+    Route::get('getshare', 'ShareController@getInfo');
+    Route::post('setshare', 'ShareController@setInfo');
 
     Route::view('{a?}/{b?}/{c?}/{d?}', 'admin');
 });

@@ -9,6 +9,7 @@ use App\Repositories\Api\CategoryRepository;
 use App\Repositories\Api\UserRecRepository;
 use App\Repositories\Api\UserCollRepository;
 use App\Repositories\Api\PromoteRepository ;
+use App\Repositories\SettingRepository;
 use Illuminate\Support\Facades\Auth;
 
 class AppController extends Controller
@@ -28,8 +29,10 @@ class AppController extends Controller
         return response()->json($this->get_result());
     }
 
-    public function getApp($id, UserRecRepository $userRecRepository, UserCollRepository $userCollRepository)
-    {
+    public function getApp(
+        $id, UserRecRepository $userRecRepository, 
+        UserCollRepository $userCollRepository, SettingRepository $settingRepository
+    ) {
         $app = $this->appRepository->getAppById($id);
         if(!$app) {
             $this->set_error('找不到APP');
@@ -40,6 +43,7 @@ class AppController extends Controller
             $app['isCollection'] = false;
             $user_id = null;
             $app['share_url'] = config('my.site.register_path');
+            $app['share_info'] = $settingRepository->getSettings('share');
             if($user && $user->id) {
                 $user_id = $user->id;
                 $key = config('my.site.recomm');
