@@ -9,8 +9,8 @@ class ContactUsController extends Controller
 {
     //
     protected $settingRepository;
-    protected $set_type = 'app';
-    protected $set_code = 'app_contactus';
+    protected $set_type = 'contactus';
+    protected $set_code = 'contactus_api';
     
     public function __construct(SettingRepository $settingRepository) {
         $this->settingRepository = $settingRepository;

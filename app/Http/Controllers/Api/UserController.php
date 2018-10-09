@@ -33,7 +33,8 @@ class UserController extends Controller
             $user = new UserResource($this->user);
             $key = config('my.site.recomm');
             $share_url = config('my.site.register_path') . "?{$key}=" . create_url_encode_by_id('users', $user->id);
-            $contact_us = $usRepository->getData();
+            $contact_us = $settingRepository->getSettings('contactus');
+            $contact_us = isset($contact_us['contactus_api']) ? $contact_us['contactus_api'] : '';
             $share_info = $settingRepository->getSettings('share');
             $this->set_success('获取成功!')
                 ->set_data('user', $user)
