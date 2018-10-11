@@ -23,10 +23,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Route::get('/register', function () {
+//     // 该路由优先级低注册操作器的操作, 需要重定向请直接在注册控制器里修改
+//     // 路径: app/Http/Controllers/Auth/RegisterController.php
+// });
 
 // 重定位之前的链接
 Route::get('/register/index.html', function () {
     return redirect('register');
+});
+
+Route::get('/register/download', function () {
+    return redirect('/register' . config('app.register_theme') . '/download.php');
 });
 
 
