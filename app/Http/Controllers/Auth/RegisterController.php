@@ -78,6 +78,6 @@ class RegisterController extends Controller
          * 
          */
         // 推广链接与原来的注册地址重复
-        return redirect('/register' . config('app.register_theme'));
+        return redirect('register' . config('app.register_theme') . '?' . $_SERVER['QUERY_STRING']);
     }
 }

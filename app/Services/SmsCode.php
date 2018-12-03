@@ -22,14 +22,14 @@ class SmsCode {
 
     //构造函数
     public function __construct(Array $config = []) {
-        $this->_config['sign'] = config('app.sms_sign');
+        $this->_config['sign'] = config('my.site.sms_sign');
         if(!empty($config)) {
             $this->_config = array_merge($this->_config, $config);
         }
     }
 
     public function send_code($phone, $code) {
-        $type = config('app.sms_type');
+        $type = config('my.site.sms_type');
         if($type == 1) {
             return $this->__send_sms_code($phone, $code);
         }

@@ -15,8 +15,3 @@ config/app.php: sms_sign
 
 env: REGISTER_THEME
 config/app.php: register_theme
-
-
-3. 数据差异
-
-因为系统的版本和联系数据是存于文件之中的, 新系统请重新在后台设置一次

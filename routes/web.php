@@ -30,11 +30,13 @@ Route::get('/', function () {
 
 // 重定位之前的链接
 Route::get('/register/index.html', function () {
-    return redirect('register');
+    $QUERY_STRING = empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING'];
+    return redirect('register' . $QUERY_STRING);
 });
 
 Route::get('/register/download', function () {
-    return redirect('/register' . config('app.register_theme') . '/download.php');
+    $QUERY_STRING = empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING'];
+    return redirect('/register' . config('app.register_theme') . '/download.php' . $QUERY_STRING);
 });
 
 
